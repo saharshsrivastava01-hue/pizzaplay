@@ -152,13 +152,68 @@ function persist(){localStorage.setItem("ao_cart",JSON.stringify(cart));renderCa
 function add(id){let p=products.find(x=>x.id===id),extra=p.pizza?Number(document.getElementById("size-"+id).value):0,key=id+"_"+extra;cart[key]=(cart[key]||0)+1;persist();toast("Added to cart")}
 function change(key,d){cart[key]=(cart[key]||0)+d;if(cart[key]<=0)delete cart[key];persist()}
 function clearCart(){cart={};persist()}
-function cartSubtotal(){return Object.entries(cart).reduce((sum,e)=>{let parts=e[0].split("_"),p=products.find(x=>x.id===Number(parts[0]));return sum+(p.price+Number(parts[1]))*e[1]},0)}
-function getCouponDiscount(subtotal){if(activeCoupon==="OVEN10"&&subtotal>=299)return Math.min(75,Math.round(subtotal*.10));if(activeCoupon==="FIRST50"&&subtotal>=499)return 50;return 0}
-function applyCoupon(){let code=(document.getElementById("couponCode").value||"").trim().toUpperCase();let subtotal=cartSubtotal();if(code==="OVEN10"&&subtotal>=299||code==="FIRST50"&&subtotal>=499){activeCoupon=code;localStorage.setItem("ao_coupon",code);renderCart();document.getElementById("couponMessage").textContent=code+" applied. Discount is calculated before delivery; final offer approval is by the store.";return}activeCoupon="";localStorage.removeItem("ao_coupon");renderCart();document.getElementById("couponCode").value=code;document.getElementById("couponMessage").textContent=code==="OVEN10"?"OVEN10 needs a cart subtotal of at least ₹299.":code==="FIRST50"?"FIRST50 needs a cart subtotal of at least ₹499.":"That code is not recognised. Check the spelling or ask the store."}
-function renderCart(){let entries=Object.entries(cart),count=entries.reduce((a,e)=>a+e[1],0),sum=0;document.getElementById("cartCount").textContent=count;document.getElementById("cartLines").innerHTML=entries.length?entries.map(e=>{let key=e[0],n=e[1],parts=key.split("_"),id=Number(parts[0]),extra=Number(parts[1]),p=products.find(x=>x.id===id),unit=p.price+extra;sum+=unit*n;return '<div class="cartline"><div><b>'+p.name+'</b><br><span class="muted">'+(extra?'Large':'Regular')+' · '+money(unit)+' each</span></div><div class="qty"><button onclick="change(\\''+key+'\\',-1)">−</button>'+n+'<button onclick="change(\\''+key+'\\',1)">+</button></div></div>'}).join(""):"<p class='muted'>Your cart is empty. Add something from the menu.</p>";let discount=getCouponDiscount(sum);document.getElementById("subtotal").textContent=money(sum);document.getElementById("discountRow").hidden=!discount;document.getElementById("discountAmount").textContent="−"+money(discount);document.getElementById("grandTotal").textContent=money(sum-discount);document.getElementById("couponCode").value=activeCoupon;document.getElementById("cartUpsells").innerHTML=count?'<h4>Complete your meal</h4><div class="upsell-item"><span>🥖 Garlic Bread · ₹149</span><button class="secondary small" onclick="add(17)">Add</button></div><div class="upsell-item"><span>🥤 Cold Coffee · ₹129</span><button class="secondary small" onclick="add(22)">Add</button></div>':"";if(activeCoupon&&!discount){activeCoupon="";localStorage.removeItem("ao_coupon");document.getElementById("couponCode").value=""}}
+function cartSubtotal(){
+return Object.entries(cart).reduce((sum,e)=>{
+let parts=e[0].split("_"),p=products.find(x=>x.id===Number(parts[0]));
+return sum+(p.price+Number(parts[1]))*e[1]
+},0)
+}
+function getCouponDiscount(subtotal){
+if(activeCoupon==="OVEN10"&&subtotal>=299)return Math.min(75,Math.round(subtotal*.10));
+if(activeCoupon==="FIRST50"&&subtotal>=499)return 50;
+return 0
+}
+function applyCoupon(){
+let code=(document.getElementById("couponCode").value||"").trim().toUpperCase(),subtotal=cartSubtotal();
+if((code==="OVEN10"&&subtotal>=299)||(code==="FIRST50"&&subtotal>=499)){
+activeCoupon=code;localStorage.setItem("ao_coupon",code);renderCart();
+document.getElementById("couponMessage").textContent=code+" applied. The store must confirm this demo offer.";
+return
+}
+activeCoupon="";localStorage.removeItem("ao_coupon");renderCart();document.getElementById("couponCode").value=code;
+document.getElementById("couponMessage").textContent=code==="OVEN10"?"OVEN10 needs a cart subtotal of at least ₹299.":code==="FIRST50"?"FIRST50 needs a cart subtotal of at least ₹499.":"That code is not recognised. Check the spelling or ask the store."
+}
+function changeByParts(id,extra,delta){
+const key=String(id)+"_"+String(extra);
+cart[key]=(cart[key]||0)+delta;
+if(cart[key]<=0)delete cart[key];
+persist()
+}
+function renderCart(){
+let entries=Object.entries(cart),count=entries.reduce((a,e)=>a+e[1],0),sum=0;
+document.getElementById("cartCount").textContent=count;
+document.getElementById("cartLines").innerHTML=entries.length?entries.map(e=>{
+let key=e[0],n=e[1],parts=key.split("_"),id=Number(parts[0]),extra=Number(parts[1]),p=products.find(x=>x.id===id),unit=p.price+extra;
+sum+=unit*n;
+return '<div class="cartline"><div><b>'+p.name+'</b><br><span class="muted">'+(extra?"Large":"Regular")+' · '+money(unit)+' each</span></div><div class="qty"><button onclick="changeByParts('+id+','+extra+',-1)">−</button>'+n+'<button onclick="changeByParts('+id+','+extra+',1)">+</button></div></div>'
+}).join(""):"<p class='muted'>Your cart is empty. Add something from the menu.</p>";
+let discount=getCouponDiscount(sum);
+document.getElementById("subtotal").textContent=money(sum);
+document.getElementById("discountRow").hidden=!discount;
+document.getElementById("discountAmount").textContent="−"+money(discount);
+document.getElementById("grandTotal").textContent=money(sum-discount);
+document.getElementById("couponCode").value=activeCoupon;
+document.getElementById("cartUpsells").innerHTML=count?'<h4>Complete your meal</h4><div class="upsell-item"><span>🥖 Garlic Bread · ₹149</span><button class="secondary small" onclick="add(17)">Add</button></div><div class="upsell-item"><span>🥤 Cold Coffee · ₹129</span><button class="secondary small" onclick="add(22)">Add</button></div>':"";
+if(activeCoupon&&!discount){activeCoupon="";localStorage.removeItem("ao_coupon");document.getElementById("couponCode").value=""}
+}
 function recommend(){let s=document.getElementById("preference").value.toLowerCase(),p=s.includes("chicken")?products[12]:s.includes("paneer")?products[3]:s.includes("spicy")||s.includes("chilli")?products[4]:s.includes("cheese")?products[5]:s.includes("mushroom")?products[7]:s.includes("pesto")?products[8]:products[2];document.getElementById("recommendation").textContent="Try "+p.name+": "+p.desc+" ("+money(p.price)+" regular). Add it from the menu."}
 function saveSettings(){let n=document.getElementById("businessPhone").value.replace(/\D/g,"");if(!/^91[6-9]\d{9}$/.test(n)){toast("Enter a valid number: 91 + 10 digits");return}localStorage.setItem("ao_business_phone",n);toast("Business WhatsApp saved on this device")}
-function placeOrder(e){e.preventDefault();let entries=Object.entries(cart);if(!entries.length){toast("Add an item to your cart first");return}let biz=getStoreWhatsApp();if(!biz){toast("Store WhatsApp is not configured yet. Please contact the owner.");return}let sum=cartSubtotal(),discount=getCouponDiscount(sum),total=sum-discount,lines=entries.map(e=>{let parts=e[0].split("_"),id=Number(parts[0]),extra=Number(parts[1]),n=e[1],p=products.find(x=>x.id===id),amount=(p.price+extra)*n;return n+" x "+p.name+" ("+(extra?"Large":"Regular")+") — "+money(amount)}).join("\\n");let fields={name:document.getElementById("customer").value,phone:document.getElementById("phone").value,area:document.getElementById("area").value,address:document.getElementById("address").value,fulfilment:document.getElementById("fulfilment").value,payment:document.getElementById("payment").value,notes:document.getElementById("notes").value};let message="NEW AMDAVAD OVEN ORDER REQUEST\\n"+lines+"\\nSubtotal: "+money(sum)+"\\nCoupon: "+(activeCoupon||"None")+"\\nDiscount: "+money(discount)+"\\nTotal before delivery: "+money(total)+"\\nName: "+fields.name+"\\nPhone: "+fields.phone+"\\nArea: "+fields.area+"\\nAddress: "+fields.address+"\\nFulfilment: "+fields.fulfilment+"\\nPayment preference: "+fields.payment+"\\nNotes: "+fields.notes+"\\nPlease confirm availability, delivery fee and final total.";window.open("https://wa.me/"+biz+"?text="+encodeURIComponent(message),"_blank","noopener")}function toast(s){let t=document.getElementById("toast");t.textContent=s;t.style.display="block";setTimeout(()=>t.style.display="none",2600)}
+function placeOrder(e){
+e.preventDefault();
+let entries=Object.entries(cart);
+if(!entries.length){toast("Add an item to your cart first");return}
+let biz=getStoreWhatsApp();
+if(!biz){toast("Store WhatsApp is not configured yet. Please contact the owner.");return}
+let sum=cartSubtotal(),discount=getCouponDiscount(sum),total=sum-discount;
+let lines=entries.map(e=>{
+let parts=e[0].split("_"),id=Number(parts[0]),extra=Number(parts[1]),n=e[1],p=products.find(x=>x.id===id),amount=(p.price+extra)*n;
+return n+" x "+p.name+" ("+(extra?"Large":"Regular")+") — "+money(amount)
+}).join("\n");
+let fields={name:document.getElementById("customer").value,phone:document.getElementById("phone").value,area:document.getElementById("area").value,address:document.getElementById("address").value,fulfilment:document.getElementById("fulfilment").value,payment:document.getElementById("payment").value,notes:document.getElementById("notes").value};
+let message="NEW AMDAVAD OVEN ORDER REQUEST\n"+lines+"\nSubtotal: "+money(sum)+"\nCoupon: "+(activeCoupon||"None")+"\nDiscount: "+money(discount)+"\nTotal before delivery: "+money(total)+"\nName: "+fields.name+"\nPhone: "+fields.phone+"\nArea: "+fields.area+"\nAddress: "+fields.address+"\nFulfilment: "+fields.fulfilment+"\nPayment preference: "+fields.payment+"\nNotes: "+fields.notes+"\nPlease confirm availability, delivery fee and final total.";
+window.open("https://wa.me/"+biz+"?text="+encodeURIComponent(message),"_blank","noopener")
+}
+function toast(s){let t=document.getElementById("toast");t.textContent=s;t.style.display="block";setTimeout(()=>t.style.display="none",2600)}
 document.getElementById("year").textContent=new Date().getFullYear();renderMenu();renderCart();document.getElementById("businessPhone").value=localStorage.getItem("ao_business_phone")||"";
 
 const ovenKnowledge = [
@@ -199,12 +254,42 @@ if("serviceWorker" in navigator && location.protocol.startsWith("http")){window.
 
 let activeCoupon=localStorage.getItem("ao_coupon")||"";
 const STORE_WHATSAPP_NUMBER=""; // Set to 91 followed by the verified 10-digit store number before launch.
-function getStoreWhatsApp(){const configured=(STORE_WHATSAPP_NUMBER||"").replace(/\\D/g,"");if(/^91[6-9]\\d{9}$/.test(configured))return configured;const local=(localStorage.getItem("ao_business_phone")||"").replace(/\\D/g,"");return /^91[6-9]\\d{9}$/.test(local)?local:""}
-function toggleSupport(force){const panel=document.getElementById("supportPanel"),open=typeof force==="boolean"?force:panel.hidden;panel.hidden=!open;document.getElementById("supportLauncher").setAttribute("aria-expanded",String(open));if(open)document.getElementById("supportQuestion").focus()}
+function getStoreWhatsApp(){
+const configured=(STORE_WHATSAPP_NUMBER||"").replace(/\D/g,"");
+if(/^91[6-9]\d{9}$/.test(configured))return configured;
+const local=(localStorage.getItem("ao_business_phone")||"").replace(/\D/g,"");
+return /^91[6-9]\d{9}$/.test(local)?local:""
+}
+function toggleSupport(force){
+const panel=document.getElementById("supportPanel"),open=typeof force==="boolean"?force:panel.hidden;
+panel.hidden=!open;document.getElementById("supportLauncher").setAttribute("aria-expanded",String(open));
+if(open)document.getElementById("supportQuestion").focus()
+}
 function openSupportWith(q){toggleSupport(true);supportPreset(q)}
-function supportBubble(message,who){const log=document.getElementById("supportLog"),el=document.createElement("div");el.className="support-message "+who;el.textContent=message;log.appendChild(el);log.scrollTop=log.scrollHeight}
-function supportAnswer(question){const q=question.toLowerCase();if(q.includes("order")||q.includes("checkout"))return "Add items to your cart, enter your name, mobile number and delivery address, then send the request on WhatsApp. The order is only accepted after the kitchen confirms it.";if(q.includes("delivery")||q.includes("area")||q.includes("fee")||q.includes("time"))return "The initial target areas are Naranpura and Navrangpura. Coverage, delivery fee and estimated time are not live-connected; the store team must confirm these for your address.";if(q.includes("payment")||q.includes("upi")||q.includes("cash"))return "This demo records your payment preference only. It does not process online payments. Never share your UPI PIN, OTP or card details in a chat.";if(q.includes("cancel")||q.includes("refund"))return "For a cancellation or refund request, contact the store as quickly as possible. The kitchen must confirm whether preparation has started and explain the applicable policy.";if(q.includes("allerg")||q.includes("nut")||q.includes("gluten")||q.includes("dairy")||q.includes("ingredient"))return "Please contact the kitchen before ordering with any allergy or dietary concern. Sample ingredients are not a verified allergen statement, and cross-contact cannot be ruled out.";if(q.includes("hour")||q.includes("open")||q.includes("close"))return "Store hours have not been configured yet. Please confirm today's operating hours with the store before ordering.";if(q.includes("offer")||q.includes("coupon")||q.includes("discount"))return "The demo codes are OVEN10 (10% off, capped at ₹75, minimum subtotal ₹299) and FIRST50 (₹50 off, minimum subtotal ₹499). The owner must approve these offers before advertising them.";return "I can help with ordering, delivery areas, payment, cancellation/refund questions, offers and allergen guidance. For stock, preparation times, live order status or anything urgent, please contact the store team."}
+function supportBubble(message,who){
+const log=document.getElementById("supportLog"),el=document.createElement("div");
+el.className="support-message "+who;el.textContent=message;log.appendChild(el);log.scrollTop=log.scrollHeight
+}
+function supportAnswer(question){
+const q=question.toLowerCase();
+if(q.includes("order")||q.includes("checkout"))return "Add items to your cart, enter your name, mobile number and delivery address, then send the request on WhatsApp. The order is accepted only after the kitchen confirms it.";
+if(q.includes("delivery")||q.includes("area")||q.includes("fee")||q.includes("time"))return "The initial target areas are Naranpura and Navrangpura. Coverage, delivery fee and estimated time are not live-connected; the store team must confirm these for your address.";
+if(q.includes("payment")||q.includes("upi")||q.includes("cash"))return "This demo records your payment preference only. It does not process online payments. Never share your UPI PIN, OTP or card details in a chat.";
+if(q.includes("cancel")||q.includes("refund"))return "For a cancellation or refund request, contact the store as quickly as possible. The kitchen must confirm whether preparation has started and explain the applicable policy.";
+if(q.includes("allerg")||q.includes("nut")||q.includes("gluten")||q.includes("dairy")||q.includes("ingredient"))return "Please contact the kitchen before ordering with any allergy or dietary concern. Sample ingredients are not a verified allergen statement, and cross-contact cannot be ruled out.";
+if(q.includes("hour")||q.includes("open")||q.includes("close"))return "Store hours have not been configured yet. Please confirm today's operating hours with the store before ordering.";
+if(q.includes("offer")||q.includes("coupon")||q.includes("discount"))return "Demo codes: OVEN10 (10% off, capped at ₹75, minimum subtotal ₹299) and FIRST50 (₹50 off, minimum subtotal ₹499). Owner approval is required before advertising these offers.";
+return "I can help with ordering, delivery areas, payments, cancellation/refund questions, offers and allergen guidance. For stock, preparation times or live order status, please contact the store team."
+}
 function supportPreset(q){supportBubble(q,"user");supportBubble(supportAnswer(q),"bot")}
-function sendSupportQuestion(e){e.preventDefault();const field=document.getElementById("supportQuestion"),q=field.value.trim();if(!q)return;supportPreset(q);field.value=""}
-function contactSupportWhatsApp(){const number=getStoreWhatsApp();if(!number){toast("Customer-care WhatsApp is not configured. Ask the store owner to add the verified number.");return}const msg="Hello Amdavad Oven, I need help with an order. Please assist.";window.open("https://wa.me/"+number+"?text="+encodeURIComponent(msg),"_blank","noopener")}
+function sendSupportQuestion(e){
+e.preventDefault();const field=document.getElementById("supportQuestion"),q=field.value.trim();
+if(!q)return;supportPreset(q);field.value=""
+}
+function contactSupportWhatsApp(){
+const number=getStoreWhatsApp();
+if(!number){toast("Customer-care WhatsApp is not configured yet. Ask the store owner to add the verified number.");return}
+const msg="Hello Amdavad Oven, I need help with an order. Please assist.";
+window.open("https://wa.me/"+number+"?text="+encodeURIComponent(msg),"_blank","noopener")
+}
 </script></body></html>
