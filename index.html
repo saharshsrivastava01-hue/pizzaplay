@@ -100,7 +100,7 @@ footer{background:#251f1a;color:#fff5e8;margin-top:48px;padding:32px 18px}.footi
 </script>
 
 </head><body>
-<header><a class="brand" href="#" aria-label="Amdavad Oven home"><img src="./logo.svg" alt="Amdavad Oven" width="174" height="44"></a><nav><a href="#menu" data-i18n="navMenu">Menu</a><a href="#promise" data-i18n="navPromise">Our promise</a><a href="#customer-support" data-i18n="navSupport">Support</a><a href="#order" data-i18n="navOrder">Order</a><select class="lang-switch" id="languageSelect" aria-label="Select language" onchange="setStoreLanguage(this.value)"><option value="en">EN</option><option value="gu">ગુજરાતી</option><option value="hi">हिन्दी</option></select><button class="primary small" onclick="document.querySelector('#order').scrollIntoView({behavior:'smooth'})"><span data-i18n="cartLabel">Cart</span> <span id="cartCount">0</span></button></nav></header>
+<header><a class="brand" href="#" aria-label="Amdavad Oven home"><img src="./logo.svg" alt="Amdavad Oven" width="174" height="44"></a><nav><a href="#menu" data-i18n="navMenu">Menu</a><a href="#promise" data-i18n="navPromise">Our promise</a><a href="#customer-support" data-i18n="navSupport">Support</a><a href="#order" data-i18n="navOrder">Order</a><a href="./launch.html">Share</a><select class="lang-switch" id="languageSelect" aria-label="Select language" onchange="setStoreLanguage(this.value)"><option value="en">EN</option><option value="gu">ગુજરાતી</option><option value="hi">हिन्दी</option></select><button class="primary small" onclick="document.querySelector('#order').scrollIntoView({behavior:'smooth'})"><span data-i18n="cartLabel">Cart</span> <span id="cartCount">0</span></button></nav></header>
 <main>
 <section class="wrap hero"><div><div class="eyebrow">Artisan pizza • Ahmedabad</div><h1>Good dough.<br><span style="color:var(--red)">Great</span> nights.</h1><p>Pizza, sides and sweet finishes for sharing. Explore the menu, build your cart and send your order request straight to the kitchen.</p><div class="actions"><a class="btn" href="#menu">Explore menu</a><a class="btn secondary" href="#order">Build your order</a></div><p class="muted" style="font-size:.86rem;margin-top:18px">Initial target zones: Naranpura and Navrangpura, Ahmedabad. Every order is subject to kitchen confirmation.</p><div id="backendStatus" class="notice" role="status">Checking secure order service…</div></div><div class="pizza-art"><b>🍕</b></div></section>
 <section class="wrap" id="menu"><div class="section-head"><div><div class="eyebrow">The good stuff</div><h2 data-i18n="menuTitle">Explore the menu</h2></div><input id="search" placeholder="Search pizzas, sides…" oninput="renderMenu()"></div><div class="filters"><button class="chip active" onclick="setFilter('All',this)">All items</button><button class="chip" onclick="setFilter('Veg',this)">Vegetarian</button><button class="chip" onclick="setFilter('Non-Veg',this)">Non-veg</button><button class="chip" onclick="setFilter('Premium',this)">Premium</button><button class="chip" onclick="setFilter('Sides',this)">Sides</button><button class="chip" onclick="setFilter('Desserts',this)">Desserts</button><button class="chip" onclick="setFilter('Drinks',this)">Drinks</button></div><div class="grid" id="menuGrid"></div></section>
@@ -272,7 +272,7 @@ footer{background:#251f1a;color:#fff5e8;margin-top:48px;padding:32px 18px}.footi
 <div id="cartUpsells" class="upsell-box"></div><p class="notice">Delivery fees, ETA and final availability will be confirmed by the kitchen on WhatsApp. Sample prices and offers are editable launch placeholders.</p></div>
 <form class="panel" onsubmit="placeOrder(event)"><h3 data-i18n="deliveryDetails">Delivery details</h3><label data-i18n="yourName">Your name</label><input id="customer" required maxlength="80" placeholder="Full name"><label data-i18n="mobileNumber">Mobile number</label><input id="phone" required inputmode="numeric" pattern="[6-9][0-9]{9}" maxlength="10" placeholder="10-digit Indian mobile"><label>Area</label><select id="area"><option>Naranpura</option><option>Navrangpura</option><option>Other Ahmedabad area — confirm first</option></select><label data-i18n="fullAddress">Full address and landmark</label><textarea id="address" required maxlength="500" placeholder="Building, street, landmark"></textarea><div class="two"><div><label>Fulfilment</label><select id="fulfilment"><option>Delivery</option><option>Pickup</option></select></div><div><label>Payment preference</label><select id="payment"><option>Cash on delivery / pickup</option><option>UPI — confirm manually</option></select></div></div><label>Special instructions</label><textarea id="notes" maxlength="300" placeholder="Spice preference, gate instructions, etc."></textarea><button type="submit" class="primary" style="width:100%" data-i18n="sendOrder">Save order request & continue</button><p class="muted" style="font-size:.78rem">Your order request is saved by the restaurant API before handoff. No online payment is processed; your order is not accepted until the kitchen replies.</p></form></div></section>
 <section class="wrap"><div class="panel"><h3>Owner setup</h3><p class="muted">Enter the real business WhatsApp number before taking orders. Use country code +91 and 10 digits, with no spaces. This demo stores the number in this browser only.</p><label>Business WhatsApp number</label><input id="businessPhone" inputmode="numeric" placeholder="91XXXXXXXXXX"><button class="secondary" onclick="saveSettings()">Save number on this device</button><p class="notice">Production checklist: secure server-side admin and order database, confirmed kitchen capacity, accurate menu/allergen information, applicable FSSAI registration/licence and tax checks, verified WhatsApp, payment gateway (if needed), privacy/refund terms, and delivery operations.</p></div></section>
-</main><footer><div class="footin"><div><b>AMDAVAD OVEN.</b><p>Artisan pizza, Ahmedabad.</p></div><div><b>Local first.</b><p>Naranpura • Navrangpura</p><small>© <span id="year"></span> Amdavad Oven. Menu and prices are sample placeholders.</small><p><a href="./admin.html" style="color:#f3c47a">Team portal</a> · <a href="./track.html" style="color:#f3c47a">Track an order</a></p></div></div></footer>
+</main><footer><div class="footin"><div><b>AMDAVAD OVEN.</b><p>Artisan pizza, Ahmedabad.</p></div><div><b>Local first.</b><p>Naranpura • Navrangpura</p><small>© <span id="year"></span> Amdavad Oven. Menu and prices are sample placeholders.</small><p><a href="./admin.html" style="color:#f3c47a">Team portal</a> · <a href="./track.html" style="color:#f3c47a">Track an order</a> · <a href="./launch.html" style="color:#f3c47a">Share AMDAVAD OVEN</a></p></div></div></footer>
 <aside id="supportPanel" class="support-panel" hidden role="dialog" aria-label="Amdavad Oven customer support">
   <div class="support-head"><div><b>Oven Customer Care</b><small>Quick help and order guidance</small></div><button class="secondary small" onclick="toggleSupport(false)" aria-label="Close support">✕</button></div>
   <div id="supportLog" class="support-log" aria-live="polite"><div class="support-message bot">Hi! I can help with ordering, payments, delivery areas, cancellations and menu questions. For live order confirmation, the kitchen must reply directly.</div></div>
@@ -286,7 +286,7 @@ footer{background:#251f1a;color:#fff5e8;margin-top:48px;padding:32px 18px}.footi
 <div class="draft-backdrop" id="orderDraftDialog" hidden role="dialog" aria-modal="true" aria-labelledby="draftTitle">
   <div class="draft-dialog">
     <div class="eyebrow">Order request prepared</div><h2 id="draftTitle">Your order message</h2>
-    <p class="muted">The business WhatsApp number is not configured on this site. This message has <b>not</b> been sent and your order is <b>not confirmed</b>. Copy it or download it, then contact the restaurant using a verified channel.</p>
+    <p class="muted">This message is a customer order record or local request draft, depending on the status shown below. It is not an online payment confirmation.</p>
     <label for="orderDraftText">Order request details</label>
     <textarea id="orderDraftText" readonly></textarea>
     <div class="draft-actions"><button class="primary" onclick="copyOrderDraft()">Copy request</button><button class="secondary" onclick="downloadOrderDraft()">Download text</button><button class="secondary" onclick="closeOrderDraft()">Close</button></div>
@@ -428,6 +428,8 @@ if("serviceWorker" in navigator && location.protocol.startsWith("http")){window.
 
 const STORE_WHATSAPP_NUMBER=""; // Set to 91 followed by the verified 10-digit store number before launch.
 function getStoreWhatsApp(){
+const remote=((window.AO_STORE_CONFIG&&window.AO_STORE_CONFIG.whatsappNumber)||"").replace(/\D/g,"");
+if(/^91[6-9]\d{9}$/.test(remote))return remote;
 const configured=(STORE_WHATSAPP_NUMBER||"").replace(/\D/g,"");
 if(/^91[6-9]\d{9}$/.test(configured))return configured;
 const local=(localStorage.getItem("ao_business_phone")||"").replace(/\D/g,"");
@@ -576,6 +578,7 @@ try{setStoreLanguage(localStorage.getItem("ao_language")||"en")}catch(e){setStor
  async function connect(){
    try{
      await fetchJson('/healthz');
+     try{window.AO_STORE_CONFIG=await fetchJson('/api/storefront-config')}catch(_){}
      setStatus('Order service connected · PostgreSQL online · menu and order totals are validated by the server.',true);
      const data=await fetchJson('/api/menu');
      for(const item of data.products||[]){
@@ -620,6 +623,7 @@ try{setStoreLanguage(localStorage.getItem("ao_language")||"en")}catch(e){setStor
      paymentPreference:document.getElementById('payment').value.includes('UPI')?'upi_manual':'cash_on_delivery',
      notes:document.getElementById('notes').value.trim(),
      couponCode:'',
+     referralCode:(localStorage.getItem('ao_referral_code')||undefined),
      items:[]
    };
    try{
@@ -629,6 +633,7 @@ try{setStoreLanguage(localStorage.getItem("ao_language")||"en")}catch(e){setStor
      const result=await fetchJson('/api/orders',{method:'POST',headers:{'Content-Type':'application/json','Idempotency-Key':idem},body:JSON.stringify(fields)});
      const order=result.order;
      localStorage.removeItem('ao_pending_idem');
+     if(window.aoTrack)window.aoTrack('order_saved');
      const trackingUrl=location.origin+'/track.html?token='+encodeURIComponent(order.public_token);
      const lines=entries.map(([key,n])=>{
        const p=products.find(x=>Number(x.id)===Number(key.split('_')[0]));
@@ -674,4 +679,5 @@ try{setStoreLanguage(localStorage.getItem("ao_language")||"en")}catch(e){setStor
  connect();
 })();
 </script>
+<script src="./campaign.js"></script>
 </body></html>
