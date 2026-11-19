@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#211c18"><title>AMDAVAD OVEN · Team Portal</title>
+<style>
+:root{--ink:#211c18;--cream:#fff8ed;--paper:#fffdf8;--red:#c83d27;--muted:#756b60;--line:#eadfce;--green:#42643b}
+*{box-sizing:border-box}body{margin:0;background:var(--cream);color:var(--ink);font:15px/1.5 Inter,system-ui,Arial,sans-serif}
+header{background:#fff9f0;border-bottom:1px solid var(--line);padding:15px max(16px,calc((100vw - 1120px)/2));display:flex;justify-content:space-between;align-items:center}
+.brand{font-size:1.15rem;font-weight:950;letter-spacing:-.05em;text-decoration:none;color:var(--ink)}.brand span{color:var(--red)}
+main{max-width:1120px;margin:auto;padding:24px 16px 70px}
+h1{font-size:clamp(2rem,5vw,3.4rem);letter-spacing:-.06em;margin:12px 0}
+h2{letter-spacing:-.04em}.muted{color:var(--muted)}.eyebrow{color:var(--red);font-size:.72rem;font-weight:950;letter-spacing:2px;text-transform:uppercase}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:19px;margin:14px 0}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.stat{background:#fff9f0;border:1px solid var(--line);border-radius:15px;padding:15px}.stat b{font-size:1.8rem;display:block}
+input,select,textarea{width:100%;border:1px solid var(--line);border-radius:11px;padding:11px;margin:6px 0 12px;background:white;font:inherit;color:var(--ink)}
+label{font-size:.85rem;font-weight:850}.btn{border:0;border-radius:99px;padding:11px 17px;font:inherit;font-weight:850;cursor:pointer;background:var(--red);color:white}.secondary{background:#f0e5d5;color:var(--ink)}
+.row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.row>*{flex:1}
+.card{border:1px solid var(--line);border-radius:15px;padding:15px;margin:10px 0;background:#fffaf3}
+.pill{display:inline-block;border-radius:99px;background:#e9f0e4;color:var(--green);font-size:.72rem;padding:4px 9px;font-weight:900}
+.error{color:#9f2e20}.success{color:var(--green)}.hidden{display:none!important}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:15px 0}.tabs button{background:#f0e5d5;color:var(--ink)}.tabs button.active{background:var(--ink);color:white}
+table{width:100%;border-collapse:collapse;font-size:.9rem}th,td{text-align:left;padding:10px;border-bottom:1px solid var(--line);vertical-align:top}
+.table-wrap{overflow:auto}.product-line{display:grid;grid-template-columns:1.5fr .6fr .7fr auto;gap:10px;align-items:center;border-bottom:1px solid var(--line);padding:10px 0}
+#notice{padding:10px;border-radius:10px;background:#fff1df;margin:10px 0}
+@media(max-width:720px){.grid{grid-template-columns:1fr}.product-line{grid-template-columns:1fr 1fr}.product-line strong{grid-column:1/-1}.row{display:block}table{min-width:640px}}
+</style>
+</head>
+<body>
+<header><a class="brand" href="./">AMDAVAD <span>OVEN.</span> · TEAM</a><div class="row" style="flex:0"><a class="muted" href="./">Storefront</a><button class="btn secondary hidden" id="logoutBtn" onclick="logout()">Sign out</button></div></header>
+<main>
+  <div class="eyebrow">HearthOS · TrustForge</div><h1>Restaurant operations</h1>
+  <p class="muted">Private staff portal for order requests, menu availability and customer support. This portal does not process payments or confirm delivery capacity.</p>
+  <div id="notice" role="status">Connecting to the restaurant API…</div>
+
+  <section class="panel" id="setupPanel">
+    <div class="eyebrow">One-time first owner setup</div><h2>Create the owner account</h2>
+    <p class="muted">Open the API service’s Render Environment page, reveal the generated <code>BOOTSTRAP_KEY</code>, and enter it here. The key is used once only. Keep it private.</p>
+    <form id="setupForm">
+      <label>One-time setup key</label><input id="setupKey" type="password" autocomplete="off" required>
+      <label>Owner email</label><input id="setupEmail" type="email" required>
+      <label>Strong password (12+ characters)</label><input id="setupPassword" type="password" minlength="12" autocomplete="new-password" required>
+      <button class="btn" type="submit">Create owner account</button>
+      <p id="setupMessage" class="muted"></p>
+    </form>
+  </section>
+
+  <section class="panel" id="loginPanel">
+    <div class="eyebrow">Staff authentication</div><h2>Sign in</h2>
+    <form id="loginForm">
+      <label>Email</label><input id="loginEmail" type="email" autocomplete="username" required>
+      <label>Password</label><input id="loginPassword" type="password" autocomplete="current-password" required>
+      <button class="btn" type="submit">Sign in to operations</button>
+      <p id="loginMessage" class="muted"></p>
+    </form>
+  </section>
+
+  <section id="dashboard" class="hidden">
+    <div class="row"><div><span class="pill" id="rolePill">STAFF</span><p id="signedIn" class="muted"></p></div><button class="btn secondary" onclick="refreshAll()">Refresh data</button></div>
+    <div class="grid" id="metrics"></div>
+    <div class="tabs">
+      <button class="btn active" data-tab="orders" onclick="showTab('orders',this)">Orders</button>
+      <button class="btn" data-tab="products" onclick="showTab('products',this)">Menu & stock</button>
+      <button class="btn" data-tab="support" onclick="showTab('support',this)">Support tickets</button>
+    </div>
+    <section id="tab-orders" class="panel"><h2>Kitchen order queue</h2><p class="muted">Advance each order through the permitted lifecycle. All status changes are recorded in the audit log.</p><div id="orders"></div></section>
+    <section id="tab-products" class="panel hidden"><h2>Menu and availability</h2><p class="muted">Edit sample menu pricing and pause unavailable items. Confirm recipe and allergen information with the kitchen separately.</p><div id="products"></div></section>
+    <section id="tab-support" class="panel hidden"><h2>Customer support tickets</h2><div id="tickets"></div></section>
+  </section>
+  <p class="muted" style="font-size:.78rem">Free-tier note: this API may sleep after inactivity. First request can take time to wake up. Do not use this temporary database for long-term customer records before migration and backups are configured.</p>
+</main>
+<script>
+const API='https://amdavad-oven-api.onrender.com';
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let token=localStorage.getItem('ao_admin_token')||'',me=null;
+async function api(path,options={}){const headers={'Content-Type':'application/json',...(options.headers||{})};if(token)headers.Authorization='Bearer '+token;const r=await fetch(API+path,{...options,headers});let data={};try{data=await r.json()}catch{}if(!r.ok)throw new Error(data.error||'Request failed ('+r.status+')');return data}
+function message(id,text,kind='muted'){const el=document.getElementById(id);el.textContent=text;el.className=kind}
+async function ping(){try{await api('/healthz');message('notice','API and PostgreSQL are connected.','success')}catch(e){message('notice','API not ready yet: '+e.message+' (The free API may be waking up.)','error')}}
+document.getElementById('setupForm').addEventListener('submit',async e=>{e.preventDefault();message('setupMessage','Creating owner account…');try{const key=document.getElementById('setupKey').value;const body={email:document.getElementById('setupEmail').value,password:document.getElementById('setupPassword').value};const r=await fetch(API+'/api/admin/bootstrap',{method:'POST',headers:{'Content-Type':'application/json','X-Bootstrap-Key':key},body:JSON.stringify(body)});const d=await r.json();if(!r.ok)throw new Error(d.error||'Setup failed');message('setupMessage','Owner created. Sign in below.','success');document.getElementById('loginEmail').value=body.email;document.getElementById('setupKey').value='';document.getElementById('setupPassword').value=''}catch(err){message('setupMessage',err.message,'error')}});
+document.getElementById('loginForm').addEventListener('submit',async e=>{e.preventDefault();message('loginMessage','Signing in…');try{const r=await fetch(API+'/api/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:document.getElementById('loginEmail').value,password:document.getElementById('loginPassword').value})});const d=await r.json();if(!r.ok)throw new Error(d.error||'Login failed');token=d.token;localStorage.setItem('ao_admin_token',token);await openDashboard()}catch(err){message('loginMessage',err.message,'error')}});
+function logout(){token='';me=null;localStorage.removeItem('ao_admin_token');document.getElementById('dashboard').classList.add('hidden');document.getElementById('loginPanel').classList.remove('hidden');document.getElementById('logoutBtn').classList.add('hidden')}
+function showTab(name,button){['orders','products','support'].forEach(x=>document.getElementById('tab-'+x).classList.toggle('hidden',x!==name));document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('active',b===button))}
+async function openDashboard(){me=await api('/api/admin/me');document.getElementById('setupPanel').classList.add('hidden');document.getElementById('loginPanel').classList.add('hidden');document.getElementById('dashboard').classList.remove('hidden');document.getElementById('logoutBtn').classList.remove('hidden');document.getElementById('signedIn').textContent='Signed in as '+me.admin.email;document.getElementById('rolePill').textContent=me.admin.role.toUpperCase();await refreshAll()}
+async function refreshAll(){try{const [overview,orders,products,tickets]=await Promise.all([api('/api/admin/overview'),api('/api/admin/orders'),api('/api/admin/products'),api('/api/admin/support')]);const m=overview.metrics;document.getElementById('metrics').innerHTML='<div class="stat"><span>Orders today</span><b>'+esc(m.total_orders)+'</b></div><div class="stat"><span>Open orders</span><b>'+esc(m.open_orders)+'</b></div><div class="stat"><span>Verified paid revenue</span><b>₹'+esc(m.verified_paid_revenue_rupees)+'</b></div>';drawOrders(orders.orders);drawProducts(products.products);drawTickets(tickets.tickets);message('notice','Connected · data loaded from PostgreSQL.','success')}catch(e){message('notice',e.message,'error')}}
+function drawOrders(rows){const root=document.getElementById('orders');if(!rows.length){root.textContent='No orders have been received.';return}root.innerHTML=rows.map(o=>'<article class="card"><div class="row"><div><b>'+esc(o.order_number)+'</b> · <span class="pill">'+esc(o.status)+'</span><div class="muted">'+new Date(o.created_at).toLocaleString()+'</div></div><b>₹'+esc(o.total_rupees)+' · '+esc(o.payment_status)+'</b></div><p><b>'+esc(o.customer_name)+'</b> · '+esc(o.phone)+'<br>'+esc(o.area)+' · '+esc(o.fulfilment)+'<br>'+esc(o.address)+'</p><p>'+o.items.map(i=>esc(i.quantity)+' × '+esc(i.name)+' ('+esc(i.variant||'')+')').join('<br>')+'</p><div class="row"><select id="status-'+o.id+'">'+['received','accepted','rejected','preparing','baking','ready','out_for_delivery','delivered','cancelled'].map(s=>'<option '+(s===o.status?'selected':'')+' value="'+s+'">'+s.replaceAll('_',' ')+'</option>').join('')+'</select><button class="btn" onclick="changeStatus('+o.id+')">Update status</button></div></article>').join('')}
+async function changeStatus(id){const status=document.getElementById('status-'+id).value;try{await api('/api/admin/orders/'+id+'/status',{method:'PATCH',body:JSON.stringify({status})});await refreshAll()}catch(e){alert(e.message)}}
+function drawProducts(rows){document.getElementById('products').innerHTML=rows.map(p=>'<div class="product-line"><strong>'+esc(p.name)+'<br><small class="muted">'+esc(p.category)+'</small></strong><label>Price ₹<input id="price-'+p.id+'" type="number" min="1" max="100000" value="'+esc(p.price_rupees)+'"></label><label><input id="available-'+p.id+'" type="checkbox" '+(p.is_available?'checked':'')+'> Available</label><button class="btn" onclick="saveProduct('+p.id+')">Save</button></div>').join('')}
+async function saveProduct(id){try{await api('/api/admin/products/'+id,{method:'PATCH',body:JSON.stringify({price_rupees:Number(document.getElementById('price-'+id).value),is_available:document.getElementById('available-'+id).checked})});alert('Menu item updated.')}catch(e){alert(e.message)}}
+function drawTickets(rows){const root=document.getElementById('tickets');if(!rows.length){root.textContent='No support tickets yet.';return}root.innerHTML=rows.map(t=>'<article class="card"><b>'+esc(t.ticket_code)+'</b> · '+esc(t.status)+'<p>'+esc(t.customer_name)+' · '+esc(t.phone)+'</p><p>'+esc(t.message)+'</p><div class="row"><select id="ticket-'+esc(t.ticket_code)+'"><option value="open">Open</option><option value="in_progress">In progress</option><option value="resolved">Resolved</option></select><button class="btn" onclick="updateTicket(\''+esc(t.ticket_code)+'\')">Save</button></div></article>').join('')}
+async function updateTicket(code){try{await api('/api/admin/support/'+encodeURIComponent(code),{method:'PATCH',body:JSON.stringify({status:document.getElementById('ticket-'+code).value})});await refreshAll()}catch(e){alert(e.message)}}
+ping();if(token)openDashboard().catch(logout);
+</script>
+</body></html>
