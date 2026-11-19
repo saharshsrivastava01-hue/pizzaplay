@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+<title id="title">AMDAVAD OVEN — Pizza, made for sharing</title><desc id="desc">Warm premium pizza brand social preview graphic.</desc>
+<defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#241c17"/><stop offset="1" stop-color="#6b2d1e"/></linearGradient><radialGradient id="pie"><stop stop-color="#f7d991"/><stop offset=".78" stop-color="#e8a64f"/><stop offset=".82" stop-color="#a33a22"/><stop offset=".89" stop-color="#e9b65e"/><stop offset="1" stop-color="#8c321e"/></radialGradient></defs>
+<rect width="1200" height="630" rx="34" fill="url(#bg)"/>
+<circle cx="865" cy="315" r="228" fill="url(#pie)"/><circle cx="865" cy="315" r="176" fill="none" stroke="#f8d59a" stroke-width="8"/>
+<g fill="#a83c25"><circle cx="790" cy="240" r="18"/><circle cx="925" cy="260" r="18"/><circle cx="840" cy="365" r="21"/><circle cx="955" cy="390" r="15"/><circle cx="760" cy="355" r="14"/></g>
+<g fill="#497043"><ellipse cx="830" cy="270" rx="10" ry="22" transform="rotate(25 830 270)"/><ellipse cx="920" cy="340" rx="10" ry="22" transform="rotate(-28 920 340)"/><ellipse cx="785" cy="325" rx="9" ry="18" transform="rotate(55 785 325)"/></g>
+<text x="90" y="185" fill="#f3c47a" font-family="Arial,sans-serif" font-size="26" font-weight="700" letter-spacing="7">ARTISAN PIZZA · AHMEDABAD</text>
+<text x="86" y="290" fill="#fff7eb" font-family="Arial,sans-serif" font-size="83" font-weight="900" letter-spacing="-4">AMDAVAD</text>
+<text x="90" y="385" fill="#fff7eb" font-family="Arial,sans-serif" font-size="83" font-weight="900" letter-spacing="-4">OVEN.</text>
+<text x="95" y="455" fill="#f3c47a" font-family="Arial,sans-serif" font-size="30" font-weight="600">Good dough. Great nights.</text>
+<text x="95" y="535" fill="#ead9c4" font-family="Arial,sans-serif" font-size="20">Explore the menu · Build your own pizza · Send an order request</text>
+</svg>
