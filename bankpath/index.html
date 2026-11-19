@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b1630">
+<meta name="description" content="Independent guided bank account assistant for India. Compare bank categories, use verified official bank links and prepare safely for KYC.">
+<title>BankPath India — Bank Account Assistant</title>
+<style>
+:root{--ink:#10203d;--navy:#0b1630;--blue:#2859c5;--cyan:#e6efff;--paper:#fff;--bg:#f5f7fb;--line:#dfe6f1;--muted:#64718a;--green:#146c43;--red:#a22a2a;--amber:#8b5900}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Inter,system-ui,Segoe UI,Arial,sans-serif}a{color:var(--blue)}button,input,select{font:inherit}header{background:var(--navy);color:white;padding:16px max(18px,calc((100vw - 1180px)/2));display:flex;align-items:center;justify-content:space-between;gap:16px;position:sticky;top:0;z-index:8}header a{color:white;text-decoration:none}.logo{font-weight:950;letter-spacing:-1px;font-size:1.12rem}.logo i{color:#8eb9ff;font-style:normal}.topnav{display:flex;gap:16px;flex-wrap:wrap}.topnav a{font-size:.9rem;color:#e9efff}.wrap{max-width:1180px;margin:auto;padding:25px 18px}.hero{background:linear-gradient(125deg,#0b1630,#1c3a70 65%,#315ab0);color:white;border-radius:28px;padding:clamp(24px,5vw,52px);display:grid;grid-template-columns:1.2fr .8fr;gap:24px;align-items:center;overflow:hidden}.eyebrow{text-transform:uppercase;letter-spacing:1.8px;color:#a8c7ff;font-size:.72rem;font-weight:900}h1{font-size:clamp(2.5rem,6.7vw,5rem);line-height:.97;letter-spacing:-.07em;margin:12px 0 16px}h2{font-size:clamp(1.65rem,4vw,2.5rem);line-height:1.08;letter-spacing:-.04em;margin:0 0 14px}h3{margin:2px 0 8px}.hero p{color:#d9e4fb;max-width:660px}.heroArt{display:grid;place-items:center;min-height:220px}.orb{width:min(250px,65vw);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 34% 28%,#d9e8ff,#7eabff 27%,#345fc0 55%,#122955 72%);box-shadow:0 0 0 22px #ffffff10,0 0 0 44px #ffffff08;display:grid;place-items:center;font-size:5.4rem}.btn{border:0;border-radius:12px;padding:12px 16px;background:var(--blue);color:white;font-weight:850;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px}.btn.secondary{background:#e8eef9;color:var(--ink)}.btn.light{background:white;color:var(--navy)}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.panel{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:0 8px 28px #10203d08}.panel + .panel{margin-top:16px}.muted{color:var(--muted)}.small{font-size:.82rem}.steps{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}.step{border-radius:999px;padding:6px 11px;background:#edf2fa;color:#53627d;font-size:.78rem;font-weight:800}.step.active{background:#dce8ff;color:#1b4aab}.field{margin:14px 0}.field label{display:block;font-size:.88rem;font-weight:850;margin-bottom:6px}.field select,.field input{width:100%;border:1px solid #cbd5e4;background:white;border-radius:11px;padding:12px;color:var(--ink)}.choice{display:flex;gap:9px;align-items:flex-start;background:#f7f9fd;border:1px solid var(--line);border-radius:12px;padding:11px;margin:8px 0;cursor:pointer}.choice input{margin-top:5px;accent-color:var(--blue)}.result{border:1px solid var(--line);border-radius:13px;padding:13px;margin:10px 0;background:#fff}.result .meta{color:var(--muted);font-size:.78rem}.pill{display:inline-block;border-radius:999px;background:#edf2fa;color:#405372;padding:4px 8px;font-size:.72rem;font-weight:850}.warn{border:1px solid #eed8a9;background:#fff8e7;padding:13px;border-radius:12px;color:#644600}.safe{border:1px solid #b9dec9;background:#edf9f2;padding:13px;border-radius:12px;color:#174e32}.danger{border:1px solid #efc5c5;background:#fff1f1;padding:13px;border-radius:12px;color:#822323}.directoryHead{display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:space-between}.directoryHead input{flex:1;min-width:220px;border:1px solid var(--line);padding:12px;border-radius:12px}.filters{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}.filter{border:1px solid var(--line);background:white;border-radius:99px;padding:8px 12px;font-weight:800;color:#43516a;cursor:pointer}.filter.active{background:var(--navy);color:white;border-color:var(--navy)}.bankgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.bank{padding:14px;border:1px solid var(--line);border-radius:14px;background:#fff;display:flex;flex-direction:column;gap:7px;min-width:0}.bank strong{font-size:.92rem}.bank small{color:var(--muted)}.bank a{font-weight:850;font-size:.84rem;text-decoration:none}.trackerRow{display:grid;grid-template-columns:1.2fr .9fr .8fr auto;gap:9px;align-items:center;border-bottom:1px solid var(--line);padding:12px 0}.trackerRow select{padding:8px;border:1px solid var(--line);border-radius:9px;background:white}.counter{font-size:1.6rem;font-weight:950}.foot{background:var(--navy);color:#d9e4fb;margin-top:35px;padding:30px 18px}.foot a{color:#bcd3ff}.chatline{padding:12px 14px;border-radius:15px;background:#eaf1ff;margin:10px 0}.chatline.assistant{background:#f1f4f9}.hidden{display:none!important}
+@media(max-width:800px){.hero{grid-template-columns:1fr}.heroArt{min-height:160px}.orb{width:160px;font-size:4rem}.grid{grid-template-columns:1fr}.bankgrid{grid-template-columns:repeat(2,minmax(0,1fr))}.trackerRow{grid-template-columns:1fr 1fr}.trackerRow button{grid-column:span 2}}
+@media(max-width:470px){.bankgrid{grid-template-columns:1fr}.topnav{gap:9px}.topnav a{font-size:.8rem}}
+</style>
+</head>
+<body>
+<header><a class="logo" href="#">BANKPATH <i>INDIA</i></a><nav class="topnav"><a href="#assistant">Assistant</a><a href="#directory">Bank directory</a><a href="#checklist">KYC checklist</a><a href="#tracker">My tracker</a></nav></header>
+<main class="wrap">
+<section class="hero">
+<div><div class="eyebrow">A safer way to compare bank accounts</div><h1>Find your next bank account.<br><span style="color:#9ec2ff">You stay in control.</span></h1><p>Explore India’s bank categories, prepare the questions to ask, and continue only on the bank’s official website. We guide you. The bank verifies you.</p><div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:20px"><a class="btn light" href="#assistant">Start guided assistant →</a><a class="btn" style="background:#315cae" href="#directory">Browse bank directory</a></div></div>
+<div class="heroArt"><div class="orb">🏦</div></div>
+</section>
+
+<section class="panel" style="margin-top:18px">
+<div class="safe"><b>Privacy by design:</b> This guide does not ask for Aadhaar/PAN numbers, OTPs, passwords, PINs, card information, biometrics or document uploads. Your preference answers stay in this browser. It cannot submit a bank application or complete KYC for you.</div>
+</section>
+
+<section id="assistant" class="panel" style="margin-top:18px">
+<div class="eyebrow" style="color:#2859c5">Guided assistant · rule-based, no bank credentials</div>
+<h2>Let's find the right type of account to research</h2>
+<p class="muted">Answer these preference questions. The assistant produces a research shortlist—not a guarantee of eligibility, lowest fees or approval.</p>
+<div class="steps"><span class="step active" id="step1">1 · Purpose</span><span class="step" id="step2">2 · Priorities</span><span class="step" id="step3">3 · Location</span><span class="step" id="step4">4 · Shortlist</span></div>
+<div id="wizard">
+<div id="w1">
+<h3>What will you use the account for?</h3>
+<label class="choice"><input type="radio" name="purpose" value="savings" checked><span><b>Personal savings</b><br><small class="muted">Everyday income, spending and saving</small></span></label>
+<label class="choice"><input type="radio" name="purpose" value="student"><span><b>Student / first account</b><br><small class="muted">Personal banking while studying</small></span></label>
+<label class="choice"><input type="radio" name="purpose" value="salary"><span><b>Salary account</b><br><small class="muted">Salary credits and day-to-day banking</small></span></label>
+<label class="choice"><input type="radio" name="purpose" value="current"><span><b>Business current account</b><br><small class="muted">Business receipts, payments and operations</small></span></label>
+<label class="choice"><input type="radio" name="purpose" value="payments"><span><b>Payments / transfer-focused account</b><br><small class="muted">Basic payments and remittances; check service limits</small></span></label>
+<button class="btn" onclick="next(2)">Continue →</button>
+</div>
+<div id="w2" class="hidden">
+<h3>What matters most to you?</h3>
+<label class="choice"><input type="checkbox" name="priority" value="low_balance"><span><b>Low or zero minimum-balance requirement</b><br><small class="muted">I will compare the official fee schedule and balance rules.</small></span></label>
+<label class="choice"><input type="checkbox" name="priority" value="branch"><span><b>Nearby branch / cash services</b><br><small class="muted">I want to check branch and ATM coverage.</small></span></label>
+<label class="choice"><input type="checkbox" name="priority" value="digital"><span><b>Digital-first banking</b><br><small class="muted">I want to check mobile app and online services.</small></span></label>
+<label class="choice"><input type="checkbox" name="priority" value="upi"><span><b>UPI and everyday payments</b><br><small class="muted">I will confirm payment features and limits with the bank.</small></span></label>
+<label class="choice"><input type="checkbox" name="priority" value="business"><span><b>Business collections / cash deposits</b><br><small class="muted">I need to compare current-account services and fees.</small></span></label>
+<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn secondary" onclick="next(1)">← Back</button><button class="btn" onclick="next(3)">Continue →</button></div>
+</div>
+<div id="w3" class="hidden">
+<h3>Where will you mainly use the account?</h3>
+<div class="field"><label for="state">State / Union Territory</label><select id="state"><option value="Gujarat">Gujarat</option><option>Andhra Pradesh</option><option>Arunachal Pradesh</option><option>Assam</option><option>Bihar</option><option>Chhattisgarh</option><option>Goa</option><option>Haryana</option><option>Himachal Pradesh</option><option>Jharkhand</option><option>Karnataka</option><option>Kerala</option><option>Madhya Pradesh</option><option>Maharashtra</option><option>Manipur</option><option>Meghalaya</option><option>Mizoram</option><option>Nagaland</option><option>Odisha</option><option>Punjab</option><option>Rajasthan</option><option>Sikkim</option><option>Tamil Nadu</option><option>Telangana</option><option>Tripura</option><option>Uttar Pradesh</option><option>Uttarakhand</option><option>West Bengal</option><option>Delhi</option><option>Jammu and Kashmir</option><option>Ladakh</option><option>Puducherry</option><option>Andaman and Nicobar Islands</option><option>Chandigarh</option><option>Dadra and Nagar Haveli and Daman and Diu</option><option>Lakshadweep</option></select></div>
+<div class="field"><label for="city">City / district (optional preference)</label><input id="city" maxlength="60" placeholder="e.g. Ahmedabad"></div>
+<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn secondary" onclick="next(2)">← Back</button><button class="btn" onclick="buildShortlist()">Show my shortlist →</button></div>
+</div>
+<div id="w4" class="hidden">
+<h3>Your bank research shortlist</h3><p id="recommendText" class="muted"></p><div id="shortlist"></div>
+<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn secondary" onclick="next(3)">← Edit preferences</button><a class="btn" href="#directory">Browse all banks</a></div>
+</div>
+</div>
+</section>
+
+<section id="directory" class="panel" style="margin-top:18px">
+<div class="directoryHead"><div><div class="eyebrow" style="color:#2859c5">Official bank website directory</div><h2>Explore banks in India</h2></div><div class="counter" id="count">0</div></div>
+<p class="muted">Links are taken from RBI’s bank links directory and the Ministry of Finance’s current Regional Rural Bank directory. A bank website is not necessarily a direct account-opening page.</p>
+<div class="directoryHead"><input id="search" type="search" placeholder="Search bank name or state…" aria-label="Search banks"><a target="_blank" rel="noopener" href="https://rbi.org.in/scripts/banklinks.aspx">Open RBI bank links ↗</a></div>
+<div class="filters" id="filters"></div><div class="bankgrid" id="banks"></div>
+<div class="warn" style="margin-top:16px"><b>Paytm Payments Bank:</b> RBI cancelled its banking licence on 24 April 2026 and it was excluded from the Second Schedule in October 2026. It is shown separately as a historical listing, not as a bank to apply to. <a href="https://www.rbi.org.in/scripts/BS_PressReleaseDisplay.aspx?prid=62621" target="_blank" rel="noopener">RBI cancellation notice</a>.</div>
+</section>
+
+<section class="grid" style="margin-top:18px">
+<div class="panel" id="checklist">
+<div class="eyebrow" style="color:#2859c5">Before applying</div><h2>Safe application checklist</h2>
+<ul>
+<li>Open the bank website from this directory and check that the address is exactly the official domain.</li>
+<li>Find that bank’s current savings/current-account product page and its eligibility rules.</li>
+<li>Read the latest minimum-balance, debit-card, SMS, ATM, cash-deposit and closure charges.</li>
+<li>Confirm which KYC method and documents the bank currently accepts.</li>
+<li>Complete identity checks and video KYC yourself, only inside the bank’s official app/site or branch.</li>
+<li>Read all declarations and submit only information that is accurate.</li>
+<li>Save the bank’s application reference privately, not in this guide.</li>
+</ul>
+<div class="warn"><b>RBI rule:</b> KYC is mandatory when a customer starts an account-based relationship with a regulated entity. The bank is responsible for identity verification. <a href="https://rbi.org.in/commonman/english/scripts/FAQs.aspx?Id=3782" target="_blank" rel="noopener">Read RBI's KYC FAQ ↗</a></div>
+</div>
+<div class="panel">
+<div class="eyebrow" style="color:#2859c5">Stay safe</div><h2>Never give these to an agent</h2>
+<div class="danger"><b>Never share:</b> OTP, UPI PIN, ATM PIN, CVV, netbanking password, full card number or remote-screen-control access.</div>
+<p>Do not upload identity documents to this assistant. Do not pay a person who promises guaranteed account approval or asks for a “processing fee” through a personal UPI ID.</p>
+<p>Use the bank's official customer-care details from its own website. Report suspected digital payment fraud promptly through the official national cybercrime helpline 1930 and website <a target="_blank" rel="noopener" href="https://cybercrime.gov.in/">cybercrime.gov.in</a>.</p>
+</div>
+</section>
+
+<section class="panel" id="tracker" style="margin-top:18px">
+<div class="eyebrow" style="color:#2859c5">Private to this browser</div><h2>My application tracker</h2><p class="muted">Track only bank name, account type and stage. Do not enter application IDs, identity numbers, phone numbers or other personal details. This list stays in this browser's local storage and is not sent to a server.</p>
+<div class="grid"><div class="field"><label for="trackBank">Bank</label><select id="trackBank"></select></div><div class="field"><label for="trackType">Account type</label><select id="trackType"><option>Savings</option><option>Student</option><option>Salary</option><option>Current</option><option>Payments</option></select></div></div>
+<button class="btn" onclick="addTracker()">Add to tracker</button><div id="trackerRows" style="margin-top:12px"></div>
+</section>
+
+<section class="panel" style="margin-top:18px">
+<h2>Official source notes</h2>
+<p class="small muted">This is an independent guide, not a bank, broker, agent, RBI service or government portal. BankPath India does not open, submit, or approve accounts. RBI bank links provide the bank websites; the Ministry of Finance page lists the 28 Regional Rural Banks functioning as of its latest update. The full co-operative bank lists are maintained separately by RBI and are not all individually represented as cards here.</p>
+<p><a href="https://rbi.org.in/scripts/banklinks.aspx" target="_blank" rel="noopener">RBI — Websites of banks in India</a> · <a href="https://financialservices.gov.in/list-rrbs-functioning-country" target="_blank" rel="noopener">Ministry of Finance — RRBs</a> · <a href="https://www.rbi.org.in/commonman/english/scripts/banksinindia.aspx" target="_blank" rel="noopener">RBI — Banks in India, including co-operative banks</a></p>
+</section>
+</main>
+<footer class="foot"><div class="wrap"><b>BANKPATH INDIA</b><p>Independent account research and safety guide. Not a bank or RBI service.</p><p class="small">Your bank verifies identity, checks eligibility, accepts your declarations and decides whether to open an account. Never share secret credentials with this page or any third party.</p></div></footer>
+
+<script>
+const RBI='https://rbi.org.in/scripts/banklinks.aspx';
+const banks=[
+{n:'State Bank of India',c:'Public sector',s:'All India',u:'https://www.sbi.co.in'},
+{n:'Bank of Baroda',c:'Public sector',s:'All India',u:'https://www.bankofbaroda.co.in'},
+{n:'Bank of India',c:'Public sector',s:'All India',u:'https://www.bankofindia.co.in'},
+{n:'Bank of Maharashtra',c:'Public sector',s:'All India',u:'https://www.bankofmaharashtra.in'},
+{n:'Canara Bank',c:'Public sector',s:'All India',u:'https://www.canarabank.com'},
+{n:'Central Bank of India',c:'Public sector',s:'All India',u:'https://www.centralbankofindia.co.in'},
+{n:'Indian Bank',c:'Public sector',s:'All India',u:'https://www.indianbank.in'},
+{n:'Indian Overseas Bank',c:'Public sector',s:'All India',u:'https://www.iob.in'},
+{n:'Punjab & Sind Bank',c:'Public sector',s:'All India',u:'https://punjabandsindbank.co.in'},
+{n:'Punjab National Bank',c:'Public sector',s:'All India',u:'https://www.pnbindia.in'},
+{n:'UCO Bank',c:'Public sector',s:'All India',u:'https://www.ucobank.com'},
+{n:'Union Bank of India',c:'Public sector',s:'All India',u:'https://www.unionbankofindia.co.in'},
+{n:'Axis Bank',c:'Private sector',s:'All India',u:'https://www.axisbank.com'},
+{n:'Bandhan Bank',c:'Private sector',s:'All India',u:'https://www.bandhanbank.com'},
+{n:'CSB Bank',c:'Private sector',s:'All India',u:'https://www.csb.co.in'},
+{n:'City Union Bank',c:'Private sector',s:'All India',u:'https://www.cityunionbank.com'},
+{n:'DCB Bank',c:'Private sector',s:'All India',u:'https://www.dcbbank.com'},
+{n:'Dhanlaxmi Bank',c:'Private sector',s:'All India',u:'https://www.dhanbank.com'},
+{n:'Federal Bank',c:'Private sector',s:'All India',u:'https://www.federalbank.co.in'},
+{n:'HDFC Bank',c:'Private sector',s:'All India',u:'https://www.hdfcbank.com'},
+{n:'ICICI Bank',c:'Private sector',s:'All India',u:'https://www.icicibank.com'},
+{n:'IndusInd Bank',c:'Private sector',s:'All India',u:'https://www.indusind.com'},
+{n:'IDFC FIRST Bank',c:'Private sector',s:'All India',u:'https://www.idfcfirstbank.com'},
+{n:'Jammu & Kashmir Bank',c:'Private sector',s:'Jammu and Kashmir',u:'https://www.jkbank.com'},
+{n:'Karnataka Bank',c:'Private sector',s:'All India',u:'https://karnatakabank.com'},
+{n:'Karur Vysya Bank',c:'Private sector',s:'All India',u:'https://www.kvb.co.in'},
+{n:'Kotak Mahindra Bank',c:'Private sector',s:'All India',u:'https://www.kotak.com'},
+{n:'Nainital Bank',c:'Private sector',s:'Uttarakhand / North India',u:'https://www.nainitalbank.co.in'},
+{n:'RBL Bank',c:'Private sector',s:'All India',u:'https://www.rblbank.com'},
+{n:'South Indian Bank',c:'Private sector',s:'All India',u:'https://www.southindianbank.com'},
+{n:'Tamilnad Mercantile Bank',c:'Private sector',s:'All India',u:'https://www.tmb.in'},
+{n:'YES Bank',c:'Private sector',s:'All India',u:'https://www.yes.bank.in'},
+{n:'IDBI Bank',c:'Private sector',s:'All India',u:'https://www.idbi.com'},
+{n:'AU Small Finance Bank',c:'Small finance',s:'All India',u:'https://www.aubank.in'},
+{n:'Capital Small Finance Bank',c:'Small finance',s:'Punjab / North India',u:'https://www.capitalbank.co.in'},
+{n:'Equitas Small Finance Bank',c:'Small finance',s:'All India',u:'https://www.equitasbank.com'},
+{n:'ESAF Small Finance Bank',c:'Small finance',s:'All India',u:'https://www.esafbank.com'},
+{n:'Suryoday Small Finance Bank',c:'Small finance',s:'All India',u:'https://www.suryodaybank.com'},
+{n:'Ujjivan Small Finance Bank',c:'Small finance',s:'All India',u:'https://www.ujjivansfb.in'},
+{n:'Utkarsh Small Finance Bank',c:'Small finance',s:'All India',u:'https://www.utkarsh.bank'},
+{n:'North East Small Finance Bank',c:'Small finance',s:'North East India',u:'https://nesfb.com'},
+{n:'Jana Small Finance Bank',c:'Small finance',s:'All India',u:'https://www.janabank.com'},
+{n:'Shivalik Small Finance Bank',c:'Small finance',s:'All India',u:'https://shivalikbank.com'},
+{n:'Unity Small Finance Bank',c:'Small finance',s:'All India',u:'https://theunitybank.com'},
+{n:'Airtel Payments Bank',c:'Payments bank',s:'All India',u:'https://www.airtel.in'},
+{n:'India Post Payments Bank',c:'Payments bank',s:'All India',u:'https://www.ippbonline.com'},
+{n:'Fino Payments Bank',c:'Payments bank',s:'All India',u:'https://www.finobank.com'},
+{n:'Jio Payments Bank',c:'Payments bank',s:'All India',u:'https://www.jiobank.in'},
+{n:'NSDL Payments Bank',c:'Payments bank',s:'All India',u:'https://nsdlbank.com'},
+{n:'Coastal Local Area Bank',c:'Local area',s:'Limited operating area',u:'https://www.coastalareabank.com'},
+{n:'Krishna Bhima Samruddhi Local Area Bank',c:'Local area',s:'Limited operating area',u:'https://www.kbsbankindia.com'},
+{n:'Andhra Pradesh Grameena Bank',c:'Regional rural',s:'Andhra Pradesh',u:'https://apgb.bank.in'},
+{n:'Arunachal Pradesh Rural Bank',c:'Regional rural',s:'Arunachal Pradesh',u:'https://aprb.bank.in'},
+{n:'Assam Gramin Bank',c:'Regional rural',s:'Assam',u:'https://www.agvb.bank.in'},
+{n:'Bihar Gramin Bank',c:'Regional rural',s:'Bihar',u:'https://bgb.bank.in'},
+{n:'Chhattisgarh Gramin Bank',c:'Regional rural',s:'Chhattisgarh',u:'https://www.crgb.bank.in'},
+{n:'Gujarat Gramin Bank',c:'Regional rural',s:'Gujarat',u:'https://www.ggb.bank.in'},
+{n:'Haryana Gramin Bank',c:'Regional rural',s:'Haryana',u:'https://shgb.bank.in'},
+{n:'Himachal Pradesh Gramin Bank',c:'Regional rural',s:'Himachal Pradesh',u:'https://www.hpgb.bank.in'},
+{n:'Jammu and Kashmir Grameen Bank',c:'Regional rural',s:'Jammu and Kashmir',u:'https://www.jkgrameen.bank.in'},
+{n:'Jharkhand Gramin Bank',c:'Regional rural',s:'Jharkhand',u:'https://www.jrgbank.bank.in'},
+{n:'Karnataka Grameena Bank',c:'Regional rural',s:'Karnataka',u:'https://karnatakagb.bank.in'},
+{n:'Kerala Grameena Bank',c:'Regional rural',s:'Kerala',u:'https://kgb.bank.in'},
+{n:'Madhya Pradesh Gramin Bank',c:'Regional rural',s:'Madhya Pradesh',u:'https://mpgb.bank.in'},
+{n:'Maharashtra Gramin Bank',c:'Regional rural',s:'Maharashtra',u:'https://www.mahagramin.bank.in'},
+{n:'Manipur Rural Bank',c:'Regional rural',s:'Manipur',u:'https://manipurrural.bank.in'},
+{n:'Meghalaya Rural Bank',c:'Regional rural',s:'Meghalaya',u:'https://meghalayaruralbank.bank.in'},
+{n:'Mizoram Rural Bank',c:'Regional rural',s:'Mizoram',u:'https://mrb.bank.in'},
+{n:'Nagaland Rural Bank',c:'Regional rural',s:'Nagaland',u:'https://www.nrb.bank.in'},
+{n:'Odisha Grameen Bank',c:'Regional rural',s:'Odisha',u:'https://odishabank.in'},
+{n:'Puducherry Grama Bank',c:'Regional rural',s:'Puducherry',u:'https://pygb.bank.in'},
+{n:'Punjab Gramin Bank',c:'Regional rural',s:'Punjab',u:'https://pgb.bank.in'},
+{n:'Rajasthan Gramin Bank',c:'Regional rural',s:'Rajasthan',u:'https://rgb.bank.in'},
+{n:'Tamil Nadu Grama Bank',c:'Regional rural',s:'Tamil Nadu',u:'https://tngb.bank.in'},
+{n:'Telangana Grameena Bank',c:'Regional rural',s:'Telangana',u:'https://tgbhyd.in'},
+{n:'Tripura Gramin Bank',c:'Regional rural',s:'Tripura',u:'https://tripuragramin.bank.in'},
+{n:'Uttar Pradesh Gramin Bank',c:'Regional rural',s:'Uttar Pradesh',u:'https://upgb.bank.in'},
+{n:'Uttarakhand Gramin Bank',c:'Regional rural',s:'Uttarakhand',u:'https://www.ukgb.bank.in'},
+{n:'West Bengal Gramin Bank',c:'Regional rural',s:'West Bengal',u:'https://www.wbgb.bank.in'},
+{n:'AB Bank',c:'Foreign bank',s:'India presence; retail eligibility varies',u:'https://abbl.com'},
+{n:'American Express Banking Corporation',c:'Foreign bank',s:'India presence; product eligibility varies',u:'https://www.americanexpress.com'},
+{n:'ANZ',c:'Foreign bank',s:'India presence; product eligibility varies',u:'https://www.anz.com'},
+{n:'Barclays Bank',c:'Foreign bank',s:'India presence; product eligibility varies',u:'https://www.barclays.in'},
+{n:'Bank of America',c:'Foreign bank',s:'India presence; product eligibility varies',u:'https://bofa-india.com'},
+{n:'Bank of Bahrain and Kuwait',c:'Foreign bank',s:'India presence; product eligibility varies',u:'https://www.bbkindia.com'},
+{n:'Bank of Ceylon',c:'Foreign bank',s:'India presence; product eligibility varies',u:'https://www.boc.lk'},
+{n:'Bank of China',c:'Foreign bank',s:'India presence; product eligibility varies',u:'https://www.bankofchina.com'},
+{n:'Bank of Nova Scotia',c:'Foreign bank',s:'India presence; product eligibility varies',u:'https://www.scotiabank.com'},
+{n:'BNP Paribas',c:'Foreign bank',s:'India presence; product eligibility varies',u:'https://www.bnpparibas.co.in'},
+{n:'Citibank N.A.',c:'Foreign bank',s:'India presence; product eligibility varies',u:'https://www.citigroup.com'},
+{n:'Rabobank',c:'Foreign bank',s:'India presence; product eligibility varies',u:'https://www.rabobank.com'},
+{n:'Credit Agricole CIB',c:'Foreign bank',s:'India presence; product eligibility varies',u:'https://www.ca-cib.com'},
+{n:'CTBC Bank',c:'Foreign bank',s:'India presence; product eligibility varies',u:'https://www.chinatrustindia.com'},
+{n:'DBS Bank India',c:'Foreign bank',s:'India presence; retail account page to verify',u:'https://www.dbs.com'},
+{n:'Deutsche Bank',c:'Foreign bank',s:'India presence; product eligibility varies',u:'https://www.deutschebank.co.in'},
+{n:'Doha Bank',c:'Foreign bank',s:'India presence; product eligibility varies',u:'https://dohabank.co.in'},
+{n:'Emirates NBD',c:'Foreign bank',s:'India presence; product eligibility varies',u:'https://www.emiratesnbd.co.in'},
+{n:'First Abu Dhabi Bank',c:'Foreign bank',s:'India presence; product eligibility varies',u:'https://www.bankfab.com'},
+{n:'FirstRand Bank',c:'Foreign bank',s:'India presence; product eligibility varies',u:'https://www.firstrand.co.in'},
+{n:'HSBC India',c:'Foreign bank',s:'India presence; product eligibility varies',u:'https://www.hsbc.co.in'},
+{n:'Industrial and Commercial Bank of China',c:'Foreign bank',s:'India presence; product eligibility varies',u:'https://www.icbcindia.com'},
+{n:'Industrial Bank of Korea',c:'Foreign bank',s:'India presence; product eligibility varies',u:'https://in.globalibk.com'},
+{n:'J.P. Morgan Chase Bank',c:'Foreign bank',s:'India presence; product eligibility varies',u:'https://www.jpmorgan.com'},
+{n:'JSC VTB Bank',c:'Foreign bank',s:'India presence; product eligibility varies',u:'https://www.vtbindia.com'},
+{n:'KEB Hana Bank',c:'Foreign bank',s:'India presence; product eligibility varies',u:'https://global.1qbank.com'},
+{n:'Kookmin Bank',c:'Foreign bank',s:'India presence; product eligibility varies',u:'https://kbglobal.kbstar.com'},
+{n:'Mashreq Bank',c:'Foreign bank',s:'India presence; product eligibility varies',u:'https://www.mashreqbank.com'},
+{n:'Mizuho Bank',c:'Foreign bank',s:'India presence; product eligibility varies',u:'https://www.mizuhogroup.com'},
+{n:'MUFG Bank',c:'Foreign bank',s:'India presence; product eligibility varies',u:'https://www.bk.mufg.jp'},
+{n:'Nong Hyup Bank',c:'Foreign bank',s:'India presence; confirm current official link via RBI',u:RBI},
+{n:'NatWest Markets',c:'Foreign bank',s:'India presence; product eligibility varies',u:'https://www.natwestmarkets.in'},
+{n:'Maybank India',c:'Foreign bank',s:'India presence; product eligibility varies',u:'https://www.maybank.co.in'},
+{n:'Qatar National Bank',c:'Foreign bank',s:'India presence; product eligibility varies',u:'https://www.qnb.com'},
+{n:'Sberbank',c:'Foreign bank',s:'India presence; product eligibility varies',u:'https://www.sberbank.co.in'},
+{n:'SBM Bank India',c:'Foreign bank',s:'India presence; product eligibility varies',u:'https://www.sbmbank.co.in'},
+{n:'Shinhan Bank',c:'Foreign bank',s:'India presence; product eligibility varies',u:'https://in.shinhanglobal.com'},
+{n:'Société Générale',c:'Foreign bank',s:'India presence; product eligibility varies',u:'https://www.societegenerale.asia'},
+{n:'Sonali Bank',c:'Foreign bank',s:'India presence; product eligibility varies',u:'https://www.sonalibank.in'},
+{n:'Standard Chartered Bank',c:'Foreign bank',s:'India presence; product eligibility varies',u:'https://www.sc.com'},
+{n:'Sumitomo Mitsui Banking Corporation',c:'Foreign bank',s:'India presence; product eligibility varies',u:'https://www.smbc.co.jp'},
+{n:'UBS AG',c:'Foreign bank',s:'India presence; confirm current official link via RBI',u:RBI},
+{n:'United Overseas Bank',c:'Foreign bank',s:'India presence; product eligibility varies',u:'https://www.uobgroup.com'},
+{n:'Woori Bank',c:'Foreign bank',s:'India presence; product eligibility varies',u:'https://go.wooribank.com'}
+];
+const cats=['All','Public sector','Private sector','Small finance','Payments bank','Regional rural','Local area','Foreign bank'];
+let active='All';
+function renderBanks(){
+ const q=(document.getElementById('search').value||'').toLowerCase();
+ const selected=banks.filter(b=>(active==='All'||b.c===active)&&(b.n+' '+b.c+' '+b.s).toLowerCase().includes(q));
+ document.getElementById('count').textContent=selected.length+' banks';
+ document.getElementById('banks').innerHTML=selected.map(b=>'<article class="bank"><div class="pill">'+escapeHtml(b.c)+'</div><strong>'+escapeHtml(b.n)+'</strong><small>'+escapeHtml(b.s)+'</small><a href="'+b.u+'" target="_blank" rel="noopener noreferrer">Open official website ↗</a><button class="btn secondary" onclick="trackThis('+JSON.stringify(b.n)+')">Add to tracker</button></article>').join('')||'<p class="muted">No matching bank in this filter. Try another search.</p>';
+ document.getElementById('trackBank').innerHTML=banks.filter(b=>b.c!=='Foreign bank').map(b=>'<option>'+escapeHtml(b.n)+'</option>').join('');
+}
+function escapeHtml(v){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+document.getElementById('filters').innerHTML=cats.map(c=>'<button class="filter '+(c==='All'?'active':'')+'" data-cat="'+c+'">'+c+'</button>').join('');
+document.getElementById('filters').addEventListener('click',e=>{const b=e.target.closest('button[data-cat]');if(!b)return;active=b.dataset.cat;document.querySelectorAll('.filter').forEach(x=>x.classList.toggle('active',x===b));renderBanks()});
+document.getElementById('search').addEventListener('input',renderBanks);
+function next(n){for(let i=1;i<=4;i++){document.getElementById('w'+i).classList.toggle('hidden',i!==n);document.getElementById('step'+i).classList.toggle('active',i===n)}}
+function buildShortlist(){
+ const p=document.querySelector('input[name="purpose"]:checked').value;
+ const state=document.getElementById('state').value;
+ const selected=[...document.querySelectorAll('input[name="priority"]:checked')].map(x=>x.value);
+ let pool=[];
+ if(p==='payments')pool=banks.filter(b=>b.c==='Payments bank');
+ else if(p==='current')pool=banks.filter(b=>['Public sector','Private sector','Small finance'].includes(b.c));
+ else pool=banks.filter(b=>['Public sector','Private sector','Small finance'].includes(b.c));
+ if(p!=='payments'){
+  const regional=banks.filter(b=>b.c==='Regional rural'&&b.s===state);
+  if(regional.length)pool=regional.concat(pool);
+ }
+ const priorityText=selected.length?selected.map(x=>({low_balance:'compare zero/low-balance products and penalties',branch:'check branch/ATM distance and cash services',digital:'compare app features and online service availability',upi:'confirm UPI and transfer limits',business:'compare cash deposit, collection and current-account fees'}[x])).join('; '):'compare fees, service access and eligibility';
+ const why=p==='current'?'For a business current account, start with scheduled commercial banks and small finance banks; verify current-account products and business KYC directly.':p==='payments'?'Payments banks have a narrower permitted business model than full-service commercial banks. Verify service limits before choosing one.':'For a personal account, start by comparing public-sector, private-sector and small finance banks. Check product-specific eligibility and fees.';
+ document.getElementById('recommendText').textContent=why+' Your priorities: '+priorityText+'. Location: '+state+'. These are research categories, not a ranked endorsement.';
+ const picks=pool.slice(0,7);
+ document.getElementById('shortlist').innerHTML=picks.map(b=>'<div class="result"><b>'+escapeHtml(b.n)+'</b><div class="meta">'+escapeHtml(b.c)+' · '+escapeHtml(b.s)+'</div><a href="'+b.u+'" target="_blank" rel="noopener">Visit official site ↗</a> <button class="btn secondary" onclick="trackThis('+JSON.stringify(b.n)+')">Track</button></div>').join('')+'<p class="small muted">This shortlist is based on account purpose and institution type only. No current interest rates, balance requirements, product availability, service quality or approval odds have been assumed.</p>';
+ next(4);
+}
+function safeLoad(){try{return JSON.parse(localStorage.getItem('bankpath_tracker_v1')||'[]')}catch(e){return []}}
+function safeSave(x){try{localStorage.setItem('bankpath_tracker_v1',JSON.stringify(x))}catch(e){alert('This browser could not save the tracker. Check local storage settings.')}}
+function trackThis(name){document.getElementById('trackBank').value=name;document.getElementById('tracker').scrollIntoView({behavior:'smooth'})}
+function addTracker(){
+ const name=document.getElementById('trackBank').value,type=document.getElementById('trackType').value;
+ const rows=safeLoad();if(rows.some(x=>x.name===name&&x.type===type)){alert('This bank and account type are already tracked.');return}
+ rows.unshift({id:Date.now().toString(36),name,type,stage:'Planning',date:new Date().toISOString().slice(0,10)});
+ safeSave(rows);renderTracker();
+}
+function stageChange(id,value){const rows=safeLoad().map(x=>x.id===id?{...x,stage:value}:x);safeSave(rows);renderTracker()}
+function removeTrack(id){safeSave(safeLoad().filter(x=>x.id!==id));renderTracker()}
+function renderTracker(){
+ const root=document.getElementById('trackerRows'),rows=safeLoad();
+ root.innerHTML=rows.length?rows.map(x=>'<div class="trackerRow"><div><b>'+escapeHtml(x.name)+'</b><br><small class="muted">'+escapeHtml(x.type)+' · Added '+escapeHtml(x.date)+'</small></div><select onchange="stageChange('+JSON.stringify(x.id)+',this.value)">'+['Planning','Official site opened','Application started','KYC completed','Decision received'].map(s=>'<option '+(x.stage===s?'selected':'')+'>'+s+'</option>').join('')+'</select><span class="pill">'+escapeHtml(x.stage)+'</span><button class="btn secondary" onclick="removeTrack('+JSON.stringify(x.id)+')">Remove</button></div>').join(''):'<p class="muted">Nothing tracked yet. Add a bank after you choose one to research.</p>';
+}
+renderBanks();renderTracker();next(1);
+</script>
+</body></html>
