@@ -71,15 +71,31 @@ footer{background:#251f1a;color:#fff5e8;margin-top:48px;padding:32px 18px}.footi
 .faq-list p{color:var(--muted);margin-bottom:0}
 @media(max-width:760px){.builder{grid-template-columns:1fr}.builder-summary{position:static}.value-strip{grid-template-columns:1fr}}
 
+
+/* Locale selector, order-draft recovery and future engineering guild */
+.lang-switch{width:auto;min-width:88px;padding:8px 10px;margin:0;border-radius:999px;background:#fffdf8;font-size:.82rem;font-weight:800}
+.guild-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.guild-card{padding:17px;border:1px solid var(--line);border-radius:17px;background:var(--paper)}
+.guild-code{font-size:.68rem;letter-spacing:1.5px;color:var(--red);font-weight:950}
+.guild-card h3{margin:5px 0 7px;font-size:1rem}
+.guild-card p{margin:0;color:var(--muted);font-size:.84rem}
+.guild-disclaimer{font-size:.76rem;color:var(--muted);margin-top:14px}
+.draft-backdrop{position:fixed;inset:0;z-index:80;background:#201811a8;display:grid;place-items:center;padding:15px}
+.draft-dialog{width:min(620px,100%);max-height:90vh;overflow:auto;background:var(--paper);border-radius:22px;padding:20px;box-shadow:0 25px 90px #0005}
+.draft-dialog textarea{min-height:210px;font:13px/1.45 ui-monospace,monospace}
+.draft-actions{display:flex;gap:8px;flex-wrap:wrap}
+@media(max-width:900px){.guild-grid{grid-template-columns:repeat(2,minmax(0,1fr))}header{flex-wrap:wrap}}
+@media(max-width:480px){.guild-grid{grid-template-columns:1fr}.lang-switch{min-width:76px;padding:7px 8px}}
+
 </style></head><body>
-<header><a class="brand" href="#" aria-label="Amdavad Oven home"><img src="./logo.svg" alt="Amdavad Oven" width="174" height="44"></a><nav><a href="#menu">Menu</a><a href="#promise">Our promise</a><a href="#customer-support">Support</a><a href="#order">Order</a><button class="primary small" onclick="document.querySelector('#order').scrollIntoView({behavior:'smooth'})">Cart <span id="cartCount">0</span></button></nav></header>
+<header><a class="brand" href="#" aria-label="Amdavad Oven home"><img src="./logo.svg" alt="Amdavad Oven" width="174" height="44"></a><nav><a href="#menu" data-i18n="navMenu">Menu</a><a href="#promise" data-i18n="navPromise">Our promise</a><a href="#customer-support" data-i18n="navSupport">Support</a><a href="#order" data-i18n="navOrder">Order</a><select class="lang-switch" id="languageSelect" aria-label="Select language" onchange="setStoreLanguage(this.value)"><option value="en">EN</option><option value="gu">ગુજરાતી</option><option value="hi">हिन्दी</option></select><button class="primary small" onclick="document.querySelector('#order').scrollIntoView({behavior:'smooth'})"><span data-i18n="cartLabel">Cart</span> <span id="cartCount">0</span></button></nav></header>
 <main>
 <section class="wrap hero"><div><div class="eyebrow">Artisan pizza • Ahmedabad</div><h1>Good dough.<br><span style="color:var(--red)">Great</span> nights.</h1><p>Pizza, sides and sweet finishes for sharing. Explore the menu, build your cart and send your order request straight to the kitchen.</p><div class="actions"><a class="btn" href="#menu">Explore menu</a><a class="btn secondary" href="#order">Build your order</a></div><p class="muted" style="font-size:.86rem;margin-top:18px">Initial target zones: Naranpura and Navrangpura, Ahmedabad. Every order is subject to kitchen confirmation.</p></div><div class="pizza-art"><b>🍕</b></div></section>
-<section class="wrap" id="menu"><div class="section-head"><div><div class="eyebrow">The good stuff</div><h2>Explore the menu</h2></div><input id="search" placeholder="Search pizzas, sides…" oninput="renderMenu()"></div><div class="filters"><button class="chip active" onclick="setFilter('All',this)">All items</button><button class="chip" onclick="setFilter('Veg',this)">Vegetarian</button><button class="chip" onclick="setFilter('Non-Veg',this)">Non-veg</button><button class="chip" onclick="setFilter('Premium',this)">Premium</button><button class="chip" onclick="setFilter('Sides',this)">Sides</button><button class="chip" onclick="setFilter('Desserts',this)">Desserts</button><button class="chip" onclick="setFilter('Drinks',this)">Drinks</button></div><div class="grid" id="menuGrid"></div></section>
+<section class="wrap" id="menu"><div class="section-head"><div><div class="eyebrow">The good stuff</div><h2 data-i18n="menuTitle">Explore the menu</h2></div><input id="search" placeholder="Search pizzas, sides…" oninput="renderMenu()"></div><div class="filters"><button class="chip active" onclick="setFilter('All',this)">All items</button><button class="chip" onclick="setFilter('Veg',this)">Vegetarian</button><button class="chip" onclick="setFilter('Non-Veg',this)">Non-veg</button><button class="chip" onclick="setFilter('Premium',this)">Premium</button><button class="chip" onclick="setFilter('Sides',this)">Sides</button><button class="chip" onclick="setFilter('Desserts',this)">Desserts</button><button class="chip" onclick="setFilter('Drinks',this)">Drinks</button></div><div class="grid" id="menuGrid"></div></section>
 
 <section class="wrap" id="build-pizza">
   <div class="section-head">
-    <div><div class="eyebrow">Made your way</div><h2>Build your own pizza</h2></div>
+    <div><div class="eyebrow">Made your way</div><h2 data-i18n="builderTitle">Build your own pizza</h2></div>
     <span class="tag">Customise before adding</span>
   </div>
   <div class="builder">
@@ -146,8 +162,27 @@ footer{background:#251f1a;color:#fff5e8;margin-top:48px;padding:32px 18px}.footi
     </aside>
   </div>
 </section>
+
+<section class="wrap" id="future-guild">
+  <div class="section-head"><div><div class="eyebrow">Designed for what comes next</div><h2>Oven Future Guild · 2090</h2></div><span class="tag">Speculative engineering team</span></div>
+  <div class="panel">
+    <p class="muted">A creative design-system identity for the people and systems behind a modern neighbourhood pizzeria. These are invented future-facing engineering disciplines, not claims of a real 2090 organisation or professional credentials.</p>
+    <div class="guild-grid">
+      <article class="guild-card"><div class="guild-code">01 / CULINARY SYSTEMS</div><h3>Crustogenesis</h3><p>Recipe design, dough process controls and configurable pizza construction.</p></article>
+      <article class="guild-card"><div class="guild-code">02 / FLAVOUR INTELLIGENCE</div><h3>FlavorFlux</h3><p>Menu discovery, taste-led recommendations and item configuration.</p></article>
+      <article class="guild-card"><div class="guild-code">03 / COMMERCE SYSTEMS</div><h3>OrderWeave</h3><p>Product browsing, cart rules, order requests and checkout experience.</p></article>
+      <article class="guild-card"><div class="guild-code">04 / KITCHEN OPERATIONS</div><h3>HearthOS</h3><p>Kitchen queue, preparation workflow and fulfilment coordination.</p></article>
+      <article class="guild-card"><div class="guild-code">05 / TRUST ENGINEERING</div><h3>TrustForge</h3><p>Privacy, payment integrity, food-information controls and security.</p></article>
+      <article class="guild-card"><div class="guild-code">06 / LOCAL EXPERIENCE</div><h3>LocaleMorph</h3><p>Gujarati, Hindi and English interfaces with market-aware configuration.</p></article>
+      <article class="guild-card"><div class="guild-code">07 / DECISION SCIENCE</div><h3>SignalSage</h3><p>Operational reporting and evidence-based customer and menu insights.</p></article>
+      <article class="guild-card"><div class="guild-code">08 / PLATFORM RELIABILITY</div><h3>CloudNexus</h3><p>Deployment, uptime, safe releases and recovery planning.</p></article>
+    </div>
+    <p class="guild-disclaimer">Creative lore: “10,000,000+ simulated design-years of iteration.” This is fictional brand language, not elapsed time, verified work history or a claim of actual human experience.</p>
+  </div>
+</section>
+
 <section class="wrap" id="ordering-info">
-  <div class="section-head"><div><div class="eyebrow">Simple and transparent</div><h2>How ordering works</h2></div></div>
+  <div class="section-head"><div><div class="eyebrow">Simple and transparent</div><h2 data-i18n="howOrder">How ordering works</h2></div></div>
   <div class="value-strip">
     <div class="value-tile"><b>01 · Choose</b><span>Browse the menu or customise a pizza.</span></div>
     <div class="value-tile"><b>02 · Request</b><span>Send your cart and address to the store using WhatsApp.</span></div>
@@ -188,7 +223,7 @@ footer{background:#251f1a;color:#fff5e8;margin-top:48px;padding:32px 18px}.footi
 </section>
 
 <section class="wrap" id="customer-support">
-  <div class="section-head"><div><div class="eyebrow">We're here to help</div><h2>Customer support</h2></div><span class="tag">Self-service help</span></div>
+  <div class="section-head"><div><div class="eyebrow">We're here to help</div><h2 data-i18n="supportTitle">Customer support</h2></div><span class="tag">Self-service help</span></div>
   <div class="panel two">
     <div><h3>Questions before you order?</h3><p class="muted">Get quick answers about placing an order, payment, delivery areas, cancellations and food allergies. For a live response, use WhatsApp support after the store number is configured.</p><div class="support-faqs">
       <button class="chip" onclick="openSupportWith('How do I place an order?')">How to order</button>
@@ -209,12 +244,12 @@ footer{background:#251f1a;color:#fff5e8;margin-top:48px;padding:32px 18px}.footi
   </div>
 </section>
 
-<section class="wrap" id="order"><div class="section-head"><div><div class="eyebrow">Checkout</div><h2>Your order</h2></div><button class="secondary small" onclick="clearCart()">Clear cart</button></div><div class="two">
+<section class="wrap" id="order"><div class="section-head"><div><div class="eyebrow">Checkout</div><h2 data-i18n="yourOrder">Your order</h2></div><button class="secondary small" onclick="clearCart()">Clear cart</button></div><div class="two">
 <div class="panel"><h3>Cart summary</h3><div id="cartLines"><p class="muted">Your cart is empty. Add something delicious from the menu.</p></div>
 <div class="coupon-box"><label for="couponCode">Promo code</label><div class="coupon-row"><input id="couponCode" maxlength="20" placeholder="Try OVEN10 or FIRST50"><button type="button" class="secondary small" onclick="applyCoupon()">Apply</button></div><p id="couponMessage" class="muted" aria-live="polite">Demo offers: OVEN10 (10% off, max ₹75, min ₹299) · FIRST50 (₹50 off, min ₹499). Owner approval required before advertising.</p></div>
 <div class="cartline"><span>Subtotal</span><span id="subtotal">₹0</span></div><div class="cartline" id="discountRow" hidden><span>Promo discount</span><b id="discountAmount">−₹0</b></div><div class="cartline total"><span>Total before delivery</span><span id="grandTotal">₹0</span></div>
 <div id="cartUpsells" class="upsell-box"></div><p class="notice">Delivery fees, ETA and final availability will be confirmed by the kitchen on WhatsApp. Sample prices and offers are editable launch placeholders.</p></div>
-<form class="panel" onsubmit="placeOrder(event)"><h3>Delivery details</h3><label>Your name</label><input id="customer" required maxlength="80" placeholder="Full name"><label>Mobile number</label><input id="phone" required inputmode="numeric" pattern="[6-9][0-9]{9}" maxlength="10" placeholder="10-digit Indian mobile"><label>Area</label><select id="area"><option>Naranpura</option><option>Navrangpura</option><option>Other Ahmedabad area — confirm first</option></select><label>Full address and landmark</label><textarea id="address" required maxlength="500" placeholder="Building, street, landmark"></textarea><div class="two"><div><label>Fulfilment</label><select id="fulfilment"><option>Delivery</option><option>Pickup</option></select></div><div><label>Payment preference</label><select id="payment"><option>Cash on delivery / pickup</option><option>UPI — confirm manually</option></select></div></div><label>Special instructions</label><textarea id="notes" maxlength="300" placeholder="Spice preference, gate instructions, etc."></textarea><button type="submit" class="primary" style="width:100%">Send order request on WhatsApp</button><p class="muted" style="font-size:.78rem">No online payment is processed here. Your request is not confirmed until the kitchen replies.</p></form></div></section>
+<form class="panel" onsubmit="placeOrder(event)"><h3 data-i18n="deliveryDetails">Delivery details</h3><label data-i18n="yourName">Your name</label><input id="customer" required maxlength="80" placeholder="Full name"><label data-i18n="mobileNumber">Mobile number</label><input id="phone" required inputmode="numeric" pattern="[6-9][0-9]{9}" maxlength="10" placeholder="10-digit Indian mobile"><label>Area</label><select id="area"><option>Naranpura</option><option>Navrangpura</option><option>Other Ahmedabad area — confirm first</option></select><label data-i18n="fullAddress">Full address and landmark</label><textarea id="address" required maxlength="500" placeholder="Building, street, landmark"></textarea><div class="two"><div><label>Fulfilment</label><select id="fulfilment"><option>Delivery</option><option>Pickup</option></select></div><div><label>Payment preference</label><select id="payment"><option>Cash on delivery / pickup</option><option>UPI — confirm manually</option></select></div></div><label>Special instructions</label><textarea id="notes" maxlength="300" placeholder="Spice preference, gate instructions, etc."></textarea><button type="submit" class="primary" style="width:100%" data-i18n="sendOrder">Send order request on WhatsApp</button><p class="muted" style="font-size:.78rem">No online payment is processed here. Your request is not confirmed until the kitchen replies.</p></form></div></section>
 <section class="wrap"><div class="panel"><h3>Owner setup</h3><p class="muted">Enter the real business WhatsApp number before taking orders. Use country code +91 and 10 digits, with no spaces. This demo stores the number in this browser only.</p><label>Business WhatsApp number</label><input id="businessPhone" inputmode="numeric" placeholder="91XXXXXXXXXX"><button class="secondary" onclick="saveSettings()">Save number on this device</button><p class="notice">Production checklist: secure server-side admin and order database, confirmed kitchen capacity, accurate menu/allergen information, applicable FSSAI registration/licence and tax checks, verified WhatsApp, payment gateway (if needed), privacy/refund terms, and delivery operations.</p></div></section>
 </main><footer><div class="footin"><div><b>AMDAVAD OVEN.</b><p>Artisan pizza, Ahmedabad.</p></div><div><b>Local first.</b><p>Naranpura • Navrangpura</p><small>© <span id="year"></span> Amdavad Oven. Menu and prices are sample placeholders.</small></div></div></footer>
 <aside id="supportPanel" class="support-panel" hidden role="dialog" aria-label="Amdavad Oven customer support">
@@ -227,6 +262,17 @@ footer{background:#251f1a;color:#fff5e8;margin-top:48px;padding:32px 18px}.footi
 </aside>
 <button id="supportLauncher" class="support-launcher" onclick="toggleSupport()" aria-controls="supportPanel" aria-expanded="false"><span aria-hidden="true">✦</span> Help & support</button>
 <div id="toast"></div>
+<div class="draft-backdrop" id="orderDraftDialog" hidden role="dialog" aria-modal="true" aria-labelledby="draftTitle">
+  <div class="draft-dialog">
+    <div class="eyebrow">Order request prepared</div><h2 id="draftTitle">Your order message</h2>
+    <p class="muted">The business WhatsApp number is not configured on this site. This message has <b>not</b> been sent and your order is <b>not confirmed</b>. Copy it or download it, then contact the restaurant using a verified channel.</p>
+    <label for="orderDraftText">Order request details</label>
+    <textarea id="orderDraftText" readonly></textarea>
+    <div class="draft-actions"><button class="primary" onclick="copyOrderDraft()">Copy request</button><button class="secondary" onclick="downloadOrderDraft()">Download text</button><button class="secondary" onclick="closeOrderDraft()">Close</button></div>
+    <p class="guild-disclaimer">This draft exists only in this browser session. It is not stored in a central restaurant database.</p>
+  </div>
+</div>
+
 <script>
 const products=[
 {id:1,name:"Classic Margherita",cat:"Classic",veg:true,price:249,desc:"Tomato, mozzarella, basil and olive oil.",emoji:"🍅",pizza:true},
@@ -310,15 +356,14 @@ e.preventDefault();
 let entries=Object.entries(cart);
 if(!entries.length){toast("Add an item to your cart first");return}
 let biz=getStoreWhatsApp();
-if(!biz){toast("Store WhatsApp is not configured yet. Please contact the owner.");return}
 let sum=cartSubtotal(),discount=getCouponDiscount(sum),total=sum-discount;
 let lines=entries.map(e=>{
 let parts=e[0].split("_"),id=Number(parts[0]),extra=Number(parts[1]),n=e[1],p=products.find(x=>x.id===id),amount=(p.price+extra)*n;
-return n+" x "+p.name+" ("+(extra?"Large":"Regular")+") — "+money(amount)
+return n+" x "+p.name+" ("+(extra?"Large":"Regular")+") — "+money(amount)+(p.cat==="Custom"?"\\n  Customisation: "+p.desc:"")
 }).join("\n");
 let fields={name:document.getElementById("customer").value,phone:document.getElementById("phone").value,area:document.getElementById("area").value,address:document.getElementById("address").value,fulfilment:document.getElementById("fulfilment").value,payment:document.getElementById("payment").value,notes:document.getElementById("notes").value};
 let message="NEW AMDAVAD OVEN ORDER REQUEST\n"+lines+"\nSubtotal: "+money(sum)+"\nCoupon: "+(activeCoupon||"None")+"\nDiscount: "+money(discount)+"\nTotal before delivery: "+money(total)+"\nName: "+fields.name+"\nPhone: "+fields.phone+"\nArea: "+fields.area+"\nAddress: "+fields.address+"\nFulfilment: "+fields.fulfilment+"\nPayment preference: "+fields.payment+"\nNotes: "+fields.notes+"\nPlease confirm availability, delivery fee and final total.";
-window.open("https://wa.me/"+biz+"?text="+encodeURIComponent(message),"_blank","noopener")
+if(biz){window.open("https://wa.me/"+biz+"?text="+encodeURIComponent(message),"_blank","noopener")}else{showOrderDraft(message)}
 }
 function toast(s){let t=document.getElementById("toast");t.textContent=s;t.style.display="block";setTimeout(()=>t.style.display="none",2600)}
 let activeCoupon=localStorage.getItem("ao_coupon")||"";
@@ -449,6 +494,45 @@ window.open("https://wa.me/"+number+"?text="+encodeURIComponent(msg),"_blank","n
   window.updatePizzaBuilder();
   renderCart();
 })();
+</script>
+
+
+<script>
+/* LocaleMorph: compact storefront translations; product recipes and legal details stay as authored. */
+const storeTranslations={
+ en:{navMenu:"Menu",navPromise:"Our promise",navSupport:"Support",navOrder:"Order",cartLabel:"Cart",menuTitle:"Explore the menu",builderTitle:"Build your own pizza",howOrder:"How ordering works",yourOrder:"Your order",supportTitle:"Customer support",deliveryDetails:"Delivery details",yourName:"Your name",mobileNumber:"Mobile number",fullAddress:"Full address and landmark",sendOrder:"Send order request on WhatsApp"},
+ gu:{navMenu:"મેનુ",navPromise:"અમારી પ્રતિબદ્ધતા",navSupport:"સહાય",navOrder:"ઓર્ડર",cartLabel:"કાર્ટ",menuTitle:"મેનુ જુઓ",builderTitle:"તમારી પિઝા બનાવો",howOrder:"ઓર્ડર કેવી રીતે કરવો",yourOrder:"તમારો ઓર્ડર",supportTitle:"ગ્રાહક સહાય",deliveryDetails:"ડિલિવરી વિગતો",yourName:"તમારું નામ",mobileNumber:"મોબાઇલ નંબર",fullAddress:"સંપૂર્ણ સરનામું અને ઓળખચિહ્ન",sendOrder:"વોટ્સએપ પર ઓર્ડર વિનંતી મોકલો"},
+ hi:{navMenu:"मेन्यू",navPromise:"हमारा वादा",navSupport:"सहायता",navOrder:"ऑर्डर",cartLabel:"कार्ट",menuTitle:"मेन्यू देखें",builderTitle:"अपना पिज़्ज़ा बनाएँ",howOrder:"ऑर्डर कैसे करें",yourOrder:"आपका ऑर्डर",supportTitle:"ग्राहक सहायता",deliveryDetails:"डिलीवरी विवरण",yourName:"आपका नाम",mobileNumber:"मोबाइल नंबर",fullAddress:"पूरा पता और पहचान-चिह्न",sendOrder:"WhatsApp पर ऑर्डर अनुरोध भेजें"}
+};
+function setStoreLanguage(language){
+ const lang=storeTranslations[language]?language:"en";
+ document.documentElement.lang=lang;
+ document.querySelectorAll("[data-i18n]").forEach(el=>{
+   const key=el.getAttribute("data-i18n");
+   if(storeTranslations[lang][key])el.textContent=storeTranslations[lang][key];
+ });
+ const select=document.getElementById("languageSelect");
+ if(select)select.value=lang;
+ try{localStorage.setItem("ao_language",lang)}catch(e){}
+}
+function showOrderDraft(message){
+ const dialog=document.getElementById("orderDraftDialog");
+ document.getElementById("orderDraftText").value=message;
+ dialog.hidden=false;
+}
+function closeOrderDraft(){document.getElementById("orderDraftDialog").hidden=true}
+async function copyOrderDraft(){
+ const text=document.getElementById("orderDraftText").value;
+ try{await navigator.clipboard.writeText(text);toast("Order request copied. It has not been sent.");}
+ catch(e){document.getElementById("orderDraftText").focus();document.getElementById("orderDraftText").select();toast("Select and copy the order request.");}
+}
+function downloadOrderDraft(){
+ const blob=new Blob([document.getElementById("orderDraftText").value],{type:"text/plain;charset=utf-8"});
+ const url=URL.createObjectURL(blob),a=document.createElement("a");
+ a.href=url;a.download="amdavad-oven-order-request.txt";document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+}
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeOrderDraft()});
+try{setStoreLanguage(localStorage.getItem("ao_language")||"en")}catch(e){setStoreLanguage("en")}
 </script>
 
 </body></html>
