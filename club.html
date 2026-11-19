@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#241d18">
+<meta name="description" content="Join the AMDAVAD OVEN Ahmedabad Pizza Club. Vote for the first pizza wave, share your neighbourhood and join the launch circle.">
+<link rel="canonical" href="https://amdavad-oven.onrender.com/club.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Ahmedabad Pizza Club · AMDAVAD OVEN">
+<meta property="og:description" content="Ahmedabad, help shape the first pizza wave. Vote, share and join the neighbourhood launch circle.">
+<meta property="og:image" content="https://amdavad-oven.onrender.com/social-card.svg">
+<title>Ahmedabad Pizza Club · AMDAVAD OVEN</title>
+<style>
+:root{--ink:#241d18;--cream:#fff7ea;--paper:#fffdf8;--red:#c43d27;--gold:#e7b866;--muted:#75695e;--line:#eadfce;--green:#456c43}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--cream);color:var(--ink);font:16px/1.5 Inter,system-ui,Arial,sans-serif}
+header{position:sticky;top:0;z-index:10;background:#fffaf2ed;backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:12px max(16px,calc((100vw - 1160px)/2));display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{font-weight:1000;letter-spacing:-1.4px;text-decoration:none;color:var(--ink);font-size:1.15rem}.brand span{color:var(--red)}nav{display:flex;gap:15px;align-items:center;flex-wrap:wrap}nav a{color:var(--ink);font-size:.88rem;font-weight:800;text-decoration:none}
+.wrap{max-width:1160px;margin:auto;padding:24px 18px}.hero{display:grid;grid-template-columns:1.08fr .92fr;align-items:center;gap:25px;padding-top:45px;padding-bottom:35px}
+.eyebrow{font-size:.72rem;letter-spacing:2px;text-transform:uppercase;color:var(--red);font-weight:950}
+h1{font-size:clamp(2.8rem,7vw,5.6rem);line-height:.93;letter-spacing:-.075em;margin:12px 0 18px}h2{font-size:clamp(1.6rem,4vw,2.5rem);line-height:1;letter-spacing:-.055em;margin:7px 0 14px}h3{margin:5px 0 9px;letter-spacing:-.03em}
+p{margin:8px 0 13px}.muted{color:var(--muted)}.small{font-size:.82rem}.btn{display:inline-flex;align-items:center;justify-content:center;border:0;border-radius:999px;background:var(--red);color:white;text-decoration:none;font-weight:900;padding:12px 18px;cursor:pointer;font:inherit;font-weight:900}.secondary{background:#efe3d1;color:var(--ink)}.gold{background:var(--gold);color:var(--ink)}
+.hero-card{min-height:330px;border-radius:28px;overflow:hidden;background:radial-gradient(circle at 50% 48%,#ffe4a2 0 25%,#b64027 26% 29%,#e7ad5c 30% 48%,#8e321f 49% 54%,#f3d29b 55%);display:grid;place-items:center;box-shadow:0 25px 65px #67401f24;position:relative}
+.hero-card:after{content:"AHMEDABAD • PIZZA CLUB";position:absolute;bottom:18px;color:#fff4dd;font-weight:1000;letter-spacing:2px;font-size:.7rem}
+.hero-emoji{font-size:7rem;filter:drop-shadow(0 15px 20px #45231340)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.panel{background:var(--paper);border:1px solid var(--line);border-radius:23px;padding:22px;margin:14px 0;box-shadow:0 10px 35px #5b39100b}
+.option{display:flex;gap:10px;align-items:center;border:1px solid var(--line);background:#fffaf2;padding:12px;border-radius:14px;margin:8px 0;cursor:pointer}.option input{accent-color:var(--red);width:18px;height:18px}
+input,select,textarea{width:100%;padding:12px;border-radius:12px;border:1px solid var(--line);background:white;color:var(--ink);font:inherit;margin:6px 0 13px}
+label{font-weight:800;font-size:.88rem;display:block}.check{display:flex;gap:10px;align-items:flex-start;font-weight:600;font-size:.85rem}.check input{width:19px;flex:none;margin-top:3px}
+.row{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.row>*{flex:1}.badge{display:inline-block;padding:5px 10px;border-radius:99px;background:#f2e7d5;font-weight:900;font-size:.76rem}
+.results{margin:14px 0}.result{display:grid;grid-template-columns:145px 1fr 35px;gap:9px;align-items:center;margin:10px 0;font-size:.83rem}.bar{height:10px;background:#eee3d4;border-radius:99px;overflow:hidden}.bar span{display:block;height:100%;background:var(--red);border-radius:99px}
+.share-panel{background:#241d18;color:#fff3e3}.share-panel .eyebrow{color:#f1c579}.share-panel .muted{color:#e6d8c7}.share-panel input{background:#fffaf2}
+.step{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--line)}.step b{display:block}
+.notice{padding:11px 13px;background:#f5eddf;border-radius:12px;margin:12px 0}.success{color:var(--green);font-weight:800}.error{color:#a12d1d;font-weight:800}
+footer{background:#241d18;color:#fff3e3;margin-top:30px;padding:26px 18px}footer a{color:#f1c579}
+@media(max-width:760px){.hero{grid-template-columns:1fr;padding-top:24px}.hero-card{min-height:220px}.grid{grid-template-columns:1fr}.row{display:block}.result{grid-template-columns:110px 1fr 30px}}
+</style>
+</head>
+<body>
+<header><a class="brand" href="./">AMDAVAD <span>OVEN.</span></a><nav><a href="./">Menu</a><a href="./launch.html">Share Studio</a><a href="./admin.html">Team</a></nav></header>
+<main>
+<section class="wrap hero">
+ <div>
+  <div class="eyebrow">LocaleMorph · Ahmedabad launch circle</div>
+  <h1>Ahmedabad,<br><span style="color:var(--red)">pick the</span><br>first slice.</h1>
+  <p class="muted">Join the neighbourhood pizza club. Vote for the first pizza wave, tell us what kind of food events you enjoy and share the launch with friends. No fake countdowns, paid votes or guaranteed rewards.</p>
+  <div class="row"><a class="btn" href="#vote">Vote for a pizza</a><a class="btn secondary" href="#join">Join the club</a></div>
+ </div>
+ <div class="hero-card" aria-label="Pizza club artwork"><div class="hero-emoji">🍕</div></div>
+</section>
+
+<section class="wrap grid">
+ <div class="panel" id="vote">
+  <div class="eyebrow">Community flavour poll</div><h2>Which pizza should lead?</h2>
+  <p class="muted">One vote per browser for this poll. Results show submitted votes only; this is not a verified citywide survey.</p>
+  <form id="voteForm">
+   <label class="option"><input type="radio" name="pizzaChoice" value="paneer_tikka" required> Paneer Tikka · Ahmedabad favourite style</label>
+   <label class="option"><input type="radio" name="pizzaChoice" value="classic_margherita"> Classic Margherita · Italian classic</label>
+   <label class="option"><input type="radio" name="pizzaChoice" value="four_cheese"> Four Cheese · Extra indulgent</label>
+   <label class="option"><input type="radio" name="pizzaChoice" value="peri_peri_paneer"> Peri Peri Paneer · Spicy fusion</label>
+   <label class="option"><input type="radio" name="pizzaChoice" value="chicken_tikka"> Chicken Tikka · Smoky savoury</label>
+   <label for="voteArea">Your neighbourhood</label>
+   <select id="voteArea" required>
+    <option value="">Choose neighbourhood</option><option>Naranpura</option><option>Navrangpura</option><option>CG Road</option><option>Vastrapur</option><option>Bodakdev</option><option>Satellite</option><option>Prahlad Nagar</option><option>Maninagar</option><option>Bopal</option><option>Chandkheda</option><option>Other</option>
+   </select>
+   <button class="btn" type="submit">Submit my vote</button>
+   <p id="voteStatus" class="muted" role="status"></p>
+  </form>
+  <div class="results" id="pollResults"><p class="muted">Loading submitted votes…</p></div>
+  <p class="muted small" id="pollFootnote"></p>
+ </div>
+
+ <div class="panel" id="join">
+  <div class="eyebrow">Neighbourhood launch list</div><h2>Get launch updates</h2>
+  <p class="muted">Sign up to receive AMDAVAD OVEN launch information. Your number is used for this opt-in purpose only; no automated message is sent by this form.</p>
+  <form id="joinForm">
+   <label for="clubName">Your name</label><input id="clubName" minlength="2" maxlength="80" required placeholder="Name">
+   <label for="clubPhone">Mobile number</label><input id="clubPhone" inputmode="numeric" autocomplete="tel-national" pattern="[6-9][0-9]{9}" maxlength="10" required placeholder="10-digit Indian mobile number">
+   <label for="clubArea">Neighbourhood</label>
+   <select id="clubArea" required>
+    <option value="">Choose your area</option><option>Naranpura</option><option>Navrangpura</option><option>CG Road</option><option>Vastrapur</option><option>Bodakdev</option><option>Satellite</option><option>Prahlad Nagar</option><option>Maninagar</option><option>Bopal</option><option>Chandkheda</option><option>Other</option>
+   </select>
+   <label for="clubInterest">How would you like to participate?</label>
+   <select id="clubInterest" required>
+    <option value="early_access">Receive launch updates</option><option value="food_creator">Food creator / reviewer</option><option value="office_group">Office or group order interest</option><option value="community_host">Housing society / community host</option>
+   </select>
+   <label class="check"><input id="clubConsent" type="checkbox" required><span>I agree to receive launch-related updates from AMDAVAD OVEN. I can ask to opt out later. I understand this form does not place a food order.</span></label>
+   <button class="btn" type="submit">Join Ahmedabad Pizza Club</button>
+   <p id="joinStatus" class="muted" role="status"></p>
+  </form>
+ </div>
+</section>
+
+<section class="wrap">
+ <div class="panel share-panel">
+  <div class="eyebrow">OrderWeave · Neighbourhood invites</div><h2>Bring your people to the table.</h2>
+  <p class="muted">Share your referral link with friends, office groups or your housing society. Referral visits are counted only by our website's opt-in analytics.</p>
+  <label for="clubShareLink">Your share link</label>
+  <div class="row"><input id="clubShareLink" readonly><button class="btn gold" id="copyClubLink" type="button">Copy invite link</button></div>
+  <div class="row"><button class="btn" id="whatsappClub" type="button">Share on WhatsApp</button><button class="btn secondary" id="nativeClub" type="button">More share options</button></div>
+  <p id="shareStatus" class="small muted" role="status"></p>
+ </div>
+</section>
+
+<section class="wrap">
+ <div class="eyebrow">Neighbourhood launch map</div><h2>Start close. Grow across Amdavad.</h2>
+ <div class="grid">
+  <div class="panel"><span class="badge">First focus</span><h3>Naranpura</h3><p class="muted">Gather local food preferences and early launch interest. Service is not yet confirmed.</p></div>
+  <div class="panel"><span class="badge">First focus</span><h3>Navrangpura</h3><p class="muted">Invite office, student and community groups to share their preferred pizza styles. Service is not yet confirmed.</p></div>
+  <div class="panel"><h3>CG Road · Vastrapur · Bodakdev</h3><p class="muted">Potential next community outreach areas, subject to kitchen and delivery capacity.</p></div>
+  <div class="panel"><h3>Satellite · Prahlad Nagar · Bopal</h3><p class="muted">Potential community partners and group-order interest areas, not advertised as live delivery zones.</p></div>
+ </div>
+</section>
+<section class="wrap">
+ <div class="panel">
+  <div class="eyebrow">How community data is used</div><h3>Respectful local growth</h3>
+  <p class="muted">Launch-list contacts are stored for the update consent shown above. Poll votes use a random browser token to prevent repeat submissions from that browser. Campaign analytics are separately optional. We do not buy contact lists, scrape other websites or claim these signups represent all Ahmedabad residents.</p>
+  <p><a href="./">Visit the storefront</a> · <a href="./launch.html">Open share studio</a></p>
+ </div>
+</section>
+</main>
+<footer><div class="wrap"><b>AMDAVAD OVEN.</b><p>Ahmedabad Pizza Club · Community preference and launch interest page</p></div></footer>
+<script src="./campaign.js"></script>
+<script>
+'use strict';
+const API='https://amdavad-oven-api.onrender.com';
+const el=id=>document.getElementById(id);
+function status(id,text,kind){const n=el(id);n.textContent=text;n.className=kind||'muted'}
+function uuid(){
+ try{if(crypto.randomUUID)return crypto.randomUUID()}catch(e){}
+ return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{const r=Math.random()*16|0;return (c==='x'?r:(r&3|8)).toString(16)})
+}
+let voteToken='';
+try{voteToken=localStorage.getItem('ao_pizza_poll_token')||'';if(!voteToken){voteToken=uuid();localStorage.setItem('ao_pizza_poll_token',voteToken)}}catch(e){voteToken=uuid()}
+const referral=(()=>{try{return localStorage.getItem('ao_referral_code')||''}catch(e){return ''}})();
+function inviteLink(source){
+ if(window.aoReferralLink)return window.aoReferralLink(source,'pizza_club_ahmedabad');
+ const u=new URL('./club.html',location.href);if(referral)u.searchParams.set('ref',referral);
+ u.searchParams.set('utm_source',source);u.searchParams.set('utm_medium','share');u.searchParams.set('utm_campaign','pizza_club_ahmedabad');return u.toString()
+}
+el('clubShareLink').value=inviteLink('whatsapp');
+async function loadPoll(){
+ try{
+  const r=await fetch(API+'/api/community/poll');const d=await r.json();if(!r.ok)throw new Error(d.error||'Poll unavailable');
+  const total=Number(d.totalSubmittedVotes)||0;const rows=d.choices||[];
+  const labels={paneer_tikka:'Paneer Tikka',classic_margherita:'Classic Margherita',four_cheese:'Four Cheese',peri_peri_paneer:'Peri Peri Paneer',chicken_tikka:'Chicken Tikka'};
+  el('pollResults').innerHTML='<h3>Submitted votes · '+total+'</h3>'+(rows.length?rows.map(x=>{const pct=total?Math.round(Number(x.votes)*100/total):0;return '<div class="result"><b>'+labels[x.choice]+'</b><div class="bar"><span style="width:'+pct+'%"></span></div><span>'+x.votes+'</span></div>'}).join(''):'<p class="muted">No votes yet. Be the first.</p>');
+  el('pollFootnote').textContent=d.note||'Submitted votes only.';
+ }catch(e){el('pollResults').textContent='Poll results are temporarily unavailable. Please retry.';el('pollFootnote').textContent=e.message}
+}
+el('voteForm').addEventListener('submit',async e=>{
+ e.preventDefault();const choice=document.querySelector('input[name="pizzaChoice"]:checked');
+ if(!choice)return;
+ const btn=el('voteForm').querySelector('button');btn.disabled=true;status('voteStatus','Submitting your vote…');
+ try{
+  const r=await fetch(API+'/api/community/vote',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({voterToken:voteToken,pollKey:'first-pizza-wave-2026',choice:choice.value,neighbourhood:el('voteArea').value})});
+  const d=await r.json();if(!r.ok)throw new Error(d.error||'Vote not saved');
+  status('voteStatus',d.message,'success');await loadPoll();
+ }catch(err){status('voteStatus',err.message,'error')}
+ finally{btn.disabled=false}
+});
+el('joinForm').addEventListener('submit',async e=>{
+ e.preventDefault();const btn=el('joinForm').querySelector('button');btn.disabled=true;status('joinStatus','Saving your consent and signup…');
+ try{
+  const payload={customerName:el('clubName').value.trim(),phone:el('clubPhone').value.trim(),neighbourhood:el('clubArea').value,interestType:el('clubInterest').value,contactConsent:el('clubConsent').checked};
+  if(referral&&/^[A-Z0-9]{6,12}$/.test(referral))payload.referralCode=referral;
+  const r=await fetch(API+'/api/community/join',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+  const d=await r.json();if(!r.ok)throw new Error(d.error||'Signup not saved');
+  status('joinStatus','You are on the Ahmedabad launch list. No message has been sent.','success');
+  el('joinForm').reset();
+ }catch(err){status('joinStatus',err.message,'error')}
+ finally{btn.disabled=false}
+});
+el('copyClubLink').addEventListener('click',async()=>{
+ const link=el('clubShareLink').value;
+ try{await navigator.clipboard.writeText(link);status('shareStatus','Invite link copied. Share it with people who may genuinely be interested.','success')}
+ catch(e){el('clubShareLink').focus();el('clubShareLink').select();status('shareStatus','Select and copy the link.','muted')}
+});
+el('whatsappClub').addEventListener('click',()=>{
+ const link=inviteLink('whatsapp');const msg='Ahmedabad, help choose the next pizza wave! Vote and join the AMDAVAD OVEN Pizza Club: '+link;
+ window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank','noopener');
+ if(window.aoTrack)window.aoTrack('share_click');
+});
+el('nativeClub').addEventListener('click',async()=>{
+ const link=inviteLink('other');
+ if(navigator.share){try{await navigator.share({title:'Ahmedabad Pizza Club',text:'Vote for the first pizza wave with AMDAVAD OVEN.',url:link});if(window.aoTrack)window.aoTrack('share_click')}catch(e){}}
+ else{el('clubShareLink').value=link;el('copyClubLink').click()}
+});
+loadPoll();
+</script>
+</body></html>
