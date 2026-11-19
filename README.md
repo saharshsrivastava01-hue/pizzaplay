@@ -62,3 +62,12 @@ The Render service is a static-site service. Browser local storage is per visito
 - The staff portal Community tab shows consented signups, submitted poll votes and neighbourhood totals.
 - Poll counts represent submitted browser tokens, not independently verified unique residents or a census of Ahmedabad.
 - The landing page, homepage promo and sitemap are public. The staff portal remains excluded from indexing.
+
+
+## Pizza Lab (19 November 2026)
+- Public page: https://amdavad-oven.onrender.com/pizza-lab.html
+- Interactive configurator loads available pizza products and prices from the API, with a sample fallback if the API is unavailable.
+- The configurator supports regular/large, classic/thin/cheese-burst crust, half-and-half within the same veg category, four server-accepted topping options and short kitchen notes.
+- "Add to store cart" writes a custom item to the same `ao_custom_products` and `ao_cart` browser storage used by the main storefront. Checkout is completed on the main storefront and remains subject to kitchen confirmation.
+- The embedded canvas brand film is an original 12-second silent motion graphic. Visitors can play it on the page and, in supported browsers, record/download a WebM copy. It is not a hosted MP4 file or a generated AI video.
+- Menu data and sample prices must be checked by the actual kitchen. This does not create or verify a restaurant, kitchen, food licence, payment account or delivery service.
