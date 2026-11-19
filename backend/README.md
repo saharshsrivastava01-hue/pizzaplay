@@ -62,3 +62,10 @@ Render's free web services sleep after 15 minutes idle. Render's free Postgres h
 - `GET /api/admin/marketing` returns 30-day aggregate first-party campaign metrics.
 - Order referral codes are stored with order request records.
 - No third-party website visitor data is collected or imported.
+
+## Ahmedabad Pizza Club API
+- `POST /api/community/join`: opt-in launch-list signup; phone number is unique and consent timestamp is stored.
+- `POST /api/community/vote`: one vote per browser-generated UUID for the first pizza wave.
+- `GET /api/community/poll`: public aggregate submitted vote totals and neighbourhood totals.
+- `GET /api/admin/community`: protected consented contact and poll dashboard for owner, manager and support roles.
+- This poll is an informal preference poll, not a representative survey.
