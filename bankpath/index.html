@@ -7,7 +7,19 @@
 <title>BankPath India — Bank Account Assistant</title>
 <style>
 :root{--ink:#10203d;--navy:#0b1630;--blue:#2859c5;--cyan:#e6efff;--paper:#fff;--bg:#f5f7fb;--line:#dfe6f1;--muted:#64718a;--green:#146c43;--red:#a22a2a;--amber:#8b5900}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Inter,system-ui,Segoe UI,Arial,sans-serif}a{color:var(--blue)}button,input,select{font:inherit}header{background:var(--navy);color:white;padding:16px max(18px,calc((100vw - 1180px)/2));display:flex;align-items:center;justify-content:space-between;gap:16px;position:sticky;top:0;z-index:8}header a{color:white;text-decoration:none}.logo{font-weight:950;letter-spacing:-1px;font-size:1.12rem}.logo i{color:#8eb9ff;font-style:normal}.topnav{display:flex;gap:16px;flex-wrap:wrap}.topnav a{font-size:.9rem;color:#e9efff}.wrap{max-width:1180px;margin:auto;padding:25px 18px}.hero{background:linear-gradient(125deg,#0b1630,#1c3a70 65%,#315ab0);color:white;border-radius:28px;padding:clamp(24px,5vw,52px);display:grid;grid-template-columns:1.2fr .8fr;gap:24px;align-items:center;overflow:hidden}.eyebrow{text-transform:uppercase;letter-spacing:1.8px;color:#a8c7ff;font-size:.72rem;font-weight:900}h1{font-size:clamp(2.5rem,6.7vw,5rem);line-height:.97;letter-spacing:-.07em;margin:12px 0 16px}h2{font-size:clamp(1.65rem,4vw,2.5rem);line-height:1.08;letter-spacing:-.04em;margin:0 0 14px}h3{margin:2px 0 8px}.hero p{color:#d9e4fb;max-width:660px}.heroArt{display:grid;place-items:center;min-height:220px}.orb{width:min(250px,65vw);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 34% 28%,#d9e8ff,#7eabff 27%,#345fc0 55%,#122955 72%);box-shadow:0 0 0 22px #ffffff10,0 0 0 44px #ffffff08;display:grid;place-items:center;font-size:5.4rem}.btn{border:0;border-radius:12px;padding:12px 16px;background:var(--blue);color:white;font-weight:850;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px}.btn.secondary{background:#e8eef9;color:var(--ink)}.btn.light{background:white;color:var(--navy)}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.panel{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:0 8px 28px #10203d08}.panel + .panel{margin-top:16px}.muted{color:var(--muted)}.small{font-size:.82rem}.steps{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}.step{border-radius:999px;padding:6px 11px;background:#edf2fa;color:#53627d;font-size:.78rem;font-weight:800}.step.active{background:#dce8ff;color:#1b4aab}.field{margin:14px 0}.field label{display:block;font-size:.88rem;font-weight:850;margin-bottom:6px}.field select,.field input{width:100%;border:1px solid #cbd5e4;background:white;border-radius:11px;padding:12px;color:var(--ink)}.choice{display:flex;gap:9px;align-items:flex-start;background:#f7f9fd;border:1px solid var(--line);border-radius:12px;padding:11px;margin:8px 0;cursor:pointer}.choice input{margin-top:5px;accent-color:var(--blue)}.result{border:1px solid var(--line);border-radius:13px;padding:13px;margin:10px 0;background:#fff}.result .meta{color:var(--muted);font-size:.78rem}.pill{display:inline-block;border-radius:999px;background:#edf2fa;color:#405372;padding:4px 8px;font-size:.72rem;font-weight:850}.warn{border:1px solid #eed8a9;background:#fff8e7;padding:13px;border-radius:12px;color:#644600}.safe{border:1px solid #b9dec9;background:#edf9f2;padding:13px;border-radius:12px;color:#174e32}.danger{border:1px solid #efc5c5;background:#fff1f1;padding:13px;border-radius:12px;color:#822323}.directoryHead{display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:space-between}.directoryHead input{flex:1;min-width:220px;border:1px solid var(--line);padding:12px;border-radius:12px}.filters{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}.filter{border:1px solid var(--line);background:white;border-radius:99px;padding:8px 12px;font-weight:800;color:#43516a;cursor:pointer}.filter.active{background:var(--navy);color:white;border-color:var(--navy)}.bankgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.bank{padding:14px;border:1px solid var(--line);border-radius:14px;background:#fff;display:flex;flex-direction:column;gap:7px;min-width:0}.bank strong{font-size:.92rem}.bank small{color:var(--muted)}.bank a{font-weight:850;font-size:.84rem;text-decoration:none}.trackerRow{display:grid;grid-template-columns:1.2fr .9fr .8fr auto;gap:9px;align-items:center;border-bottom:1px solid var(--line);padding:12px 0}.trackerRow select{padding:8px;border:1px solid var(--line);border-radius:9px;background:white}.counter{font-size:1.6rem;font-weight:950}.foot{background:var(--navy);color:#d9e4fb;margin-top:35px;padding:30px 18px}.foot a{color:#bcd3ff}.chatline{padding:12px 14px;border-radius:15px;background:#eaf1ff;margin:10px 0}.chatline.assistant{background:#f1f4f9}.hidden{display:none!important}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Inter,system-ui,Segoe UI,Arial,sans-serif}a{color:var(--blue)}button,input,select{font:inherit}header{background:var(--navy);color:white;padding:16px max(18px,calc((100vw - 1180px)/2));display:flex;align-items:center;justify-content:space-between;gap:16px;position:sticky;top:0;z-index:8}header a{color:white;text-decoration:none}.logo{font-weight:950;letter-spacing:-1px;font-size:1.12rem}.logo i{color:#8eb9ff;font-style:normal}.topnav{display:flex;gap:16px;flex-wrap:wrap}.topnav a{font-size:.9rem;color:#e9efff}.wrap{max-width:1180px;margin:auto;padding:25px 18px}.hero{background:linear-gradient(125deg,#0b1630,#1c3a70 65%,#315ab0);color:white;border-radius:28px;padding:clamp(24px,5vw,52px);display:grid;grid-template-columns:1.2fr .8fr;gap:24px;align-items:center;overflow:hidden}.eyebrow{text-transform:uppercase;letter-spacing:1.8px;color:#a8c7ff;font-size:.72rem;font-weight:900}h1{font-size:clamp(2.5rem,6.7vw,5rem);line-height:.97;letter-spacing:-.07em;margin:12px 0 16px}h2{font-size:clamp(1.65rem,4vw,2.5rem);line-height:1.08;letter-spacing:-.04em;margin:0 0 14px}h3{margin:2px 0 8px}.hero p{color:#d9e4fb;max-width:660px}.heroArt{display:grid;place-items:center;min-height:220px}.orb{width:min(250px,65vw);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 34% 28%,#d9e8ff,#7eabff 27%,#345fc0 55%,#122955 72%);box-shadow:0 0 0 22px #ffffff10,0 0 0 44px #ffffff08;display:grid;place-items:center;font-size:5.4rem}.btn{border:0;border-radius:12px;padding:12px 16px;background:var(--blue);color:white;font-weight:850;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px}.btn.secondary{background:#e8eef9;color:var(--ink)}.btn.light{background:white;color:var(--navy)}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.panel{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:0 8px 28px #10203d08}.panel + .panel{margin-top:16px}.muted{color:var(--muted)}.small{font-size:.82rem}.steps{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}.step{border-radius:999px;padding:6px 11px;background:#edf2fa;color:#53627d;font-size:.78rem;font-weight:800}.step.active{background:#dce8ff;color:#1b4aab}.field{margin:14px 0}.field label{display:block;font-size:.88rem;font-weight:850;margin-bottom:6px}.field select,.field input{width:100%;border:1px solid #cbd5e4;background:white;border-radius:11px;padding:12px;color:var(--ink)}.choice{display:flex;gap:9px;align-items:flex-start;background:#f7f9fd;border:1px solid var(--line);border-radius:12px;padding:11px;margin:8px 0;cursor:pointer}.choice input{margin-top:5px;accent-color:var(--blue)}.result{border:1px solid var(--line);border-radius:13px;padding:13px;margin:10px 0;background:#fff}.result .meta{color:var(--muted);font-size:.78rem}.pill{display:inline-block;border-radius:999px;background:#edf2fa;color:#405372;padding:4px 8px;font-size:.72rem;font-weight:850}.warn{border:1px solid #eed8a9;background:#fff8e7;padding:13px;border-radius:12px;color:#644600}.safe{border:1px solid #b9dec9;background:#edf9f2;padding:13px;border-radius:12px;color:#174e32}.danger{border:1px solid #efc5c5;background:#fff1f1;padding:13px;border-radius:12px;color:#822323}.directoryHead{display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:space-between}.directoryHead input{flex:1;min-width:220px;border:1px solid var(--line);padding:12px;border-radius:12px}.filters{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}.filter{border:1px solid var(--line);background:white;border-radius:99px;padding:8px 12px;font-weight:800;color:#43516a;cursor:pointer}.filter.active{background:var(--navy);color:white;border-color:var(--navy)}.bankgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.bank{padding:14px;border:1px solid var(--line);border-radius:14px;background:#fff;display:flex;flex-direction:column;gap:7px;min-width:0}.bank strong{font-size:.92rem}.bank small{color:var(--muted)}.bank a{font-weight:850;font-size:.84rem;text-decoration:none}.trackerRow{display:grid;grid-template-columns:1.2fr .9fr .8fr auto;gap:9px;align-items:center;border-bottom:1px solid var(--line);padding:12px 0}.trackerRow select{padding:8px;border:1px solid var(--line);border-radius:9px;background:white}
+.copilotBox{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.assistantMessages{background:#f7f9fd;border:1px solid var(--line);border-radius:15px;padding:12px;min-height:150px;max-height:290px;overflow:auto}
+.msg{padding:10px 12px;border-radius:12px;margin:8px 0;max-width:95%;white-space:pre-wrap}
+.msg.user{background:#dce8ff;margin-left:auto}.msg.bot{background:#fff;border:1px solid var(--line)}
+.quickQuestions{display:flex;gap:7px;flex-wrap:wrap;margin:10px 0}
+.quickQuestions button{background:#edf2fa;border:1px solid var(--line);padding:8px 10px;border-radius:999px;font-size:.79rem;font-weight:800;cursor:pointer}
+.copilotInput{display:flex;gap:8px;margin-top:10px}.copilotInput input{flex:1;min-width:0;border:1px solid #cbd5e4;padding:11px;border-radius:11px}
+.applicationPlan{background:#f8faff;border:1px solid var(--line);border-radius:15px;padding:15px;margin-top:12px}
+.applicationPlan li{margin:8px 0}
+@media(max-width:800px){.copilotBox{grid-template-columns:1fr}.copilotInput{flex-direction:column}}
+
+.counter{font-size:1.6rem;font-weight:950}.foot{background:var(--navy);color:#d9e4fb;margin-top:35px;padding:30px 18px}.foot a{color:#bcd3ff}.chatline{padding:12px 14px;border-radius:15px;background:#eaf1ff;margin:10px 0}.chatline.assistant{background:#f1f4f9}.hidden{display:none!important}
 @media(max-width:800px){.hero{grid-template-columns:1fr}.heroArt{min-height:160px}.orb{width:160px;font-size:4rem}.grid{grid-template-columns:1fr}.bankgrid{grid-template-columns:repeat(2,minmax(0,1fr))}.trackerRow{grid-template-columns:1fr 1fr}.trackerRow button{grid-column:span 2}}
 @media(max-width:470px){.bankgrid{grid-template-columns:1fr}.topnav{gap:9px}.topnav a{font-size:.8rem}}
 </style>
@@ -59,6 +71,39 @@
 <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn secondary" onclick="next(3)">← Edit preferences</button><a class="btn" href="#directory">Browse all banks</a></div>
 </div>
 </div>
+</section>
+
+
+<section class="panel" id="account-copilot" style="margin-top:18px">
+ <div class="eyebrow" style="color:#2859c5">Account Opening Copilot · guided workflow</div>
+ <h2>Prepare one account application at a time</h2>
+ <p class="muted">Choose the bank and account type. The copilot prepares a tailored checklist and takes you to the bank's official website. You review and enter all information yourself.</p>
+ <div class="copilotBox">
+  <div>
+   <div class="field"><label for="appBank">Which bank did you choose?</label><select id="appBank"></select></div>
+   <div class="field"><label for="appType">Account type</label><select id="appType"><option value="savings">Savings account</option><option value="basic_savings">Basic / no-frills savings account</option><option value="student">Student account</option><option value="salary">Salary account</option><option value="current">Business current account</option><option value="payments">Payments account</option></select></div>
+   <div class="field"><label for="appStage">Where are you in the process?</label><select id="appStage"><option value="research">Still comparing</option><option value="ready">Ready to read the bank's product terms</option><option value="started">I opened the official application form</option><option value="kyc">The bank has asked me to complete KYC</option><option value="submitted">I submitted it and am waiting</option></select></div>
+   <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" onclick="buildAccountPlan()">Prepare my checklist →</button><button class="btn secondary" onclick="openSelectedBank()">Open bank website ↗</button></div>
+  </div>
+  <div>
+   <div class="safe"><b>What this automation can do:</b> compare bank categories, prepare checklists, explain application fields, open official bank pages and track your progress.</div>
+   <div class="danger" style="margin-top:10px"><b>What it will not do:</b> impersonate you, enter OTPs, upload identity documents, complete biometrics/video KYC, sign declarations or submit applications automatically.</div>
+  </div>
+ </div>
+ <div id="accountPlan" class="applicationPlan hidden"></div>
+ <div class="panel" style="margin-top:16px;background:#f8faff;box-shadow:none">
+  <h3>Ask BankPath Guide</h3>
+  <p class="small muted">This offline assistant uses a fixed set of safe banking guides. It is not a connected generative AI model and cannot access bank systems or your records.</p>
+  <div class="assistantMessages" id="assistantMessages" aria-live="polite"><div class="msg bot">Hello. I can explain account types, KYC preparation, official application steps, loan preparation and common scam warnings. What would you like help with?</div></div>
+  <div class="quickQuestions">
+   <button onclick="askBankPath('What do I need before opening a savings account?')">Savings checklist</button>
+   <button onclick="askBankPath('How does KYC work?')">KYC steps</button>
+   <button onclick="askBankPath('Can you submit every bank form for me?')">Can you submit forms?</button>
+   <button onclick="askBankPath('How do I prepare for a personal loan?')">Loan preparation</button>
+   <button onclick="askBankPath('How do I avoid banking scams?')">Scam safety</button>
+  </div>
+  <form class="copilotInput" onsubmit="sendBankPathChat(event)"><input id="assistantQuestion" maxlength="240" placeholder="Ask a banking question…" aria-label="Ask a banking question"><button class="btn" type="submit">Ask</button></form>
+ </div>
 </section>
 
 <section id="directory" class="panel" style="margin-top:18px">
@@ -393,6 +438,66 @@ function calculateLoanEMI(){
  root.innerHTML='<b>Illustrative monthly EMI: ₹'+Math.round(emi).toLocaleString('en-IN')+'</b><br>Principal: ₹'+Math.round(P).toLocaleString('en-IN')+'<br>Estimated interest over tenure: ₹'+Math.round(interest).toLocaleString('en-IN')+'<br>Estimated total repayments: ₹'+Math.round(total).toLocaleString('en-IN')+'<br>Entered upfront fees: ₹'+Math.round(fees).toLocaleString('en-IN')+'<br><small class="muted">Approximate reducing-balance EMI. Actual APR and effective cost may differ due to fees, insurance, taxes, payment timing and lender terms. This is not an offer or eligibility result.</small>';
 }
 renderLoanTracker();
+
+
+function fillApplicationBankSelect(){
+ const node=document.getElementById('appBank');
+ if(!node)return;
+ node.innerHTML=banks.filter(b=>b.c!=='Foreign bank').map(b=>'<option value="'+encodeURIComponent(b.n)+'">'+escapeHtml(b.n)+' — '+escapeHtml(b.c)+'</option>').join('');
+}
+function selectedApplicationBank(){const name=decodeURIComponent(document.getElementById('appBank').value);return banks.find(b=>b.n===name)}
+function openSelectedBank(){const b=selectedApplicationBank();if(!b)return;window.open(b.u,'_blank','noopener,noreferrer')}
+function buildAccountPlan(){
+ const b=selectedApplicationBank(),type=document.getElementById('appType').value,stage=document.getElementById('appStage').value;
+ if(!b)return;
+ const types={savings:'Savings account',basic_savings:'Basic savings account',student:'Student account',salary:'Salary account',current:'Business current account',payments:'Payments account'};
+ const common=[
+  'Open the bank’s official website and confirm the exact product and its eligibility.',
+  'Read the latest schedule of charges: minimum balance, debit card, ATM, SMS, cash deposit and account closure.',
+  'Check whether this product can be opened online in your state or whether a branch visit is required.',
+  'Read the bank’s list of currently accepted KYC documents and its privacy notice.',
+  'Enter personal details directly into the bank’s secured application page. Do not send them to this guide or to a third-party agent.',
+  'Read every declaration yourself and submit only accurate information.',
+  'Complete the bank’s own OTP, video KYC, biometric or branch verification steps yourself.',
+  'Save your application reference privately and follow up through the bank’s official support channel.'
+ ];
+ const typeNotes={
+  savings:'Check standard savings-account eligibility, balance rules, debit-card charges and digital access.',
+  basic_savings:'Ask whether a Basic Savings Bank Deposit Account is appropriate, what free services apply and what restrictions or conversion rules exist.',
+  student:'Check age limits, student proof requirements, guardian rules for minors and any student-specific concessions.',
+  salary:'Check whether the account requires an employer salary arrangement and what happens if salary credits stop.',
+  current:'Check business entity eligibility, constitution-specific KYC, business proof, cash handling, payment collections, minimum balance and charges.',
+  payments:'Check permitted services, account limits, cash withdrawal/deposit rules and whether the service fits the intended use.'
+ };
+ const state=stage==='research'?'Research the product before starting.':stage==='ready'?'Review all terms and required documents before beginning.':stage==='started'?'Continue only on the official bank page; verify the site domain before entering data.':stage==='kyc'?'Complete KYC directly with the bank. This guide cannot receive documents or perform verification.':'Use the bank’s official reference number and support channel to check status.';
+ const root=document.getElementById('accountPlan');
+ root.classList.remove('hidden');
+ root.innerHTML='<h3>'+escapeHtml(b.n)+' · '+escapeHtml(types[type])+'</h3><p>'+escapeHtml(typeNotes[type])+'</p><p class="pill">'+escapeHtml(state)+'</p><ol>'+common.map(x=>'<li>'+escapeHtml(x)+'</li>').join('')+'</ol><div class="warn"><b>Bank-specific terms are not embedded here.</b> The bank may require additional information or in-person checks. This checklist is not an application form and does not mean an account has been opened.</div><p><a href="'+b.u+'" target="_blank" rel="noopener">Continue to '+escapeHtml(b.n)+' official website ↗</a></p>';
+ root.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function answerBankPathQuestion(q){
+ const s=q.toLowerCase();
+ if(/submit|fill.*form|on.*my.*behalf|open.*account.*for.*me|automate.*application|every.*bank/.test(s))
+  return 'I can prepare a checklist, explain fields and open the bank website you choose. I cannot impersonate you, sign declarations, pass OTP/biometric/video KYC, upload identity documents or submit an application as you. You must review and submit the bank form yourself.';
+ if(/kyc|aadhaar|pan|otp|video|biometric|document/.test(s))
+  return 'KYC is performed by the bank when it establishes the account relationship. Use only the bank’s official site/app or branch and check the bank’s current accepted-document list. Do not share Aadhaar/PAN numbers, OTPs, PINs or document uploads with this guide or a third-party agent. RBI KYC directions: https://rbi.org.in/Scripts/BS_ViewMasDirections.aspx?id=13141';
+ if(/loan|borrow|personal loan|credit|cibil|emi|business loan/.test(s))
+  return 'For a loan, check lender eligibility and affordability before applying. Prepare accurate income/employment or business records, existing EMI details and purpose. Compare the Key Facts Statement, APR, processing fees, net disbursal, repayment schedule and prepayment rules. Avoid multiple speculative applications. RBI KFS: https://rbi.org.in/Scripts/NotificationUser.aspx?Id=12663. EMI calculator and lender links are in the Loan Assistant section.';
+ if(/savings|account|student|salary|current|zero balance|minimum balance/.test(s))
+  return 'First choose the correct product: savings for personal use, salary if your employer has an arrangement, basic savings if you want to review its service limits, or current account for business operations. Compare minimum balance and penalties, card/ATM fees, branch access, cash services and online features. Use the bank selector above to prepare one bank’s checklist.';
+ if(/scam|fraud|safe|security|password|pin/.test(s))
+  return 'Never share OTP, UPI PIN, ATM PIN, CVV, netbanking password or remote-screen access. Do not pay an individual for guaranteed approval. Open the bank’s official domain yourself. For suspected cyber financial fraud in India, call 1930 and visit https://cybercrime.gov.in/.';
+ if(/many banks|all banks|multiple/.test(s))
+  return 'You may compare many banks, but apply only where the product and eligibility fit. Each bank performs its own KYC. Applying for multiple loans in a short period can create multiple credit enquiries; new bank accounts alone do not guarantee credit.';
+ return 'I can help with: choosing savings/current/student/salary accounts, understanding KYC, checking the official application steps, preparing a loan checklist, comparing KFS terms and spotting scams. This page is an offline guide, not a connected generative AI service. Try one of the quick questions or select a bank in the Account Opening Copilot.';
+}
+function appendBankPathMessage(text,kind){
+ const root=document.getElementById('assistantMessages'),m=document.createElement('div');
+ m.className='msg '+(kind==='user'?'user':'bot');m.textContent=text;root.appendChild(m);root.scrollTop=root.scrollHeight;
+}
+function askBankPath(q){appendBankPathMessage(q,'user');appendBankPathMessage(answerBankPathQuestion(q),'assistant')}
+function sendBankPathChat(e){e.preventDefault();const input=document.getElementById('assistantQuestion'),q=input.value.trim();if(!q)return;input.value='';askBankPath(q)}
+fillApplicationBankSelect();
 
 renderBanks();renderTracker();next(1);
 </script>
