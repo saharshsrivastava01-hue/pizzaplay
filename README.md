@@ -54,3 +54,11 @@ The Render service is a static-site service. Browser local storage is per visito
 - Listing and paid-placement links are provided for public Ahmedabad channels; each publisher must approve the placement and provide its current rate card.
 - Referral codes measure first-party site traffic and linked order requests. They do not scrape other sites, identify users, or guarantee reach.
 - The global store WhatsApp number should be configured by an authenticated owner only after a real business number is provisioned and verified.
+
+## Ahmedabad Pizza Club
+- Public route: `/club.html`
+- `POST /api/community/join`: stores launch-list details only when the visitor explicitly consents to launch updates.
+- `POST /api/community/vote` and `GET /api/community/poll`: one submitted vote per browser token for the first pizza wave poll.
+- The staff portal Community tab shows consented signups, submitted poll votes and neighbourhood totals.
+- Poll counts represent submitted browser tokens, not independently verified unique residents or a census of Ahmedabad.
+- The landing page, homepage promo and sitemap are public. The staff portal remains excluded from indexing.
