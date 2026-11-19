@@ -8,7 +8,7 @@ const jwt = require('jsonwebtoken');
 const { Pool } = require('pg');
 const rateLimit = require('express-rate-limit');
 const { z } = require('zod');
-const { randomUUID, randomBytes, timingSafeEqual } = require('node:crypto');
+const { randomUUID, randomBytes, timingSafeEqual, createHmac } = require('node:crypto');
 const { calculateCart, calculateDiscount } = require('./pricing');
 
 const app = express();
@@ -46,7 +46,7 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization', 'Idempotency-Key', 'X-Bootstrap-Key'],
   maxAge: 600
 }));
-app.use(express.json({ limit: '64kb' }));
+app.use(express.json({ limit: '64kb', verify(req,_res,buf) { req.rawBody = Buffer.from(buf); } }));
 
 const generalLimiter = rateLimit({ windowMs: 60000, limit: 120, standardHeaders: 'draft-7', legacyHeaders: false });
 const orderLimiter = rateLimit({ windowMs: 10 * 60000, limit: 8, standardHeaders: 'draft-7', legacyHeaders: false });
@@ -201,6 +201,15 @@ async function migrate() {
     CREATE INDEX IF NOT EXISTS idx_support_status ON support_tickets(status, created_at DESC);
   `);
 
+  await pool.query(`
+    ALTER TABLE orders ADD COLUMN IF NOT EXISTS payment_provider TEXT;
+    ALTER TABLE orders ADD COLUMN IF NOT EXISTS razorpay_order_id TEXT;
+    ALTER TABLE orders ADD COLUMN IF NOT EXISTS razorpay_payment_id TEXT;
+    ALTER TABLE orders ADD COLUMN IF NOT EXISTS payment_updated_at TIMESTAMPTZ;
+    CREATE UNIQUE INDEX IF NOT EXISTS idx_orders_razorpay_order_id ON orders(razorpay_order_id) WHERE razorpay_order_id IS NOT NULL;
+    CREATE UNIQUE INDEX IF NOT EXISTS idx_orders_razorpay_payment_id ON orders(razorpay_payment_id) WHERE razorpay_payment_id IS NOT NULL;
+  `);
+
   const defaultSettings = {
     store_name: 'AMDAVAD OVEN',
     whatsapp_number: '',
@@ -233,7 +242,7 @@ const OrderSchema = z.object({
   area: z.string().trim().min(2).max(80),
   address: z.string().trim().min(8).max(500),
   fulfilment: z.enum(['Delivery','Pickup']),
-  paymentPreference: z.enum(['cash_on_delivery','upi_manual']),
+  paymentPreference: z.enum(['cash_on_delivery','upi_manual','online']),
   notes: z.string().max(300).optional().default(''),
   couponCode: z.string().max(20).optional().default(''),
   referralCode: z.string().regex(/^[A-Z0-9]{6,12}$/).optional(),
@@ -365,6 +374,178 @@ app.post('/api/orders', orderLimiter, asyncRoute(async (req,res) => {
     }
     throw err;
   } finally { client.release(); }
+}));
+
+function razorpayReady() {
+  return process.env.RAZORPAY_ENABLED === 'true'
+    && Boolean(process.env.RAZORPAY_KEY_ID)
+    && Boolean(process.env.RAZORPAY_KEY_SECRET)
+    && Boolean(process.env.RAZORPAY_WEBHOOK_SECRET);
+}
+function timingSafeHexMatch(expected,received) {
+  if (typeof received !== 'string' || !/^[0-9a-f]{64}$/i.test(received)) return false;
+  const a=Buffer.from(expected,'hex'),b=Buffer.from(received,'hex');
+  return a.length===b.length && timingSafeEqual(a,b);
+}
+async function razorpayRequest(path,options={}) {
+  const auth=Buffer.from(process.env.RAZORPAY_KEY_ID+':'+process.env.RAZORPAY_KEY_SECRET).toString('base64');
+  const controller=new AbortController();
+  const timer=setTimeout(()=>controller.abort(),15000);
+  try {
+    const response=await fetch('https://api.razorpay.com/v1'+path,{
+      ...options,
+      signal:controller.signal,
+      headers:{
+        Authorization:'Basic '+auth,
+        'Content-Type':'application/json',
+        ...(options.headers||{})
+      }
+    });
+    const data=await response.json().catch(()=>({}));
+    if(!response.ok) {
+      const message=data.error&&data.error.description ? data.error.description : 'Payment provider request failed.';
+      throw new Error(message);
+    }
+    return data;
+  } finally { clearTimeout(timer); }
+}
+
+app.get('/api/payments/razorpay/config',(req,res)=>{
+  res.json({enabled:razorpayReady(),provider:'Razorpay',currency:'INR'});
+});
+
+const RazorpayCreateSchema=z.object({
+  orderNumber:z.string().trim().min(8).max(40),
+  publicToken:z.string().uuid()
+});
+app.post('/api/payments/razorpay/order',orderLimiter,asyncRoute(async (req,res)=>{
+  if(!razorpayReady()) return res.status(503).json({error:'Online payments are not activated for this store yet.'});
+  const parsed=RazorpayCreateSchema.safeParse(req.body);
+  if(!parsed.success) return res.status(400).json({error:'Invalid order reference.'});
+  const {orderNumber,publicToken}=parsed.data;
+  const result=await pool.query(
+    'SELECT id,order_number,public_token,total_rupees,status,payment_status,razorpay_order_id FROM orders WHERE order_number=$1 AND public_token=$2',
+    [orderNumber,publicToken]
+  );
+  if(!result.rowCount) return res.status(404).json({error:'Order not found.'});
+  const order=result.rows[0];
+  if(order.status!=='accepted') return res.status(409).json({error:'The kitchen must accept the order before online payment can be collected.'});
+  if(order.payment_status==='paid') return res.status(409).json({error:'This order is already paid.'});
+  if(!Number.isInteger(Number(order.total_rupees)) || Number(order.total_rupees)<1)
+    return res.status(400).json({error:'This order does not have a payable amount.'});
+
+  let providerOrderId=order.razorpay_order_id;
+  let amount=Number(order.total_rupees)*100;
+  if(!providerOrderId) {
+    const created=await razorpayRequest('/orders',{
+      method:'POST',
+      body:JSON.stringify({
+        amount,
+        currency:'INR',
+        receipt:order.order_number,
+        notes:{order_number:order.order_number,restaurant:'AMDAVAD OVEN'}
+      })
+    });
+    if(!created.id || Number(created.amount)!==amount || created.currency!=='INR')
+      throw new Error('Payment provider returned an unexpected order.');
+    const saved=await pool.query(
+      `UPDATE orders
+       SET razorpay_order_id=$1,payment_provider='razorpay',payment_status='pending',payment_updated_at=NOW()
+       WHERE id=$2 AND razorpay_order_id IS NULL
+       RETURNING razorpay_order_id`,
+      [created.id,order.id]
+    );
+    if(saved.rowCount) providerOrderId=saved.rows[0].razorpay_order_id;
+    else {
+      const current=await pool.query('SELECT razorpay_order_id FROM orders WHERE id=$1',[order.id]);
+      providerOrderId=current.rows[0]&&current.rows[0].razorpay_order_id;
+    }
+  }
+  if(!providerOrderId) throw new Error('Could not save the payment reference. Please retry.');
+  res.json({
+    ok:true,
+    keyId:process.env.RAZORPAY_KEY_ID,
+    amount,
+    currency:'INR',
+    razorpayOrderId:providerOrderId,
+    orderNumber:order.order_number,
+    storeName:'AMDAVAD OVEN'
+  });
+}));
+
+const RazorpayVerifySchema=z.object({
+  orderNumber:z.string().trim().min(8).max(40),
+  publicToken:z.string().uuid(),
+  razorpay_order_id:z.string().min(10).max(100),
+  razorpay_payment_id:z.string().min(10).max(100),
+  razorpay_signature:z.string().regex(/^[0-9a-f]{64}$/i)
+});
+app.post('/api/payments/razorpay/verify',orderLimiter,asyncRoute(async (req,res)=>{
+  if(!razorpayReady()) return res.status(503).json({error:'Online payments are not activated.'});
+  const parsed=RazorpayVerifySchema.safeParse(req.body);
+  if(!parsed.success) return res.status(400).json({error:'Invalid payment confirmation.'});
+  const x=parsed.data;
+  const result=await pool.query(
+    'SELECT id,order_number,total_rupees,status,payment_status,razorpay_order_id FROM orders WHERE order_number=$1 AND public_token=$2',
+    [x.orderNumber,x.publicToken]
+  );
+  if(!result.rowCount) return res.status(404).json({error:'Order not found.'});
+  const order=result.rows[0];
+  if(order.razorpay_order_id!==x.razorpay_order_id) return res.status(400).json({error:'Payment order does not match this restaurant order.'});
+  const expected=createHmac('sha256',process.env.RAZORPAY_KEY_SECRET)
+    .update(x.razorpay_order_id+'|'+x.razorpay_payment_id).digest('hex');
+  if(!timingSafeHexMatch(expected,x.razorpay_signature))
+    return res.status(400).json({error:'Payment signature could not be verified.'});
+
+  const payment=await razorpayRequest('/payments/'+encodeURIComponent(x.razorpay_payment_id));
+  if(payment.order_id!==order.razorpay_order_id
+    || Number(payment.amount)!==Number(order.total_rupees)*100
+    || payment.currency!=='INR')
+    return res.status(400).json({error:'Payment details do not match the restaurant order.'});
+
+  const status=payment.status==='captured'?'paid':payment.status==='authorized'?'authorized':'unpaid';
+  await pool.query(
+    `UPDATE orders SET payment_provider='razorpay',
+       razorpay_payment_id=$1,payment_status=$2,payment_updated_at=NOW(),updated_at=NOW()
+     WHERE id=$3 AND (razorpay_payment_id IS NULL OR razorpay_payment_id=$1)`,
+    [x.razorpay_payment_id,status,order.id]
+  );
+  res.status(status==='paid'?200:202).json({
+    ok:true,
+    paymentStatus:status,
+    message:status==='paid'?'Payment verified and captured.':'Payment is not yet captured. The order will remain unpaid until capture is confirmed.'
+  });
+}));
+
+app.post('/api/payments/razorpay/webhook',asyncRoute(async (req,res)=>{
+  if(!process.env.RAZORPAY_WEBHOOK_SECRET) return res.status(503).json({error:'Payment webhook is not configured.'});
+  const signature=req.get('x-razorpay-signature')||'';
+  const body=req.rawBody;
+  if(!Buffer.isBuffer(body)) return res.status(400).json({error:'Missing signed webhook body.'});
+  const expected=createHmac('sha256',process.env.RAZORPAY_WEBHOOK_SECRET).update(body).digest('hex');
+  if(!timingSafeHexMatch(expected,signature)) return res.status(400).json({error:'Invalid webhook signature.'});
+  const event=req.body&&req.body.event;
+  if(event==='payment.captured' || event==='order.paid') {
+    const payment=req.body&&req.body.payload&&req.body.payload.payment&&req.body.payload.payment.entity;
+    if(!payment || payment.status!=='captured' || payment.captured===false)
+      return res.status(400).json({error:'Captured payment payload is incomplete.'});
+    const result=await pool.query(
+      'SELECT id,total_rupees FROM orders WHERE razorpay_order_id=$1',
+      [payment.order_id]
+    );
+    if(result.rowCount) {
+      const order=result.rows[0];
+      if(Number(payment.amount)===Number(order.total_rupees)*100 && payment.currency==='INR') {
+        await pool.query(
+          `UPDATE orders SET payment_provider='razorpay',razorpay_payment_id=$1,
+             payment_status='paid',payment_updated_at=NOW(),updated_at=NOW()
+           WHERE id=$2 AND (razorpay_payment_id IS NULL OR razorpay_payment_id=$1)`,
+          [payment.id,order.id]
+        );
+      }
+    }
+  }
+  res.json({received:true});
 }));
 
 app.get('/api/orders/track/:token', asyncRoute(async (req,res) => {
