@@ -496,7 +496,7 @@ window.open("https://wa.me/"+number+"?text="+encodeURIComponent(msg),"_blank","n
     const name="Custom "+sizeName+" • "+data.base.name+(data.half?" / "+data.half.name:"");
     const detail=[data.crustName.replace(/ \(.*\)/,""),toppingNames.length?"Extras: "+toppingNames.join(", "):"",notes?"Note: "+notes:""].filter(Boolean).join(" · ");
     const id=900000+Date.now()%90000;
-    const item={id,name,cat:"Custom",veg:data.base.veg,price:data.price,desc:detail,emoji:"🍕",pizza:true,builderConfig:{baseProductId:data.base.id,halfProductId:data.half?data.half.id:null,size:data.size?"large":"regular",crust:data.crustName.startsWith("Cheese")?"cheese_burst":data.crustName.startsWith("Thin")?"thin":"classic",toppings:data.toppings.map(t=>({ "Extra cheese":"extra_cheese","Jalapeño":"jalapeno","Olives":"olives","Paneer":"paneer"}[t.dataset.label]).filter(Boolean),notes:notes}};
+    const item={id,name,cat:"Custom",veg:data.base.veg,price:data.price,desc:detail,emoji:"🍕",pizza:true,builderConfig:{baseProductId:data.base.id,halfProductId:data.half?data.half.id:null,size:data.size?"large":"regular",crust:data.crustName.startsWith("Cheese")?"cheese_burst":data.crustName.startsWith("Thin")?"thin":"classic",toppings:data.toppings.map(t=>({ "Extra cheese":"extra_cheese","Jalapeño":"jalapeno","Olives":"olives","Paneer":"paneer"}[t.dataset.label])).filter(Boolean),notes:notes}};
     products.push(item);
     const saved=JSON.parse(localStorage.getItem("ao_custom_products")||"[]");
     saved.push(item);localStorage.setItem("ao_custom_products",JSON.stringify(saved.slice(-30)));
