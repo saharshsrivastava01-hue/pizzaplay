@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 124" role="img" aria-labelledby="title desc">
+<title id="title">Amdavad Oven</title><desc id="desc">A pizza slice inside a round oven mark, beside the Amdavad Oven wordmark.</desc>
+<g transform="translate(8 6)">
+<circle cx="56" cy="56" r="53" fill="#211c18"/>
+<circle cx="56" cy="56" r="44" fill="#edbd73"/>
+<path d="M56 16 L94 93 L56 82 L18 93 Z" fill="#c83d27" stroke="#8f2d20" stroke-width="3" stroke-linejoin="round"/>
+<path d="M56 16 L56 82" stroke="#fff3d7" stroke-width="3" opacity=".9"/>
+<circle cx="43" cy="55" r="5" fill="#42643b"/><circle cx="66" cy="64" r="5" fill="#42643b"/><circle cx="57" cy="40" r="4.5" fill="#42643b"/>
+<path d="M18 93 Q56 105 94 93" fill="none" stroke="#fff3d7" stroke-width="4" stroke-linecap="round"/>
+</g>
+<g font-family="Arial,Helvetica,sans-serif" font-weight="900">
+<text x="130" y="57" fill="#211c18" font-size="39" letter-spacing="1.5">AMDAVAD</text>
+<text x="132" y="98" fill="#c83d27" font-size="33" letter-spacing="7">OVEN</text>
+</g></svg>
