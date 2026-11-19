@@ -64,10 +64,19 @@ table{width:100%;border-collapse:collapse;font-size:.9rem}th,td{text-align:left;
       <button class="btn" data-tab="support" onclick="showTab('support',this)">Support tickets</button>
       <button class="btn" data-tab="marketing" onclick="showTab('marketing',this)">Growth analytics</button>
       <button class="btn" data-tab="settings" onclick="showTab('settings',this)">Store setup</button>
+      <button class="btn" data-tab="community" onclick="showTab('community',this)">Pizza Club</button>
     </div>
     <section id="tab-orders" class="panel"><h2>Kitchen order queue</h2><p class="muted">Advance each order through the permitted lifecycle. All status changes are recorded in the audit log.</p><div id="orders"></div></section>
     <section id="tab-products" class="panel hidden"><h2>Menu and availability</h2><p class="muted">Edit sample menu pricing and pause unavailable items. Confirm recipe and allergen information with the kitchen separately.</p><div id="products"></div></section>
     <section id="tab-support" class="panel hidden"><h2>Customer support tickets</h2><div id="tickets"></div></section>
+    <section id="tab-community" class="panel hidden">
+      <div class="eyebrow">LocaleMorph · Ahmedabad Pizza Club</div><h2>Community launch list</h2>
+      <p class="muted">Only people who checked the explicit launch-update consent box appear here. Use these details only for the stated launch updates; respect opt-out requests.</p>
+      <div id="communityMetrics" class="campaign-grid"></div>
+      <h3>Pizza preference poll</h3><div id="communityVotes"></div>
+      <h3>Interest by neighbourhood</h3><div id="communityAreas"></div>
+      <h3>Consented launch contacts</h3><div id="communitySignups"></div>
+    </section>
     <section id="tab-marketing" class="panel hidden">
       <div class="eyebrow">SignalSage · Campaign analytics</div><h2>Referral and campaign activity</h2>
       <p class="muted">30-day opt-in anonymous website events and order referral tags. Event totals are not verified unique visitors; order request value is not paid revenue.</p>
@@ -107,7 +116,7 @@ async function ping(){try{await api('/healthz');message('notice','API and Postgr
 document.getElementById('setupForm').addEventListener('submit',async e=>{e.preventDefault();message('setupMessage','Creating owner account…');try{const key=document.getElementById('setupKey').value;const body={email:document.getElementById('setupEmail').value,password:document.getElementById('setupPassword').value};const r=await fetch(API+'/api/admin/bootstrap',{method:'POST',headers:{'Content-Type':'application/json','X-Bootstrap-Key':key},body:JSON.stringify(body)});const d=await r.json();if(!r.ok)throw new Error(d.error||'Setup failed');message('setupMessage','Owner created. Sign in below.','success');document.getElementById('loginEmail').value=body.email;document.getElementById('setupKey').value='';document.getElementById('setupPassword').value=''}catch(err){message('setupMessage',err.message,'error')}});
 document.getElementById('loginForm').addEventListener('submit',async e=>{e.preventDefault();message('loginMessage','Signing in…');try{const r=await fetch(API+'/api/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:document.getElementById('loginEmail').value,password:document.getElementById('loginPassword').value})});const d=await r.json();if(!r.ok)throw new Error(d.error||'Login failed');token=d.token;localStorage.setItem('ao_admin_token',token);await openDashboard()}catch(err){message('loginMessage',err.message,'error')}});
 function logout(){token='';me=null;localStorage.removeItem('ao_admin_token');document.getElementById('dashboard').classList.add('hidden');document.getElementById('loginPanel').classList.remove('hidden');document.getElementById('logoutBtn').classList.add('hidden')}
-function showTab(name,button){['orders','products','support','marketing','settings'].forEach(x=>document.getElementById('tab-'+x).classList.toggle('hidden',x!==name));document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('active',b===button))}
+function showTab(name,button){['orders','products','support','marketing','settings','community'].forEach(x=>document.getElementById('tab-'+x).classList.toggle('hidden',x!==name));document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('active',b===button))}
 async function openDashboard(){me=await api('/api/admin/me');document.getElementById('setupPanel').classList.add('hidden');document.getElementById('loginPanel').classList.add('hidden');document.getElementById('dashboard').classList.remove('hidden');document.getElementById('logoutBtn').classList.remove('hidden');document.getElementById('signedIn').textContent='Signed in as '+me.admin.email;document.getElementById('rolePill').textContent=me.admin.role.toUpperCase();await refreshAll()}
 async function refreshAll(){
  try{
@@ -123,6 +132,12 @@ async function refreshAll(){
   drawOrders(orders.orders);drawProducts(products.products);drawTickets(tickets.tickets);
   if(marketing)drawMarketing(marketing);
   if(settings)drawSettings(settings.settings);
+  if(['owner','manager','support'].includes(me.admin.role)){
+    const community=await api('/api/admin/community');
+    drawCommunity(community);
+  }else{
+    document.querySelector('[data-tab="community"]').classList.add('hidden');
+  }
   if(!['owner','manager'].includes(me.admin.role)){
     document.querySelectorAll('[data-tab="marketing"],[data-tab="settings"]').forEach(el=>el.classList.add('hidden'));
   }
@@ -134,6 +149,25 @@ async function changeStatus(id){const status=document.getElementById('status-'+i
 function drawProducts(rows){document.getElementById('products').innerHTML=rows.map(p=>'<div class="product-line"><strong>'+esc(p.name)+'<br><small class="muted">'+esc(p.category)+'</small></strong><label>Price ₹<input id="price-'+p.id+'" type="number" min="1" max="100000" value="'+esc(p.price_rupees)+'"></label><label><input id="available-'+p.id+'" type="checkbox" '+(p.is_available?'checked':'')+'> Available</label><button class="btn" onclick="saveProduct('+p.id+')">Save</button></div>').join('')}
 async function saveProduct(id){try{await api('/api/admin/products/'+id,{method:'PATCH',body:JSON.stringify({price_rupees:Number(document.getElementById('price-'+id).value),is_available:document.getElementById('available-'+id).checked})});alert('Menu item updated.')}catch(e){alert(e.message)}}
 function drawTickets(rows){const root=document.getElementById('tickets');if(!rows.length){root.textContent='No support tickets yet.';return}root.innerHTML=rows.map(t=>'<article class="card"><b>'+esc(t.ticket_code)+'</b> · '+esc(t.status)+'<p>'+esc(t.customer_name)+' · '+esc(t.phone)+'</p><p>'+esc(t.message)+'</p><div class="row"><select id="ticket-'+esc(t.ticket_code)+'"><option value="open">Open</option><option value="in_progress">In progress</option><option value="resolved">Resolved</option></select><button class="btn" onclick="updateTicket(\''+esc(t.ticket_code)+'\')">Save</button></div></article>').join('')}
+function drawCommunity(data){
+ const signups=data.signups||[],areas=data.byNeighbourhood||[],votes=data.pollVotes||[];
+ const totalVotes=votes.reduce((n,r)=>n+Number(r.votes),0);
+ document.getElementById('communityMetrics').innerHTML=[
+  ['Consented launch contacts',signups.length],
+  ['Submitted pizza votes',totalVotes],
+  ['Neighbourhoods represented',areas.length]
+ ].map(([label,value])=>'<div class="campaign-stat"><span>'+esc(label)+'</span><b>'+esc(value)+'</b></div>').join('');
+ const pizzaNames={paneer_tikka:'Paneer Tikka',classic_margherita:'Classic Margherita',four_cheese:'Four Cheese',peri_peri_paneer:'Peri Peri Paneer',chicken_tikka:'Chicken Tikka'};
+ document.getElementById('communityVotes').innerHTML=votes.length
+  ? '<div class="table-wrap"><table><thead><tr><th>Pizza</th><th>Submitted votes</th></tr></thead><tbody>'+votes.map(r=>'<tr><td>'+esc(pizzaNames[r.choice]||r.choice)+'</td><td>'+esc(r.votes)+'</td></tr>').join('')+'</tbody></table></div>'
+  : '<p class="muted">No submitted votes yet.</p>';
+ document.getElementById('communityAreas').innerHTML=areas.length
+  ? '<div class="table-wrap"><table><thead><tr><th>Neighbourhood</th><th>Signups</th></tr></thead><tbody>'+areas.map(r=>'<tr><td>'+esc(r.neighbourhood)+'</td><td>'+esc(r.signups)+'</td></tr>').join('')+'</tbody></table></div>'
+  : '<p class="muted">No launch list signups yet.</p>';
+ document.getElementById('communitySignups').innerHTML=signups.length
+  ? '<div class="table-wrap"><table><thead><tr><th>Name</th><th>Mobile</th><th>Neighbourhood</th><th>Interest</th><th>Consent date</th><th>Referral</th></tr></thead><tbody>'+signups.map(r=>'<tr><td>'+esc(r.customer_name)+'</td><td>'+esc(r.phone)+'</td><td>'+esc(r.neighbourhood)+'</td><td>'+esc(r.interest_type)+'</td><td>'+new Date(r.consented_at).toLocaleString()+'</td><td>'+esc(r.referral_code||'—')+'</td></tr>').join('')+'</tbody></table></div>'
+  : '<p class="muted">No consented launch signups yet.</p>';
+}
 function drawMarketing(data){
  const s=data.summary||{},m=data.orders||{};
  document.getElementById('marketingMetrics').innerHTML=[
