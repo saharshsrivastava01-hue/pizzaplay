@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#211c18"><meta name="description" content="Explore artisan-style pizza, sides and desserts at Amdavad Oven. Local order requests for Ahmedabad.">
+<meta name="theme-color" content="#211c18"><link rel="manifest" href="./manifest.json"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><link rel="icon" href="./icon.svg" type="image/svg+xml"><meta name="description" content="Explore artisan-style pizza, sides and desserts at Amdavad Oven. Local order requests for Ahmedabad.">
 <meta property="og:title" content="Amdavad Oven | Pizza, made for sharing"><meta property="og:description" content="Explore the menu and send your order request directly to the kitchen.">
 <title>Amdavad Oven — Pizza, made for sharing</title>
 <style>
@@ -22,12 +22,57 @@ footer{background:#251f1a;color:#fff5e8;margin-top:48px;padding:32px 18px}.footi
 #toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#211c18;color:white;padding:12px 18px;border-radius:99px;display:none;z-index:20;max-width:90vw;text-align:center}
 @media(max-width:760px){nav a{display:none}.hero{grid-template-columns:1fr;padding-top:28px}.pizza-art{min-height:245px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.two{grid-template-columns:1fr}.section-head{align-items:start;flex-direction:column}#search{max-width:none}}
 @media(max-width:480px){.grid{grid-template-columns:1fr}.food{height:130px}header{padding:10px 13px}.brand{font-size:1.1rem}}
+
+/* Concierge, local discovery and installable-app enhancements */
+.ai-shell{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
+.ai-card{background:#fff9f0;border:1px solid var(--line);border-radius:18px;padding:16px}
+.ai-log{height:220px;overflow:auto;display:flex;flex-direction:column;gap:9px;padding:10px;background:#fffdf8;border:1px solid var(--line);border-radius:14px}
+.ai-msg{max-width:92%;padding:10px 12px;border-radius:14px;font-size:.9rem;white-space:pre-wrap}
+.ai-msg.bot{background:#f3eadb;align-self:flex-start}.ai-msg.user{background:#2a231e;color:#fff;align-self:flex-end}
+.quick-prompts{display:flex;gap:7px;flex-wrap:wrap;margin:10px 0}.quick-prompts button{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:99px;padding:7px 10px;font-size:.8rem}
+.share-actions{display:flex;gap:10px;flex-wrap:wrap}.share-card{background:linear-gradient(135deg,#2c211b,#6c3022);color:#fff8ed;border-radius:18px;padding:20px}
+@media(max-width:760px){.ai-shell{grid-template-columns:1fr}}
+
 </style></head><body>
 <header><a class="brand" href="#">AMDAVAD <span>OVEN.</span></a><nav><a href="#menu">Menu</a><a href="#promise">Our promise</a><a href="#order">Order</a><button class="primary small" onclick="document.querySelector('#order').scrollIntoView({behavior:'smooth'})">Cart <span id="cartCount">0</span></button></nav></header>
 <main>
 <section class="wrap hero"><div><div class="eyebrow">Artisan pizza • Ahmedabad</div><h1>Good dough.<br><span style="color:var(--red)">Great</span> nights.</h1><p>Pizza, sides and sweet finishes for sharing. Explore the menu, build your cart and send your order request straight to the kitchen.</p><div class="actions"><a class="btn" href="#menu">Explore menu</a><a class="btn secondary" href="#order">Build your order</a></div><p class="muted" style="font-size:.86rem;margin-top:18px">Initial target zones: Naranpura and Navrangpura, Ahmedabad. Every order is subject to kitchen confirmation.</p></div><div class="pizza-art"><b>🍕</b></div></section>
 <section class="wrap" id="menu"><div class="section-head"><div><div class="eyebrow">The good stuff</div><h2>Explore the menu</h2></div><input id="search" placeholder="Search pizzas, sides…" oninput="renderMenu()"></div><div class="filters"><button class="chip active" onclick="setFilter('All',this)">All items</button><button class="chip" onclick="setFilter('Veg',this)">Vegetarian</button><button class="chip" onclick="setFilter('Non-Veg',this)">Non-veg</button><button class="chip" onclick="setFilter('Premium',this)">Premium</button><button class="chip" onclick="setFilter('Sides',this)">Sides</button><button class="chip" onclick="setFilter('Desserts',this)">Desserts</button><button class="chip" onclick="setFilter('Drinks',this)">Drinks</button></div><div class="grid" id="menuGrid"></div></section>
 <section class="wrap" id="promise"><div class="panel two"><div><div class="eyebrow">Our promise</div><h2>Neighbourhood pizza energy.</h2><p class="muted">A local pizza concept focused on fresh preparation, clear menu details and friendly service. Ingredients, availability, allergen notes and prices must be confirmed by the kitchen before public launch.</p></div><div><h3>Pizza Concierge ✦</h3><p class="muted">A lightweight menu guide. Tell it what you like and it will suggest an item from this menu. This is local recommendation logic, not a hosted AI model.</p><input id="preference" placeholder="e.g. spicy vegetarian, paneer, cheesy"><button class="primary" onclick="recommend()">Find my pizza</button><p id="recommendation" aria-live="polite"></p></div></div></section>
+
+<section class="wrap" id="oven-assistant">
+  <div class="section-head"><div><div class="eyebrow">Meet your neighbourhood pizza guide</div><h2>Ask the Oven Expert ✦</h2></div><span class="tag">Menu-aware assistant</span></div>
+  <div class="panel ai-shell">
+    <div class="ai-card">
+      <p class="muted" style="margin-top:0">Ask about vegetarian picks, spicy pizzas, ingredients, budget ideas or ordering. Replies use the menu and a curated local knowledge base. For allergens, live stock and delivery estimates, the kitchen must confirm.</p>
+      <div class="quick-prompts">
+        <button onclick="askPreset('Suggest a vegetarian pizza')">Vegetarian picks</button>
+        <button onclick="askPreset('I like spicy food')">Something spicy</button>
+        <button onclick="askPreset('What can I get under ₹300?')">Under ₹300</button>
+        <button onclick="askPreset('How does delivery work?')">Delivery help</button>
+      </div>
+      <div id="aiLog" class="ai-log" aria-live="polite"><div class="ai-msg bot">Hello! I’m the Amdavad Oven menu guide. Tell me what flavours you like or what you want to spend.</div></div>
+      <form onsubmit="sendOvenQuestion(event)" style="display:flex;gap:8px;margin-top:10px"><input id="aiQuestion" required maxlength="240" placeholder="Ask the pizza guide…" style="margin:0"><button class="primary" type="submit">Ask</button></form>
+    </div>
+    <div class="ai-card">
+      <h3>How this assistant works</h3>
+      <p class="muted">It searches the actual menu items and uses locally stored pizza FAQs and recommendation rules. No customer chat is sent to an AI provider. This makes the demo inexpensive and predictable, but it is not a live ChatGPT connection.</p>
+      <div class="notice"><b>Kitchen-confirmed information only:</b> final ingredient lists, allergen cross-contact, stock, operating hours, delivery areas, fees and arrival times must be confirmed by staff.</div>
+      <h3 style="margin-top:20px">A quick recommendation</h3>
+      <p class="muted">Tell the guide your taste, dietary preference and budget. It can suggest a matching menu item and you can add it from the menu above.</p>
+    </div>
+  </div>
+</section>
+<section class="wrap" id="share-kit">
+  <div class="share-card">
+    <div class="eyebrow" style="color:#ffd28c">Spread the pizza love</div>
+    <h2 style="margin:8px 0">Good pizza is better shared.</h2>
+    <p style="max-width:650px;color:#fff0df">Invite friends and neighbours to explore the Amdavad Oven menu. This shares the public site link; it does not promise a discount or guarantee viral reach.</p>
+    <div class="share-actions"><button class="primary" onclick="shareAmdavad()">Share with friends ↗</button><button class="secondary" onclick="copyAmdavadLink()">Copy website link</button></div>
+    <p id="shareStatus" style="font-size:.86rem;color:#ffe5c8" aria-live="polite"></p>
+  </div>
+</section>
+
 <section class="wrap" id="order"><div class="section-head"><div><div class="eyebrow">Checkout</div><h2>Your order</h2></div><button class="secondary small" onclick="clearCart()">Clear cart</button></div><div class="two">
 <div class="panel"><h3>Cart summary</h3><div id="cartLines"><p class="muted">Your cart is empty. Add something delicious from the menu.</p></div><div class="cartline total"><span>Subtotal</span><span id="subtotal">₹0</span></div><p class="notice">Delivery fees, ETA and final availability will be confirmed by the kitchen on WhatsApp. Sample prices are editable launch placeholders.</p></div>
 <form class="panel" onsubmit="placeOrder(event)"><h3>Delivery details</h3><label>Your name</label><input id="customer" required maxlength="80" placeholder="Full name"><label>Mobile number</label><input id="phone" required inputmode="numeric" pattern="[6-9][0-9]{9}" maxlength="10" placeholder="10-digit Indian mobile"><label>Area</label><select id="area"><option>Naranpura</option><option>Navrangpura</option><option>Other Ahmedabad area — confirm first</option></select><label>Full address and landmark</label><textarea id="address" required maxlength="500" placeholder="Building, street, landmark"></textarea><div class="two"><div><label>Fulfilment</label><select id="fulfilment"><option>Delivery</option><option>Pickup</option></select></div><div><label>Payment preference</label><select id="payment"><option>Cash on delivery / pickup</option><option>UPI — confirm manually</option></select></div></div><label>Special instructions</label><textarea id="notes" maxlength="300" placeholder="Spice preference, gate instructions, etc."></textarea><button type="submit" class="primary" style="width:100%">Send order request on WhatsApp</button><p class="muted" style="font-size:.78rem">No online payment is processed here. Your request is not confirmed until the kitchen replies.</p></form></div></section>
@@ -71,4 +116,40 @@ function saveSettings(){let n=document.getElementById("businessPhone").value.rep
 function placeOrder(e){e.preventDefault();let entries=Object.entries(cart);if(!entries.length){toast("Add an item to your cart first");return}let biz=localStorage.getItem("ao_business_phone");if(!biz){toast("Owner: configure the WhatsApp number below first");document.getElementById("businessPhone").focus();return}let sum=0,lines=entries.map(e=>{let parts=e[0].split("_"),id=Number(parts[0]),extra=Number(parts[1]),n=e[1],p=products.find(x=>x.id===id),amount=(p.price+extra)*n;sum+=amount;return n+" x "+p.name+" ("+(extra?"Large":"Regular")+") — "+money(amount)}).join("\n");let fields={name:document.getElementById("customer").value,phone:document.getElementById("phone").value,area:document.getElementById("area").value,address:document.getElementById("address").value,fulfilment:document.getElementById("fulfilment").value,payment:document.getElementById("payment").value,notes:document.getElementById("notes").value};let message="NEW AMDAVAD OVEN ORDER REQUEST\n"+lines+"\nSubtotal: "+money(sum)+"\nName: "+fields.name+"\nPhone: "+fields.phone+"\nArea: "+fields.area+"\nAddress: "+fields.address+"\nFulfilment: "+fields.fulfilment+"\nPayment preference: "+fields.payment+"\nNotes: "+fields.notes+"\nPlease confirm availability, delivery fee and final total.";window.open("https://wa.me/"+biz+"?text="+encodeURIComponent(message),"_blank","noopener")}
 function toast(s){let t=document.getElementById("toast");t.textContent=s;t.style.display="block";setTimeout(()=>t.style.display="none",2600)}
 document.getElementById("year").textContent=new Date().getFullYear();renderMenu();renderCart();document.getElementById("businessPhone").value=localStorage.getItem("ao_business_phone")||"";
+
+const ovenKnowledge = [
+  {keys:["delivery","area","naranpura","navrangpura","when","time","minutes","fee"],answer:"The demo currently lists Naranpura and Navrangpura as target areas. Delivery availability, fee and arrival estimate are not live-connected; the kitchen must confirm these details for each address."},
+  {keys:["payment","upi","pay","cash"],answer:"This demo supports a WhatsApp order request with cash-on-delivery or manual UPI as a preference. It does not process payments. Do not send UPI PINs, OTPs or card details in chat."},
+  {keys:["allergen","allergy","gluten","dairy","nut","ingredients"],answer:"Please tell the kitchen about any allergy before ordering. The sample menu is not a verified allergen declaration and shared-kitchen cross-contact cannot be ruled out."},
+  {keys:["hours","open","close","today"],answer:"Live store hours are not configured yet. Please confirm today's operating hours with the business before placing an order."},
+  {keys:["order","cancel","track","status"],answer:"This is a demo storefront. Order requests are handed off to WhatsApp and are not stored in a central order database, so order acceptance and status must be confirmed directly by the kitchen."}
+];
+function addAiBubble(text,who){const log=document.getElementById("aiLog");const node=document.createElement("div");node.className="ai-msg "+who;node.textContent=text;log.appendChild(node);log.scrollTop=log.scrollHeight}
+function ovenAnswer(question){
+  const q=question.toLowerCase();
+  for(const item of ovenKnowledge){if(item.keys.some(k=>q.includes(k)))return item.answer}
+  let candidates=products.filter(p=>p.pizza);
+  if(q.includes("vegetarian")||q.includes("veg"))candidates=candidates.filter(p=>p.veg);
+  if(q.includes("non veg")||q.includes("chicken"))candidates=candidates.filter(p=>!p.veg);
+  if(q.includes("spicy")||q.includes("hot")||q.includes("chilli"))candidates=candidates.filter(p=>/chilli|peri peri|mexican|spicy/i.test(p.name));
+  if(q.includes("paneer"))candidates=candidates.filter(p=>/paneer/i.test(p.name));
+  if(q.includes("cheese"))candidates=candidates.filter(p=>/cheese/i.test(p.name));
+  const budgetMatch=q.match(/(?:under|below|within|budget(?: of)?)\s*₹?\s*(\d+)/);
+  if(budgetMatch)candidates=candidates.filter(p=>p.price<=Number(budgetMatch[1]));
+  if(candidates.length){
+    candidates.sort((a,b)=>a.price-b.price);
+    const picked=candidates.slice(0,3);
+    return "Based on your request, consider: "+picked.map(p=>p.name+" ("+money(p.price)+")").join(", ")+". These are sample menu prices; select an item above to add it to your cart.";
+  }
+  if(q.includes("recommend")||q.includes("suggest")||q.includes("best")||q.includes("what should")){
+    return "For a classic choice, try Classic Margherita (₹249). For a richer vegetarian option, try Paneer Tikka (₹369). These are sample prices and recipes; check the menu and confirm details with the kitchen.";
+  }
+  return "I can help you explore vegetarian or non-vegetarian pizzas, spicy flavours, cheese, paneer, budget picks, payment and delivery basics. Try asking: “vegetarian under ₹350” or “something spicy”. For live stock, allergens and delivery promises, please ask the kitchen.";
+}
+function sendOvenQuestion(event){event.preventDefault();const field=document.getElementById("aiQuestion");const q=field.value.trim();if(!q)return;addAiBubble(q,"user");addAiBubble(ovenAnswer(q),"bot");field.value=""}
+function askPreset(q){document.getElementById("aiQuestion").value=q;document.getElementById("aiQuestion").focus();addAiBubble(q,"user");addAiBubble(ovenAnswer(q),"bot")}
+function shareAmdavad(){const url=location.href.split("#")[0];const data={title:"Amdavad Oven — artisan pizza",text:"Explore the Amdavad Oven pizza menu and send an order request.",url};if(navigator.share){navigator.share(data).then(()=>{document.getElementById("shareStatus").textContent="Share sheet opened."}).catch(()=>{})}else{copyAmdavadLink()}}
+async function copyAmdavadLink(){const url=location.href.split("#")[0];try{await navigator.clipboard.writeText(url);document.getElementById("shareStatus").textContent="Website link copied. Paste it into WhatsApp, Instagram or your local groups."}catch(e){document.getElementById("shareStatus").textContent="Copy is unavailable in this browser. Copy the address from your browser bar."}}
+if("serviceWorker" in navigator && location.protocol.startsWith("http")){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}))}
+
 </script></body></html>
