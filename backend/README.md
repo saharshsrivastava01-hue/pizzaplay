@@ -54,3 +54,11 @@ This service does not integrate a payment provider. Every new order is initially
 
 ## Free-tier warning
 Render's free web services sleep after 15 minutes idle. Render's free Postgres has 1 GB capacity, no backups and expires 30 days after creation. This test database expires on 19 December 2026. Export and migrate it to a durable database before then and before using this for live customer orders.
+
+## Marketing and store configuration
+- `GET /api/storefront-config` publishes only the public store configuration.
+- `PATCH /api/admin/settings` updates verified public store details for owner/manager roles.
+- `POST /api/marketing/events` accepts anonymous, opt-in page/share/cart/referral events.
+- `GET /api/admin/marketing` returns 30-day aggregate first-party campaign metrics.
+- Order referral codes are stored with order request records.
+- No third-party website visitor data is collected or imported.
