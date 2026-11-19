@@ -136,14 +136,21 @@ function makeLink(channel){
  document.getElementById('refStatus').textContent='Share this link on '+channel+'. It contains your referral code and campaign source.';
 }
 async function copyRef(){const link=document.getElementById('refLink').value||linkFor('other');try{await navigator.clipboard.writeText(link);document.getElementById('refStatus').textContent='Link copied.'}catch(e){document.getElementById('refLink').value=link;document.getElementById('refLink').select();document.getElementById('refStatus').textContent='Select and copy the link.'}}
-async function copyField(id){const el=document.getElementById(id);try{await navigator.clipboard.writeText(el.value);el.style.borderColor='#42643b'}catch(e){el.focus();el.select()}}
+async function copyText(text){try{await navigator.clipboard.writeText(text);document.getElementById('refStatus').textContent='Campaign copy copied with your trackable referral link.'}catch(e){document.getElementById('refStatus').textContent='Copy is unavailable; select the text field manually.'}}
+async function copyField(id){const el=document.getElementById(id);await copyText(el.value);el.style.borderColor='#42643b'}
 function shareTo(channel){
  const link=linkFor(channel);
  const text='Ahmedabad, meet AMDAVAD OVEN 🍕 Explore the menu and customise a pizza: '+link;
  if(channel==='whatsapp'){window.open('https://wa.me/?text='+encodeURIComponent(text),'_blank','noopener');if(window.aoTrack)aoTrack('share_click')}
  else if(channel==='facebook'){window.open('https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(link),'_blank','noopener');if(window.aoTrack)aoTrack('share_click')}
- else if(channel==='instagram'){copyField('copyInstagram');if(window.aoTrack)aoTrack('share_click')}
- else {copyField('copyReel');if(window.aoTrack)aoTrack('share_click')}
+ else if(channel==='instagram'){
+   const caption=document.getElementById('copyInstagram').value.replace('https://amdavad-oven.onrender.com',link);
+   copyText(caption);if(window.aoTrack)aoTrack('share_click')
+ }
+ else {
+   const caption=document.getElementById('copyReel').value.replaceAll('https://amdavad-oven.onrender.com',link);
+   copyText(caption);if(window.aoTrack)aoTrack('share_click')
+ }
 }
 async function nativeShare(){
  const link=linkFor('other');
