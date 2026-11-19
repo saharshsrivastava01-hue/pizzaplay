@@ -145,6 +145,11 @@ async function migrate() {
       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
       updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
     );
+    CREATE TABLE IF NOT EXISTS store_settings (
+      setting_key TEXT PRIMARY KEY,
+      setting_value JSONB NOT NULL,
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
     CREATE TABLE IF NOT EXISTS audit_logs (
       id BIGSERIAL PRIMARY KEY,
       admin_user_id BIGINT REFERENCES admin_users(id),
@@ -159,6 +164,24 @@ async function migrate() {
     CREATE INDEX IF NOT EXISTS idx_orders_status ON orders(status);
     CREATE INDEX IF NOT EXISTS idx_support_status ON support_tickets(status, created_at DESC);
   `);
+
+  const defaultSettings = {
+    store_name: 'AMDAVAD OVEN',
+    whatsapp_number: '',
+    opening_hours: {},
+    delivery_areas: [],
+    delivery_enabled: false,
+    pickup_enabled: true,
+    promotions_enabled: false,
+    currency: 'INR',
+    time_zone: 'Asia/Kolkata'
+  };
+  for (const [key,value] of Object.entries(defaultSettings)) {
+    await pool.query(
+      'INSERT INTO store_settings (setting_key,setting_value) VALUES ($1,$2) ON CONFLICT (setting_key) DO NOTHING',
+      [key,JSON.stringify(value)]
+    );
+  }
 
   for (const p of seedProducts) {
     await pool.query(
@@ -228,6 +251,22 @@ async function audit(adminId,eventType,entityType,entityId,details={}) {
 app.get('/healthz', asyncRoute(async (_req,res) => {
   await pool.query('SELECT 1');
   res.json({ ok:true, service:'amdavad-oven-api', database:'connected', time:new Date().toISOString() });
+}));
+
+app.get('/api/storefront-config', asyncRoute(async (_req,res) => {
+  const result = await pool.query('SELECT setting_key,setting_value FROM store_settings');
+  const values = Object.fromEntries(result.rows.map(r => [r.setting_key,r.setting_value]));
+  res.json({
+    storeName: values.store_name || 'AMDAVAD OVEN',
+    whatsappNumber: values.whatsapp_number || '',
+    openingHours: values.opening_hours || {},
+    deliveryAreas: values.delivery_areas || [],
+    deliveryEnabled: values.delivery_enabled === true,
+    pickupEnabled: values.pickup_enabled !== false,
+    promotionsEnabled: values.promotions_enabled === true,
+    currency: values.currency || 'INR',
+    timeZone: values.time_zone || 'Asia/Kolkata'
+  });
 }));
 
 app.get('/api/menu', asyncRoute(async (_req,res) => {
@@ -342,22 +381,82 @@ app.post('/api/admin/login', authLimiter, asyncRoute(async (req,res) => {
   res.json({token,admin:{email:user.email,role:user.role}});
 }));
 
+app.post('/api/admin/staff',requireAuth,requireRoles('owner'),asyncRoute(async (req,res)=>{
+  const parsed=z.object({
+    email:z.string().email().max(200),
+    password:z.string().min(12).max(100),
+    role:z.enum(['manager','kitchen','support'])
+  }).safeParse(req.body);
+  if(!parsed.success)return res.status(400).json({error:'Use a valid email, a 12+ character password and a supported staff role.'});
+  const hash=await bcrypt.hash(parsed.data.password,12);
+  try{
+    const created=await pool.query(
+      'INSERT INTO admin_users (email,password_hash,role) VALUES ($1,$2,$3) RETURNING id,email,role,is_active,created_at',
+      [parsed.data.email.toLowerCase(),hash,parsed.data.role]
+    );
+    await audit(req.admin.sub,'staff_created','admin_user',created.rows[0].id,{email:created.rows[0].email,role:created.rows[0].role});
+    res.status(201).json({staff:created.rows[0]});
+  }catch(err){
+    if(err.code==='23505')return res.status(409).json({error:'An account already exists with that email.'});
+    throw err;
+  }
+}));
+app.get('/api/admin/staff',requireAuth,requireRoles('owner','manager'),asyncRoute(async (_req,res)=>{
+  const result=await pool.query('SELECT id,email,role,is_active,created_at FROM admin_users ORDER BY created_at');
+  res.json({staff:result.rows});
+}));
+
 app.get('/api/admin/me',requireAuth,asyncRoute(async (req,res)=>{
   const r=await pool.query('SELECT id,email,role FROM admin_users WHERE id=$1 AND is_active=TRUE',[req.admin.sub]);
   if(!r.rowCount)return res.status(401).json({error:'Admin account unavailable.'});
   res.json({admin:r.rows[0]});
 }));
 
+app.get('/api/admin/settings',requireAuth,requireRoles('owner','manager'),asyncRoute(async (_req,res)=>{
+  const result = await pool.query('SELECT setting_key,setting_value,updated_at FROM store_settings ORDER BY setting_key');
+  res.json({settings:Object.fromEntries(result.rows.map(r=>[r.setting_key,r.setting_value]))});
+}));
+app.patch('/api/admin/settings',requireAuth,requireRoles('owner','manager'),asyncRoute(async (req,res)=>{
+  const schema = z.object({
+    store_name:z.string().trim().min(2).max(80).optional(),
+    whatsapp_number:z.string().regex(/^(|91[6-9][0-9]{9})$/).optional(),
+    opening_hours:z.record(z.string().max(100)).optional(),
+    delivery_areas:z.array(z.string().trim().min(2).max(80)).max(30).optional(),
+    delivery_enabled:z.boolean().optional(),
+    pickup_enabled:z.boolean().optional(),
+    promotions_enabled:z.boolean().optional()
+  }).refine(v=>Object.keys(v).length>0);
+  const parsed=schema.safeParse(req.body);
+  if(!parsed.success)return res.status(400).json({error:'Provide valid store settings. WhatsApp must be blank or 91 plus a verified 10-digit Indian number.'});
+  for(const [key,value] of Object.entries(parsed.data)){
+    await pool.query(
+      'INSERT INTO store_settings (setting_key,setting_value,updated_at) VALUES ($1,$2,NOW()) ON CONFLICT (setting_key) DO UPDATE SET setting_value=EXCLUDED.setting_value,updated_at=NOW()',
+      [key,JSON.stringify(value)]
+    );
+  }
+  await audit(req.admin.sub,'store_settings_updated','store','amdavad-oven',parsed.data);
+  const result=await pool.query('SELECT setting_key,setting_value FROM store_settings ORDER BY setting_key');
+  res.json({settings:Object.fromEntries(result.rows.map(r=>[r.setting_key,r.setting_value]))});
+}));
+
 app.get('/api/admin/overview',requireAuth,requireRoles('owner','manager','kitchen'),asyncRoute(async (_req,res)=>{
   const r=await pool.query(`
-    SELECT COUNT(*)::int AS total_orders,
-      COUNT(*) FILTER (WHERE status IN ('received','accepted','preparing','baking','ready'))::int AS open_orders,
+    SELECT COUNT(*)::int AS total_order_requests,
+      COUNT(*) FILTER (WHERE status IN ('received','accepted','preparing','baking','ready','out_for_delivery'))::int AS open_orders,
       COUNT(*) FILTER (WHERE status='delivered')::int AS delivered_orders,
+      COALESCE(SUM(total_rupees),0)::int AS requested_order_value_rupees,
+      COALESCE(AVG(total_rupees),0)::numeric(12,2) AS average_requested_order_value_rupees,
       COALESCE(SUM(total_rupees) FILTER (WHERE payment_status='paid'),0)::int AS verified_paid_revenue_rupees
     FROM orders
     WHERE created_at >= date_trunc('day',NOW())
   `);
-  res.json({metrics:r.rows[0],note:'Revenue counts only provider-verified payments. This build does not process payments, so orders remain unpaid.'});
+  const top=await pool.query(`
+    SELECT product_name,SUM(quantity)::int AS units_sold,SUM(line_total_rupees)::int AS requested_value_rupees
+    FROM order_items i JOIN orders o ON o.id=i.order_id
+    WHERE o.created_at >= date_trunc('day',NOW())
+    GROUP BY product_name ORDER BY units_sold DESC LIMIT 5
+  `);
+  res.json({metrics:r.rows[0],topItems:top.rows,note:'Requested order value is not revenue. Verified revenue includes only payment-provider-confirmed transactions; online payment is not enabled.'});
 }));
 
 app.get('/api/admin/orders',requireAuth,requireRoles('owner','manager','kitchen','support'),asyncRoute(async (req,res)=>{
@@ -387,12 +486,21 @@ const transitions = {
 app.patch('/api/admin/orders/:id/status',requireAuth,requireRoles('owner','manager','kitchen'),asyncRoute(async (req,res)=>{
   const parsed=z.object({status:z.enum(Object.keys(transitions))}).safeParse(req.body);
   if(!parsed.success)return res.status(400).json({error:'Invalid order status.'});
-  const current=await pool.query('SELECT id,status FROM orders WHERE id=$1',[req.params.id]);
-  if(!current.rowCount)return res.status(404).json({error:'Order not found.'});
-  if(!transitions[current.rows[0].status].includes(parsed.data.status))return res.status(409).json({error:'That status transition is not allowed.'});
-  const updated=await pool.query('UPDATE orders SET status=$1,updated_at=NOW() WHERE id=$2 RETURNING id,order_number,status,updated_at',[parsed.data.status,req.params.id]);
-  await audit(req.admin.sub,'order_status_changed','order',req.params.id,{from:current.rows[0].status,to:parsed.data.status});
-  res.json({order:updated.rows[0]});
+  const client=await pool.connect();
+  try{
+    await client.query('BEGIN');
+    const current=await client.query('SELECT id,status FROM orders WHERE id=$1 FOR UPDATE',[req.params.id]);
+    if(!current.rowCount){await client.query('ROLLBACK');return res.status(404).json({error:'Order not found.'});}
+    if(!transitions[current.rows[0].status].includes(parsed.data.status)){await client.query('ROLLBACK');return res.status(409).json({error:'That status transition is not allowed.'});}
+    const updated=await client.query('UPDATE orders SET status=$1,updated_at=NOW() WHERE id=$2 RETURNING id,order_number,status,updated_at',[parsed.data.status,req.params.id]);
+    await client.query(
+      'INSERT INTO audit_logs (admin_user_id,event_type,entity_type,entity_id,details) VALUES ($1,$2,$3,$4,$5)',
+      [req.admin.sub,'order_status_changed','order',req.params.id,JSON.stringify({from:current.rows[0].status,to:parsed.data.status})]
+    );
+    await client.query('COMMIT');
+    res.json({order:updated.rows[0]});
+  }catch(err){await client.query('ROLLBACK');throw err;}
+  finally{client.release();}
 }));
 
 app.get('/api/admin/products',requireAuth,requireRoles('owner','manager','kitchen'),asyncRoute(async (_req,res)=>{
@@ -407,6 +515,13 @@ app.patch('/api/admin/products/:id',requireAuth,requireRoles('owner','manager'),
   const r=await pool.query('UPDATE products SET price_rupees=COALESCE($1,price_rupees),is_available=COALESCE($2,is_available),updated_at=NOW() WHERE id=$3 RETURNING id,name,price_rupees,is_available',[parsed.data.price_rupees??null,parsed.data.is_available??null,req.params.id]);
   await audit(req.admin.sub,'product_updated','product',req.params.id,parsed.data);
   res.json({product:r.rows[0]});
+}));
+
+app.get('/api/admin/audit',requireAuth,requireRoles('owner','manager'),asyncRoute(async (_req,res)=>{
+  const result=await pool.query(
+    'SELECT a.id,a.event_type,a.entity_type,a.entity_id,a.details,a.created_at,u.email AS actor_email FROM audit_logs a LEFT JOIN admin_users u ON u.id=a.admin_user_id ORDER BY a.created_at DESC LIMIT 200'
+  );
+  res.json({events:result.rows});
 }));
 
 app.get('/api/admin/support',requireAuth,requireRoles('owner','manager','support'),asyncRoute(async (_req,res)=>{
