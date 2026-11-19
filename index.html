@@ -49,11 +49,118 @@ footer{background:#251f1a;color:#fff5e8;margin-top:48px;padding:32px 18px}.footi
 [hidden]{display:none!important}
 @media(max-width:480px){.brand img{width:145px}.support-panel{right:10px;bottom:76px}.support-launcher{right:10px;bottom:10px}}
 
+
+/* 2028 storefront upgrade: build-your-own flow and stronger mobile ordering */
+.builder{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}
+.builder-card{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:18px}
+.builder-group{margin:14px 0}
+.builder-group h3{margin:0 0 8px;font-size:1rem}
+.option-grid{display:flex;gap:8px;flex-wrap:wrap}
+.option-pill{display:flex;align-items:center;gap:7px;border:1px solid var(--line);background:#fffaf2;border-radius:13px;padding:9px 12px;font-size:.88rem;font-weight:750}
+.option-pill input{width:auto;margin:0;accent-color:var(--red)}
+.builder-summary{background:#2b211b;color:#fff7eb;border-radius:17px;padding:18px;position:sticky;top:90px}
+.builder-summary .muted{color:#ead9c4}
+.builder-price{font-size:2rem;font-weight:950;letter-spacing:-.05em}
+.builder-note{font-size:.78rem;color:var(--muted)}
+.value-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.value-tile{background:#fffaf2;border:1px solid var(--line);border-radius:16px;padding:15px}
+.value-tile b{display:block;font-size:1.05rem}
+.value-tile span{font-size:.82rem;color:var(--muted)}
+.faq-list details{background:#fffaf2;border:1px solid var(--line);border-radius:13px;padding:13px 15px;margin:9px 0}
+.faq-list summary{font-weight:850;cursor:pointer}
+.faq-list p{color:var(--muted);margin-bottom:0}
+@media(max-width:760px){.builder{grid-template-columns:1fr}.builder-summary{position:static}.value-strip{grid-template-columns:1fr}}
+
 </style></head><body>
 <header><a class="brand" href="#" aria-label="Amdavad Oven home"><img src="./logo.svg" alt="Amdavad Oven" width="174" height="44"></a><nav><a href="#menu">Menu</a><a href="#promise">Our promise</a><a href="#customer-support">Support</a><a href="#order">Order</a><button class="primary small" onclick="document.querySelector('#order').scrollIntoView({behavior:'smooth'})">Cart <span id="cartCount">0</span></button></nav></header>
 <main>
 <section class="wrap hero"><div><div class="eyebrow">Artisan pizza • Ahmedabad</div><h1>Good dough.<br><span style="color:var(--red)">Great</span> nights.</h1><p>Pizza, sides and sweet finishes for sharing. Explore the menu, build your cart and send your order request straight to the kitchen.</p><div class="actions"><a class="btn" href="#menu">Explore menu</a><a class="btn secondary" href="#order">Build your order</a></div><p class="muted" style="font-size:.86rem;margin-top:18px">Initial target zones: Naranpura and Navrangpura, Ahmedabad. Every order is subject to kitchen confirmation.</p></div><div class="pizza-art"><b>🍕</b></div></section>
 <section class="wrap" id="menu"><div class="section-head"><div><div class="eyebrow">The good stuff</div><h2>Explore the menu</h2></div><input id="search" placeholder="Search pizzas, sides…" oninput="renderMenu()"></div><div class="filters"><button class="chip active" onclick="setFilter('All',this)">All items</button><button class="chip" onclick="setFilter('Veg',this)">Vegetarian</button><button class="chip" onclick="setFilter('Non-Veg',this)">Non-veg</button><button class="chip" onclick="setFilter('Premium',this)">Premium</button><button class="chip" onclick="setFilter('Sides',this)">Sides</button><button class="chip" onclick="setFilter('Desserts',this)">Desserts</button><button class="chip" onclick="setFilter('Drinks',this)">Drinks</button></div><div class="grid" id="menuGrid"></div></section>
+
+<section class="wrap" id="build-pizza">
+  <div class="section-head">
+    <div><div class="eyebrow">Made your way</div><h2>Build your own pizza</h2></div>
+    <span class="tag">Customise before adding</span>
+  </div>
+  <div class="builder">
+    <div class="builder-card">
+      <div class="builder-group">
+        <h3>1. Choose your first flavour</h3>
+        <select id="buildBase" onchange="updatePizzaBuilder()">
+          <option value="1">Classic Margherita</option><option value="3">House Garden</option>
+          <option value="4">Paneer Tikka</option><option value="5">Chilli Garlic Heat</option>
+          <option value="6">Four Cheese</option><option value="8">Mushroom Truffle Style</option>
+          <option value="9">Pesto Garden</option><option value="11">Mexican Fiesta</option>
+          <option value="12">Peri Peri Paneer</option><option value="13">BBQ Chicken</option>
+          <option value="14">Chicken Tikka</option><option value="16">Spicy Chicken Feast</option>
+        </select>
+      </div>
+      <div class="builder-group">
+        <h3>2. Make it half-and-half (optional)</h3>
+        <select id="buildHalf" onchange="updatePizzaBuilder()">
+          <option value="">No second flavour</option><option value="1">Classic Margherita</option>
+          <option value="3">House Garden</option><option value="4">Paneer Tikka</option>
+          <option value="5">Chilli Garlic Heat</option><option value="6">Four Cheese</option>
+          <option value="8">Mushroom Truffle Style</option><option value="9">Pesto Garden</option>
+          <option value="11">Mexican Fiesta</option><option value="12">Peri Peri Paneer</option>
+          <option value="13">BBQ Chicken</option><option value="14">Chicken Tikka</option>
+          <option value="16">Spicy Chicken Feast</option>
+        </select>
+        <p class="builder-note">Choose two flavours from the same dietary category. The kitchen must confirm whether shared preparation equipment is suitable for your needs.</p>
+      </div>
+      <div class="builder-group">
+        <h3>3. Pick a size</h3>
+        <div class="option-grid">
+          <label class="option-pill"><input type="radio" name="buildSize" value="0" checked onchange="updatePizzaBuilder()"> Regular</label>
+          <label class="option-pill"><input type="radio" name="buildSize" value="100" onchange="updatePizzaBuilder()"> Large (+₹100)</label>
+        </div>
+      </div>
+      <div class="builder-group">
+        <h3>4. Choose your crust</h3>
+        <select id="buildCrust" onchange="updatePizzaBuilder()">
+          <option value="0">Classic crust</option><option value="0">Thin crust</option><option value="80">Cheese burst (+₹80)</option>
+        </select>
+      </div>
+      <div class="builder-group">
+        <h3>5. Add extra toppings</h3>
+        <div class="option-grid">
+          <label class="option-pill"><input type="checkbox" name="buildTopping" value="30" data-label="Extra cheese" onchange="updatePizzaBuilder()"> Extra cheese (+₹30)</label>
+          <label class="option-pill"><input type="checkbox" name="buildTopping" value="30" data-label="Jalapeño" onchange="updatePizzaBuilder()"> Jalapeño (+₹30)</label>
+          <label class="option-pill"><input type="checkbox" name="buildTopping" value="30" data-label="Olives" onchange="updatePizzaBuilder()"> Olives (+₹30)</label>
+          <label class="option-pill"><input type="checkbox" name="buildTopping" value="40" data-label="Paneer" onchange="updatePizzaBuilder()"> Paneer (+₹40)</label>
+        </div>
+      </div>
+      <div class="builder-group">
+        <h3>6. Kitchen instructions (optional)</h3>
+        <textarea id="buildNotes" maxlength="180" placeholder="For example: light chilli, cut into 8 slices…"></textarea>
+      </div>
+    </div>
+    <aside class="builder-summary">
+      <div class="eyebrow" style="color:#ffd28c">Your creation</div>
+      <h3 id="buildPreviewName">Classic Margherita</h3>
+      <p id="buildPreviewText" class="muted">Classic crust · Regular</p>
+      <div class="builder-price" id="buildPrice">₹249</div>
+      <p class="muted" style="font-size:.82rem">Displayed total before any delivery fee. These are sample menu prices and every custom request is subject to kitchen confirmation.</p>
+      <button class="primary" style="width:100%" onclick="addBuiltPizza()">Add custom pizza to cart</button>
+      <p id="buildFeedback" class="muted" aria-live="polite" style="font-size:.78rem"></p>
+    </aside>
+  </div>
+</section>
+<section class="wrap" id="ordering-info">
+  <div class="section-head"><div><div class="eyebrow">Simple and transparent</div><h2>How ordering works</h2></div></div>
+  <div class="value-strip">
+    <div class="value-tile"><b>01 · Choose</b><span>Browse the menu or customise a pizza.</span></div>
+    <div class="value-tile"><b>02 · Request</b><span>Send your cart and address to the store using WhatsApp.</span></div>
+    <div class="value-tile"><b>03 · Confirm</b><span>The kitchen confirms availability, final charges and collection or delivery.</span></div>
+  </div>
+  <div class="panel faq-list">
+    <h3>Before you order</h3>
+    <details><summary>Is this a live online payment checkout?</summary><p>No. This website sends an order request. It does not charge a card, UPI account or wallet. Pay only through a method confirmed directly by the business.</p></details>
+    <details><summary>Are ingredients and allergen details verified?</summary><p>Not yet. The displayed menu is a configurable sample. Contact the kitchen before ordering with allergies or dietary requirements; cross-contact may occur.</p></details>
+    <details><summary>Where is delivery available?</summary><p>Naranpura and Navrangpura are initial target neighbourhoods, not a live verified delivery map. The store must confirm each address, delivery availability, fee and timing.</p></details>
+  </div>
+</section>
+
 <section class="wrap" id="promise"><div class="panel two"><div><div class="eyebrow">Our promise</div><h2>Neighbourhood pizza energy.</h2><p class="muted">A local pizza concept focused on fresh preparation, clear menu details and friendly service. Ingredients, availability, allergen notes and prices must be confirmed by the kitchen before public launch.</p></div><div><h3>Pizza Concierge ✦</h3><p class="muted">A lightweight menu guide. Tell it what you like and it will suggest an item from this menu. This is local recommendation logic, not a hosted AI model.</p><input id="preference" placeholder="e.g. spicy vegetarian, paneer, cheesy"><button class="primary" onclick="recommend()">Find my pizza</button><p id="recommendation" aria-live="polite"></p></div></div></section>
 
 <section class="wrap" id="oven-assistant">
@@ -292,4 +399,56 @@ if(!number){toast("Customer-care WhatsApp is not configured yet. Ask the store o
 const msg="Hello Amdavad Oven, I need help with an order. Please assist.";
 window.open("https://wa.me/"+number+"?text="+encodeURIComponent(msg),"_blank","noopener")
 }
-</script></body></html>
+</script>
+<script>
+/* Custom-pizza builder. Cart entries persist in this browser; orders remain WhatsApp requests. */
+(function(){
+  const byId=id=>document.getElementById(id);
+  function selectedProduct(id){return products.find(p=>p.id===Number(id));}
+  window.updatePizzaBuilder=function(){
+    const base=selectedProduct(byId("buildBase").value),halfId=byId("buildHalf").value;
+    const half=halfId?selectedProduct(halfId):null;
+    const vegOk=!half||base.veg===half.veg;
+    const size=Number(document.querySelector('input[name="buildSize"]:checked').value);
+    const crust=byId("buildCrust"),crustName=crust.options[crust.selectedIndex].text;
+    const toppings=[...document.querySelectorAll('input[name="buildTopping"]:checked')];
+    const toppingCost=toppings.reduce((n,x)=>n+Number(x.value),0);
+    const price=Math.max(base.price,half?half.price:0)+size+Number(crust.value)+(half?35:0)+toppingCost;
+    byId("buildPreviewName").textContent=base.name+(half?" / "+half.name:"");
+    byId("buildPreviewText").textContent=(size?"Large":"Regular")+" · "+crustName.replace(/ \(.*\)/,"")+(toppings.length?" · "+toppings.map(t=>t.dataset.label).join(", "):"");
+    byId("buildPrice").textContent=money(price);
+    byId("buildFeedback").textContent=vegOk?"": "Choose two vegetarian flavours or two non-vegetarian flavours for a half-and-half pizza.";
+    byId("buildPizzaAdd").disabled=!vegOk;
+    return {base,half,size,crustName,toppings,price,vegOk};
+  };
+  window.addBuiltPizza=function(){
+    const data=window.updatePizzaBuilder();
+    if(!data.vegOk){toast("Half-and-half flavours must be in the same dietary category.");return;}
+    const notes=(byId("buildNotes").value||"").trim();
+    const toppingNames=data.toppings.map(t=>t.dataset.label);
+    const sizeName=data.size?"Large":"Regular";
+    const name="Custom "+sizeName+" • "+data.base.name+(data.half?" / "+data.half.name:"");
+    const detail=[data.crustName.replace(/ \(.*\)/,""),toppingNames.length?"Extras: "+toppingNames.join(", "):"",notes?"Note: "+notes:""].filter(Boolean).join(" · ");
+    const id=900000+Date.now()%90000;
+    const item={id,name,cat:"Custom",veg:data.base.veg,price:data.price,desc:detail,emoji:"🍕",pizza:true};
+    products.push(item);
+    const saved=JSON.parse(localStorage.getItem("ao_custom_products")||"[]");
+    saved.push(item);localStorage.setItem("ao_custom_products",JSON.stringify(saved.slice(-30)));
+    cart[id+"_0"]=(cart[id+"_0"]||0)+1;
+    persist();renderMenu();
+    byId("buildFeedback").textContent="Added to your cart. Check your cart summary below.";
+    toast("Your custom pizza is in the cart");
+    byId("order").scrollIntoView({behavior:"smooth"});
+  };
+  try{
+    const saved=JSON.parse(localStorage.getItem("ao_custom_products")||"[]");
+    saved.forEach(item=>{if(!products.some(p=>p.id===item.id))products.push(item);});
+  }catch(e){localStorage.removeItem("ao_custom_products");}
+  const addButton=document.querySelector('#build-pizza button[onclick="addBuiltPizza()"]');
+  if(addButton)addButton.id="buildPizzaAdd";
+  window.updatePizzaBuilder();
+  renderCart();
+})();
+</script>
+
+</body></html>
