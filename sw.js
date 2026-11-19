@@ -1,5 +1,5 @@
-const CACHE_NAME = "amdavad-oven-v1";
-const APP_SHELL = ["./", "./index.html", "./manifest.json", "./icon.svg"];
+const CACHE_NAME = "amdavad-oven-v2";
+const APP_SHELL = ["./", "./index.html", "./manifest.json", "./icon.svg", "./pizza-lab.html"];
 self.addEventListener("install", event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL)));
   self.skipWaiting();
