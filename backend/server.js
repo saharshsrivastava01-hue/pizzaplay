@@ -163,6 +163,29 @@ async function migrate() {
     ALTER TABLE orders ADD COLUMN IF NOT EXISTS referral_code TEXT;
     CREATE INDEX IF NOT EXISTS idx_marketing_events_created ON marketing_events(created_at DESC);
     CREATE INDEX IF NOT EXISTS idx_marketing_events_referral ON marketing_events(referral_code);
+    CREATE TABLE IF NOT EXISTS community_signups (
+      id BIGSERIAL PRIMARY KEY,
+      customer_name TEXT NOT NULL,
+      phone TEXT UNIQUE NOT NULL,
+      neighbourhood TEXT NOT NULL,
+      interest_type TEXT NOT NULL,
+      referral_code TEXT,
+      contact_consent BOOLEAN NOT NULL DEFAULT FALSE CHECK (contact_consent=TRUE),
+      consented_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+    CREATE TABLE IF NOT EXISTS community_votes (
+      id BIGSERIAL PRIMARY KEY,
+      poll_key TEXT NOT NULL,
+      voter_token UUID NOT NULL,
+      choice TEXT NOT NULL,
+      neighbourhood TEXT NOT NULL,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      UNIQUE(poll_key,voter_token)
+    );
+    CREATE INDEX IF NOT EXISTS idx_community_signups_created ON community_signups(created_at DESC);
+    CREATE INDEX IF NOT EXISTS idx_community_votes_poll ON community_votes(poll_key,created_at DESC);
     CREATE TABLE IF NOT EXISTS audit_logs (
       id BIGSERIAL PRIMARY KEY,
       admin_user_id BIGINT REFERENCES admin_users(id),
@@ -373,6 +396,59 @@ app.post('/api/marketing/events',orderLimiter,asyncRoute(async (req,res)=>{
   res.status(202).json({ok:true});
 }));
 
+const CommunityJoinSchema=z.object({
+  customerName:z.string().trim().min(2).max(80),
+  phone:z.string().regex(/^[6-9][0-9]{9}$/),
+  neighbourhood:z.enum(['Naranpura','Navrangpura','CG Road','Vastrapur','Bodakdev','Satellite','Prahlad Nagar','Maninagar','Bopal','Chandkheda','Other']),
+  interestType:z.enum(['early_access','food_creator','office_group','community_host']),
+  referralCode:z.string().regex(/^[A-Z0-9]{6,12}$/).optional(),
+  contactConsent:z.literal(true)
+});
+app.post('/api/community/join',orderLimiter,asyncRoute(async (req,res)=>{
+  const parsed=CommunityJoinSchema.safeParse(req.body);
+  if(!parsed.success)return res.status(400).json({error:'Please check the details and explicitly agree to receive launch updates.'});
+  const x=parsed.data;
+  const result=await pool.query(
+    `INSERT INTO community_signups
+      (customer_name,phone,neighbourhood,interest_type,referral_code,contact_consent,consented_at)
+     VALUES ($1,$2,$3,$4,$5,TRUE,NOW())
+     ON CONFLICT (phone) DO UPDATE SET
+      customer_name=EXCLUDED.customer_name,
+      neighbourhood=EXCLUDED.neighbourhood,
+      interest_type=EXCLUDED.interest_type,
+      referral_code=COALESCE(EXCLUDED.referral_code,community_signups.referral_code),
+      contact_consent=TRUE,consented_at=NOW(),updated_at=NOW()
+     RETURNING id,neighbourhood,interest_type,created_at`,
+    [x.customerName,x.phone,x.neighbourhood,x.interestType,x.referralCode||null]
+  );
+  res.status(201).json({ok:true,signup:result.rows[0],message:'You are on the Ahmedabad launch list. No automated message has been sent.'});
+}));
+
+const CommunityVoteSchema=z.object({
+  voterToken:z.string().uuid(),
+  pollKey:z.literal('first-pizza-wave-2026'),
+  choice:z.enum(['paneer_tikka','classic_margherita','four_cheese','peri_peri_paneer','chicken_tikka']),
+  neighbourhood:z.enum(['Naranpura','Navrangpura','CG Road','Vastrapur','Bodakdev','Satellite','Prahlad Nagar','Maninagar','Bopal','Chandkheda','Other'])
+});
+app.post('/api/community/vote',orderLimiter,asyncRoute(async (req,res)=>{
+  const parsed=CommunityVoteSchema.safeParse(req.body);
+  if(!parsed.success)return res.status(400).json({error:'Choose one pizza and neighbourhood.'});
+  const x=parsed.data;
+  const result=await pool.query(
+    'INSERT INTO community_votes (poll_key,voter_token,choice,neighbourhood) VALUES ($1,$2,$3,$4) ON CONFLICT (poll_key,voter_token) DO NOTHING RETURNING id',
+    [x.pollKey,x.voterToken,x.choice,x.neighbourhood]
+  );
+  if(!result.rowCount)return res.status(409).json({error:'This browser has already submitted a vote in this poll.'});
+  res.status(201).json({ok:true,message:'Vote recorded. This is a preference poll, not a promise that an item will launch.'});
+}));
+app.get('/api/community/poll',asyncRoute(async (_req,res)=>{
+  const [totals,areas]=await Promise.all([
+    pool.query(`SELECT choice,COUNT(*)::int AS votes FROM community_votes WHERE poll_key='first-pizza-wave-2026' GROUP BY choice ORDER BY votes DESC,choice`),
+    pool.query(`SELECT neighbourhood,COUNT(*)::int AS votes FROM community_votes WHERE poll_key='first-pizza-wave-2026' GROUP BY neighbourhood ORDER BY votes DESC,neighbourhood`)
+  ]);
+  const total=totals.rows.reduce((n,r)=>n+Number(r.votes),0);
+  res.json({pollKey:'first-pizza-wave-2026',totalSubmittedVotes:total,choices:totals.rows,neighbourhoods:areas.rows,note:'Submitted browser votes, not a verified count of unique Ahmedabad residents.'});
+}));
 app.post('/api/support', orderLimiter, asyncRoute(async (req,res) => {
   const parsed = SupportSchema.safeParse(req.body);
   if (!parsed.success) return res.status(400).json({error:'Please check the support request details.'});
@@ -578,6 +654,14 @@ app.get('/api/admin/marketing',requireAuth,requireRoles('owner','manager'),async
   res.json({periodDays:30,summary:summary.rows[0],sources:sources.rows,campaigns:campaigns.rows,referrals:referrals.rows,orders:orders.rows[0],note:'Events are first-party browser events, not verified unique people. Order request totals are not paid revenue; no paid ads, bot traffic, or guaranteed virality.'});
 }));
 
+app.get('/api/admin/community',requireAuth,requireRoles('owner','manager','support'),asyncRoute(async (_req,res)=>{
+  const [signups,interests,votes]=await Promise.all([
+    pool.query('SELECT id,customer_name,phone,neighbourhood,interest_type,referral_code,consented_at,created_at FROM community_signups ORDER BY created_at DESC LIMIT 500'),
+    pool.query('SELECT neighbourhood,COUNT(*)::int AS signups FROM community_signups GROUP BY neighbourhood ORDER BY signups DESC'),
+    pool.query(`SELECT choice,COUNT(*)::int AS votes FROM community_votes WHERE poll_key='first-pizza-wave-2026' GROUP BY choice ORDER BY votes DESC`)
+  ]);
+  res.json({signups:signups.rows,byNeighbourhood:interests.rows,pollVotes:votes.rows,note:'Only contacts that explicitly consented to launch contact appear here. Do not export or message them for unrelated promotions.'});
+}));
 app.get('/api/admin/audit',requireAuth,requireRoles('owner','manager'),asyncRoute(async (_req,res)=>{
   const result=await pool.query(
     'SELECT a.id,a.event_type,a.entity_type,a.entity_id,a.details,a.created_at,u.email AS actor_email FROM audit_logs a LEFT JOIN admin_users u ON u.id=a.admin_user_id ORDER BY a.created_at DESC LIMIT 200'
