@@ -13,7 +13,7 @@
 </style>
 </head>
 <body>
-<header><a class="logo" href="#">BANKPATH <i>INDIA</i></a><nav class="topnav"><a href="#assistant">Assistant</a><a href="#directory">Bank directory</a><a href="#checklist">KYC checklist</a><a href="#tracker">My tracker</a></nav></header>
+<header><a class="logo" href="#">BANKPATH <i>INDIA</i></a><nav class="topnav"><a href="#assistant">Assistant</a><a href="#directory">Bank directory</a><a href="#loans">Loan assistant</a><a href="#checklist">Safety</a><a href="#tracker">My tracker</a></nav></header>
 <main class="wrap">
 <section class="hero">
 <div><div class="eyebrow">A safer way to compare bank accounts</div><h1>Find your next bank account.<br><span style="color:#9ec2ff">You stay in control.</span></h1><p>Explore India’s bank categories, prepare the questions to ask, and continue only on the bank’s official website. We guide you. The bank verifies you.</p><div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:20px"><a class="btn light" href="#assistant">Start guided assistant →</a><a class="btn" style="background:#315cae" href="#directory">Browse bank directory</a></div></div>
@@ -67,6 +67,60 @@
 <div class="directoryHead"><input id="search" type="search" placeholder="Search bank name or state…" aria-label="Search banks"><a target="_blank" rel="noopener" href="https://rbi.org.in/scripts/banklinks.aspx">Open RBI bank links ↗</a></div>
 <div class="filters" id="filters"></div><div class="bankgrid" id="banks"></div>
 <div class="warn" style="margin-top:16px"><b>Paytm Payments Bank:</b> RBI cancelled its banking licence on 24 April 2026 and it was excluded from the Second Schedule in October 2026. It is shown separately as a historical listing, not as a bank to apply to. <a href="https://www.rbi.org.in/scripts/BS_PressReleaseDisplay.aspx?prid=62621" target="_blank" rel="noopener">RBI cancellation notice</a>.</div>
+</section>
+
+
+<section class="panel" id="loans" style="margin-top:18px">
+ <div class="eyebrow" style="color:#2859c5">LoanPath · Application preparation</div>
+ <h2>Prepare a loan application — keep control of every submission</h2>
+ <p class="muted">Choose a loan type and the lenders you want to research. We will prepare a lender checklist and send you to each lender's official website. You complete the application, consent, KYC and final submission yourself.</p>
+ <div class="warn"><b>No mass applications:</b> opening many bank accounts does not guarantee a loan. Each lender independently checks your income, occupation, current debt and credit history. Applying to many lenders close together can create multiple hard enquiries and may affect your CIBIL score. Start by comparing, then apply only where the published eligibility appears to fit.</div>
+ <div class="grid" style="margin-top:16px">
+  <div>
+   <div class="field"><label for="loanType">What loan are you researching?</label><select id="loanType"><option value="personal">Personal loan</option><option value="business">Business / MSME loan</option><option value="education">Education loan</option><option value="home">Home loan</option><option value="vehicle">Vehicle loan</option><option value="gold">Gold loan</option></select></div>
+   <div class="field"><label for="loanLocation">City / state</label><input id="loanLocation" maxlength="80" value="Ahmedabad, Gujarat" placeholder="City, state"></div>
+   <div class="field"><label for="loanPurpose">Purpose (optional)</label><input id="loanPurpose" maxlength="120" placeholder="e.g. education fees, business equipment"></div>
+   <button class="btn" onclick="prepareLoanShortlist()">Show official lender pages →</button>
+   <p class="small muted">The location and purpose stay on this page only; they are not submitted.</p>
+  </div>
+  <div>
+   <h3>Loan preparation checklist</h3>
+   <ul class="small">
+    <li>Check lender eligibility and whether the product accepts your employment/business profile.</li>
+    <li>Have the bank's required identity/address documents ready, but enter them only on the bank's own secure site or at its branch.</li>
+    <li>For salaried applicants, the lender may request salary slips, employment details and bank statements.</li>
+    <li>For self-employed applicants, the lender may request ITRs, financial statements and business proof.</li>
+    <li>Check existing EMIs and total monthly affordability before borrowing.</li>
+    <li>Never use false salary, employment, business or address details.</li>
+   </ul>
+   <div class="danger small"><b>Never give this assistant</b> your PAN/Aadhaar numbers, OTP, UPI PIN, card data, passwords, bank statement uploads or selfie/video KYC. We do not need or accept them.</div>
+  </div>
+ </div>
+ <div id="loanResults" style="margin-top:14px">
+  <p class="muted">Choose a loan type and press “Show official lender pages”. Verified personal-loan landing pages are listed first. For other products, use the official bank website and check that it offers the product in your location.</p>
+ </div>
+ <div class="panel" style="margin-top:16px;background:#f7f9fd;box-shadow:none">
+  <h3>Loan EMI estimator</h3>
+  <p class="small muted">Illustrative calculation only. It does not check eligibility or approve a loan. Your bank's Key Facts Statement (KFS) is the authoritative offer.</p>
+  <div class="grid">
+   <div class="field"><label for="emiPrincipal">Loan amount (₹)</label><input type="number" id="emiPrincipal" min="1000" max="100000000" step="1000" value="100000"></div>
+   <div class="field"><label for="emiRate">Annual interest rate (%)</label><input type="number" id="emiRate" min="0" max="60" step="0.1" value="14"></div>
+   <div class="field"><label for="emiMonths">Repayment months</label><input type="number" id="emiMonths" min="1" max="360" step="1" value="24"></div>
+   <div class="field"><label for="emiFees">Upfront fees / charges (₹)</label><input type="number" id="emiFees" min="0" max="10000000" step="100" value="0"></div>
+  </div>
+  <button class="btn secondary" onclick="calculateLoanEMI()">Calculate illustrative EMI</button>
+  <div id="emiOutput" class="chatline assistant" style="margin-top:12px">Enter the figures from a lender's offer or use the sample values to understand EMI.</div>
+ </div>
+ <div class="panel" style="margin-top:16px;background:#f7f9fd;box-shadow:none">
+  <h3>Compare the Key Facts Statement (KFS)</h3>
+  <p class="small muted">For covered retail and MSME term loans, RBI requires lenders to give prospective borrowers a standardised KFS. Compare the APR (the annual all-in cost), processing fees, net disbursal, EMI schedule, late/penal charges and prepayment conditions—not just the headline interest rate.</p>
+  <a href="https://rbi.org.in/Scripts/NotificationUser.aspx?Id=12663" target="_blank" rel="noopener">Read RBI's KFS circular ↗</a>
+ </div>
+ <div class="panel" style="margin-top:16px;background:#f7f9fd;box-shadow:none">
+  <h3>My loan application tracker</h3>
+  <p class="small muted">Saved only in this browser: lender, loan category, date and stage. Do not put application numbers, identity details or financial documents here.</p>
+  <div id="loanTracker"></div>
+ </div>
 </section>
 
 <section class="grid" style="margin-top:18px">
@@ -287,6 +341,58 @@ function renderTracker(){
  const root=document.getElementById('trackerRows'),rows=safeLoad();
  root.innerHTML=rows.length?rows.map(x=>'<div class="trackerRow"><div><b>'+escapeHtml(x.name)+'</b><br><small class="muted">'+escapeHtml(x.type)+' · Added '+escapeHtml(x.date)+'</small></div><select onchange="stageChange('+JSON.stringify(x.id)+',this.value)">'+['Planning','Official site opened','Application started','KYC completed','Decision received'].map(s=>'<option '+(x.stage===s?'selected':'')+'>'+s+'</option>').join('')+'</select><span class="pill">'+escapeHtml(x.stage)+'</span><button class="btn secondary" onclick="removeTrack('+JSON.stringify(x.id)+')">Remove</button></div>').join(''):'<p class="muted">Nothing tracked yet. Add a bank after you choose one to research.</p>';
 }
+
+const verifiedPersonalLoanLinks=[
+ {name:'State Bank of India',url:'https://sbi.bank.in/en/web/personal-banking/loans/personal-loans',note:'Official personal-loan landing page'},
+ {name:'HDFC Bank',url:'https://www.hdfc.bank.in/personal-loan',note:'Official personal-loan landing page'},
+ {name:'ICICI Bank',url:'https://www.icici.bank.in/personal-banking/loans/personal-loan',note:'Official personal-loan landing page'},
+ {name:'Axis Bank',url:'https://www.axis.bank.in/loans/personal-loan',note:'Official personal-loan landing page'},
+ {name:'Bank of Baroda',url:'https://bankofbaroda.bank.in/loans/personal-loan',note:'Official personal-loan landing page'},
+ {name:'Punjab National Bank',url:'https://www.pnb.bank.in/personal.aspx',note:'Official personal-loan schemes page'},
+ {name:'IDFC FIRST Bank',url:'https://www.idfcfirst.bank.in/personal-banking/loans/personal-loan',note:'Official personal-loan landing page'},
+ {name:'AU Small Finance Bank',url:'https://www.au.bank.in/personal-banking/personal-loan',note:'Official personal-loan landing page'}
+];
+const loanTrackerKey='bankpath_loan_tracker_v1';
+function prepareLoanShortlist(){
+ const type=document.getElementById('loanType').value;
+ const city=document.getElementById('loanLocation').value.trim()||'India';
+ const purpose=document.getElementById('loanPurpose').value.trim();
+ const out=document.getElementById('loanResults');
+ if(type==='personal'){
+  out.innerHTML='<h3>Verified official personal-loan pages</h3><p class="small muted">These are lender-owned information pages, not approval recommendations. Confirm whether new-customer applications are currently open and read each lender’s latest eligibility and charges.</p>'+verifiedPersonalLoanLinks.map((b,i)=>'<article class="result"><b>'+escapeHtml(b.name)+'</b><div class="meta">'+escapeHtml(b.note)+'</div><a href="'+b.url+'" target="_blank" rel="noopener">Open official lender page ↗</a> <button class="btn secondary" onclick="addLoanTrack('+i+')">Track this lender</button></article>').join('');
+ } else {
+  const cat=type==='business'?'current':type==='education'?'public':type==='home'?'private':type==='vehicle'?'private':'private';
+  const shortlist=banks.filter(b=>b.c===cat).slice(0,8);
+  const label={business:'business / MSME',education:'education',home:'home',vehicle:'vehicle',gold:'gold'}[type];
+  out.innerHTML='<h3>Research '+label+' loan products in '+escapeHtml(city)+'</h3><p class="small muted">'+(purpose?'Purpose entered: '+escapeHtml(purpose)+'. ':'')+'These bank homepages are starting points only. They do not confirm that a particular scheme is available or that you qualify. Search the official bank site for the selected product and compare the current KFS and charges.</p>'+shortlist.map((b,i)=>'<article class="result"><b>'+escapeHtml(b.n)+'</b><div class="meta">'+escapeHtml(b.c)+' · '+escapeHtml(b.s)+'</div><a href="'+b.u+'" target="_blank" rel="noopener">Open official bank website ↗</a><button class="btn secondary" onclick="addGenericLoanTrack('+JSON.stringify(b.n)+')">Track this lender</button></article>').join('');
+ }
+}
+function addLoanTrack(index){const b=verifiedPersonalLoanLinks[index];if(!b)return;addLoanRecord(b.name,'Personal loan')}
+function addGenericLoanTrack(name){const type=document.getElementById('loanType').selectedOptions[0].textContent;addLoanRecord(name,type)}
+function loadLoanTracker(){try{return JSON.parse(localStorage.getItem(loanTrackerKey)||'[]')}catch(e){return []}}
+function saveLoanTracker(rows){try{localStorage.setItem(loanTrackerKey,JSON.stringify(rows))}catch(e){alert('This browser could not save your loan tracker.')} }
+function addLoanRecord(bank,type){
+ const rows=loadLoanTracker();if(rows.some(x=>x.bank===bank&&x.type===type)){alert('Already tracking this lender and loan type.');return}
+ rows.unshift({id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),bank,type,date:new Date().toISOString().slice(0,10),stage:'Researching'});
+ saveLoanTracker(rows);renderLoanTracker();
+}
+function changeLoanStage(id,stage){saveLoanTracker(loadLoanTracker().map(x=>x.id===id?{...x,stage}:x));renderLoanTracker()}
+function removeLoanRecord(id){saveLoanTracker(loadLoanTracker().filter(x=>x.id!==id));renderLoanTracker()}
+function renderLoanTracker(){
+ const root=document.getElementById('loanTracker');if(!root)return;
+ const rows=loadLoanTracker();
+ root.innerHTML=rows.length?rows.map(x=>'<div class="trackerRow"><div><b>'+escapeHtml(x.bank)+'</b><br><small class="muted">'+escapeHtml(x.type)+' · '+escapeHtml(x.date)+'</small></div><select onchange="changeLoanStage('+JSON.stringify(x.id)+',this.value)">'+['Researching','Eligibility reviewed','Official application opened','Submitted by me','KYC completed by me','Approved','Declined','Withdrawn'].map(v=>'<option '+(x.stage===v?'selected':'')+'>'+v+'</option>').join('')+'</select><span class="pill">'+escapeHtml(x.stage)+'</span><button class="btn secondary" onclick="removeLoanRecord('+JSON.stringify(x.id)+')">Remove</button></div>').join(''):'<p class="muted">No loan applications tracked. Research first; add a lender only when you decide to proceed.</p>';
+}
+function calculateLoanEMI(){
+ const P=Number(document.getElementById('emiPrincipal').value),annual=Number(document.getElementById('emiRate').value),n=Number(document.getElementById('emiMonths').value),fees=Number(document.getElementById('emiFees').value);
+ const root=document.getElementById('emiOutput');
+ if(!Number.isFinite(P)||!Number.isFinite(annual)||!Number.isFinite(n)||!Number.isFinite(fees)||P<=0||annual<0||annual>60||n<1||n>360||fees<0){root.textContent='Enter valid loan amount, interest rate, tenure and fees.';return}
+ const r=annual/1200,emi=r===0?P/n:P*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1);
+ const total=emi*n,interest=total-P;
+ root.innerHTML='<b>Illustrative monthly EMI: ₹'+Math.round(emi).toLocaleString('en-IN')+'</b><br>Principal: ₹'+Math.round(P).toLocaleString('en-IN')+'<br>Estimated interest over tenure: ₹'+Math.round(interest).toLocaleString('en-IN')+'<br>Estimated total repayments: ₹'+Math.round(total).toLocaleString('en-IN')+'<br>Entered upfront fees: ₹'+Math.round(fees).toLocaleString('en-IN')+'<br><small class="muted">Approximate reducing-balance EMI. Actual APR and effective cost may differ due to fees, insurance, taxes, payment timing and lender terms. This is not an offer or eligibility result.</small>';
+}
+renderLoanTracker();
+
 renderBanks();renderTracker();next(1);
 </script>
 </body></html>
