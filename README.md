@@ -46,3 +46,11 @@ Before accepting real customers, configure and verify the global store WhatsApp 
 
 ## Operational boundary
 The Render service is a static-site service. Browser local storage is per visitor and is not shared with restaurant staff. No secure owner dashboard, central database, payment processing, staff authentication, live stock, delivery dispatch or persistent order management is implemented by this static deployment. Do not accept online prepayment or treat a browser order draft as a confirmed sale.
+
+## Ahmedabad launch and referral toolkit
+- `launch.html` provides referral links and manually shareable WhatsApp, Facebook, Instagram and YouTube copy.
+- `campaign.js` captures campaign/referral tags and logs anonymous page/share/cart/order events only after visitor opt-in.
+- `admin.html` includes a protected marketing report and owner/manager store settings.
+- Listing and paid-placement links are provided for public Ahmedabad channels; each publisher must approve the placement and provide its current rate card.
+- Referral codes measure first-party site traffic and linked order requests. They do not scrape other sites, identify users, or guarantee reach.
+- The global store WhatsApp number should be configured by an authenticated owner only after a real business number is provisioned and verified.
