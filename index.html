@@ -102,7 +102,7 @@ footer{background:#251f1a;color:#fff5e8;margin-top:48px;padding:32px 18px}.footi
 </head><body>
 <header><a class="brand" href="#" aria-label="Amdavad Oven home"><img src="./logo.svg" alt="Amdavad Oven" width="174" height="44"></a><nav><a href="#menu" data-i18n="navMenu">Menu</a><a href="#promise" data-i18n="navPromise">Our promise</a><a href="#customer-support" data-i18n="navSupport">Support</a><a href="#order" data-i18n="navOrder">Order</a><select class="lang-switch" id="languageSelect" aria-label="Select language" onchange="setStoreLanguage(this.value)"><option value="en">EN</option><option value="gu">ગુજરાતી</option><option value="hi">हिन्दी</option></select><button class="primary small" onclick="document.querySelector('#order').scrollIntoView({behavior:'smooth'})"><span data-i18n="cartLabel">Cart</span> <span id="cartCount">0</span></button></nav></header>
 <main>
-<section class="wrap hero"><div><div class="eyebrow">Artisan pizza • Ahmedabad</div><h1>Good dough.<br><span style="color:var(--red)">Great</span> nights.</h1><p>Pizza, sides and sweet finishes for sharing. Explore the menu, build your cart and send your order request straight to the kitchen.</p><div class="actions"><a class="btn" href="#menu">Explore menu</a><a class="btn secondary" href="#order">Build your order</a></div><p class="muted" style="font-size:.86rem;margin-top:18px">Initial target zones: Naranpura and Navrangpura, Ahmedabad. Every order is subject to kitchen confirmation.</p></div><div class="pizza-art"><b>🍕</b></div></section>
+<section class="wrap hero"><div><div class="eyebrow">Artisan pizza • Ahmedabad</div><h1>Good dough.<br><span style="color:var(--red)">Great</span> nights.</h1><p>Pizza, sides and sweet finishes for sharing. Explore the menu, build your cart and send your order request straight to the kitchen.</p><div class="actions"><a class="btn" href="#menu">Explore menu</a><a class="btn secondary" href="#order">Build your order</a></div><p class="muted" style="font-size:.86rem;margin-top:18px">Initial target zones: Naranpura and Navrangpura, Ahmedabad. Every order is subject to kitchen confirmation.</p><div id="backendStatus" class="notice" role="status">Checking secure order service…</div></div><div class="pizza-art"><b>🍕</b></div></section>
 <section class="wrap" id="menu"><div class="section-head"><div><div class="eyebrow">The good stuff</div><h2 data-i18n="menuTitle">Explore the menu</h2></div><input id="search" placeholder="Search pizzas, sides…" oninput="renderMenu()"></div><div class="filters"><button class="chip active" onclick="setFilter('All',this)">All items</button><button class="chip" onclick="setFilter('Veg',this)">Vegetarian</button><button class="chip" onclick="setFilter('Non-Veg',this)">Non-veg</button><button class="chip" onclick="setFilter('Premium',this)">Premium</button><button class="chip" onclick="setFilter('Sides',this)">Sides</button><button class="chip" onclick="setFilter('Desserts',this)">Desserts</button><button class="chip" onclick="setFilter('Drinks',this)">Drinks</button></div><div class="grid" id="menuGrid"></div></section>
 
 <section class="wrap" id="build-pizza">
@@ -245,6 +245,15 @@ footer{background:#251f1a;color:#fff5e8;margin-top:48px;padding:32px 18px}.footi
     </div></div>
     <div class="support-callout"><div class="eyebrow">Need a person?</div><h3>Talk to the store team</h3><p class="muted">WhatsApp escalation will work once the owner adds the verified customer-support number to the site configuration.</p><button class="primary" onclick="contactSupportWhatsApp()">Contact customer care</button><p class="muted" style="font-size:.78rem;margin-bottom:0">Do not send OTPs, UPI PINs, passwords or card details.</p></div>
   </div>
+<div class="panel" id="support-ticket-form">
+  <div class="eyebrow">OrderWeave · Support desk</div><h3>Send a support request</h3>
+  <p class="muted">Create a support ticket that the staff team can see in the operations portal. Do not include payment PINs, OTPs or card details.</p>
+  <form id="publicSupportForm" onsubmit="submitSupportTicket(event)">
+    <div class="two"><div><label for="supportName">Your name</label><input id="supportName" required maxlength="80" placeholder="Name"></div><div><label for="supportPhone">Mobile number</label><input id="supportPhone" required inputmode="numeric" pattern="[6-9][0-9]{9}" maxlength="10" placeholder="10-digit Indian mobile"></div></div>
+    <label for="supportTicketMessage">How can we help?</label><textarea id="supportTicketMessage" required minlength="8" maxlength="1000" placeholder="Describe your question or issue"></textarea>
+    <button class="primary" type="submit">Create support ticket</button><p id="supportTicketStatus" class="muted" aria-live="polite"></p>
+  </form>
+</div>
 </section>
 <section class="wrap" id="share-kit">
   <div class="share-card">
@@ -261,9 +270,9 @@ footer{background:#251f1a;color:#fff5e8;margin-top:48px;padding:32px 18px}.footi
 <div class="coupon-box"><label for="couponCode">Promo code</label><div class="coupon-row"><input id="couponCode" maxlength="20" placeholder="Try OVEN10 or FIRST50"><button type="button" class="secondary small" onclick="applyCoupon()">Apply</button></div><p id="couponMessage" class="muted" aria-live="polite">Demo offers: OVEN10 (10% off, max ₹75, min ₹299) · FIRST50 (₹50 off, min ₹499). Owner approval required before advertising.</p></div>
 <div class="cartline"><span>Subtotal</span><span id="subtotal">₹0</span></div><div class="cartline" id="discountRow" hidden><span>Promo discount</span><b id="discountAmount">−₹0</b></div><div class="cartline total"><span>Total before delivery</span><span id="grandTotal">₹0</span></div>
 <div id="cartUpsells" class="upsell-box"></div><p class="notice">Delivery fees, ETA and final availability will be confirmed by the kitchen on WhatsApp. Sample prices and offers are editable launch placeholders.</p></div>
-<form class="panel" onsubmit="placeOrder(event)"><h3 data-i18n="deliveryDetails">Delivery details</h3><label data-i18n="yourName">Your name</label><input id="customer" required maxlength="80" placeholder="Full name"><label data-i18n="mobileNumber">Mobile number</label><input id="phone" required inputmode="numeric" pattern="[6-9][0-9]{9}" maxlength="10" placeholder="10-digit Indian mobile"><label>Area</label><select id="area"><option>Naranpura</option><option>Navrangpura</option><option>Other Ahmedabad area — confirm first</option></select><label data-i18n="fullAddress">Full address and landmark</label><textarea id="address" required maxlength="500" placeholder="Building, street, landmark"></textarea><div class="two"><div><label>Fulfilment</label><select id="fulfilment"><option>Delivery</option><option>Pickup</option></select></div><div><label>Payment preference</label><select id="payment"><option>Cash on delivery / pickup</option><option>UPI — confirm manually</option></select></div></div><label>Special instructions</label><textarea id="notes" maxlength="300" placeholder="Spice preference, gate instructions, etc."></textarea><button type="submit" class="primary" style="width:100%" data-i18n="sendOrder">Send order request on WhatsApp</button><p class="muted" style="font-size:.78rem">No online payment is processed here. Your request is not confirmed until the kitchen replies.</p></form></div></section>
+<form class="panel" onsubmit="placeOrder(event)"><h3 data-i18n="deliveryDetails">Delivery details</h3><label data-i18n="yourName">Your name</label><input id="customer" required maxlength="80" placeholder="Full name"><label data-i18n="mobileNumber">Mobile number</label><input id="phone" required inputmode="numeric" pattern="[6-9][0-9]{9}" maxlength="10" placeholder="10-digit Indian mobile"><label>Area</label><select id="area"><option>Naranpura</option><option>Navrangpura</option><option>Other Ahmedabad area — confirm first</option></select><label data-i18n="fullAddress">Full address and landmark</label><textarea id="address" required maxlength="500" placeholder="Building, street, landmark"></textarea><div class="two"><div><label>Fulfilment</label><select id="fulfilment"><option>Delivery</option><option>Pickup</option></select></div><div><label>Payment preference</label><select id="payment"><option>Cash on delivery / pickup</option><option>UPI — confirm manually</option></select></div></div><label>Special instructions</label><textarea id="notes" maxlength="300" placeholder="Spice preference, gate instructions, etc."></textarea><button type="submit" class="primary" style="width:100%" data-i18n="sendOrder">Save order request & continue</button><p class="muted" style="font-size:.78rem">Your order request is saved by the restaurant API before handoff. No online payment is processed; your order is not accepted until the kitchen replies.</p></form></div></section>
 <section class="wrap"><div class="panel"><h3>Owner setup</h3><p class="muted">Enter the real business WhatsApp number before taking orders. Use country code +91 and 10 digits, with no spaces. This demo stores the number in this browser only.</p><label>Business WhatsApp number</label><input id="businessPhone" inputmode="numeric" placeholder="91XXXXXXXXXX"><button class="secondary" onclick="saveSettings()">Save number on this device</button><p class="notice">Production checklist: secure server-side admin and order database, confirmed kitchen capacity, accurate menu/allergen information, applicable FSSAI registration/licence and tax checks, verified WhatsApp, payment gateway (if needed), privacy/refund terms, and delivery operations.</p></div></section>
-</main><footer><div class="footin"><div><b>AMDAVAD OVEN.</b><p>Artisan pizza, Ahmedabad.</p></div><div><b>Local first.</b><p>Naranpura • Navrangpura</p><small>© <span id="year"></span> Amdavad Oven. Menu and prices are sample placeholders.</small></div></div></footer>
+</main><footer><div class="footin"><div><b>AMDAVAD OVEN.</b><p>Artisan pizza, Ahmedabad.</p></div><div><b>Local first.</b><p>Naranpura • Navrangpura</p><small>© <span id="year"></span> Amdavad Oven. Menu and prices are sample placeholders.</small><p><a href="./admin.html" style="color:#f3c47a">Team portal</a> · <a href="./track.html" style="color:#f3c47a">Track an order</a></p></div></div></footer>
 <aside id="supportPanel" class="support-panel" hidden role="dialog" aria-label="Amdavad Oven customer support">
   <div class="support-head"><div><b>Oven Customer Care</b><small>Quick help and order guidance</small></div><button class="secondary small" onclick="toggleSupport(false)" aria-label="Close support">✕</button></div>
   <div id="supportLog" class="support-log" aria-live="polite"><div class="support-message bot">Hi! I can help with ordering, payments, delivery areas, cancellations and menu questions. For live order confirmation, the kitchen must reply directly.</div></div>
@@ -386,7 +395,7 @@ const ovenKnowledge = [
   {keys:["payment","upi","pay","cash"],answer:"This demo supports a WhatsApp order request with cash-on-delivery or manual UPI as a preference. It does not process payments. Do not send UPI PINs, OTPs or card details in chat."},
   {keys:["allergen","allergy","gluten","dairy","nut","ingredients"],answer:"Please tell the kitchen about any allergy before ordering. The sample menu is not a verified allergen declaration and shared-kitchen cross-contact cannot be ruled out."},
   {keys:["hours","open","close","today"],answer:"Live store hours are not configured yet. Please confirm today's operating hours with the business before placing an order."},
-  {keys:["order","cancel","track","status"],answer:"This is a demo storefront. Order requests are handed off to WhatsApp and are not stored in a central order database, so order acceptance and status must be confirmed directly by the kitchen."}
+  {keys:["order","cancel","track","status"],answer:"Order requests can be saved in the restaurant order database and tracked using a private link. A request is not accepted until the kitchen confirms it."}
 ];
 function addAiBubble(text,who){const log=document.getElementById("aiLog");const node=document.createElement("div");node.className="ai-msg "+who;node.textContent=text;log.appendChild(node);log.scrollTop=log.scrollHeight}
 function ovenAnswer(question){
@@ -487,7 +496,7 @@ window.open("https://wa.me/"+number+"?text="+encodeURIComponent(msg),"_blank","n
     const name="Custom "+sizeName+" • "+data.base.name+(data.half?" / "+data.half.name:"");
     const detail=[data.crustName.replace(/ \(.*\)/,""),toppingNames.length?"Extras: "+toppingNames.join(", "):"",notes?"Note: "+notes:""].filter(Boolean).join(" · ");
     const id=900000+Date.now()%90000;
-    const item={id,name,cat:"Custom",veg:data.base.veg,price:data.price,desc:detail,emoji:"🍕",pizza:true};
+    const item={id,name,cat:"Custom",veg:data.base.veg,price:data.price,desc:detail,emoji:"🍕",pizza:true,builderConfig:{baseProductId:data.base.id,halfProductId:data.half?data.half.id:null,size:data.size?"large":"regular",crust:data.crustName.startsWith("Cheese")?"cheese_burst":data.crustName.startsWith("Thin")?"thin":"classic",toppings:data.toppings.map(t=>({ "Extra cheese":"extra_cheese","Jalapeño":"jalapeno","Olives":"olives","Paneer":"paneer"}[t.dataset.label]).filter(Boolean),notes:notes}};
     products.push(item);
     const saved=JSON.parse(localStorage.getItem("ao_custom_products")||"[]");
     saved.push(item);localStorage.setItem("ao_custom_products",JSON.stringify(saved.slice(-30)));
@@ -547,4 +556,122 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape")closeOrderDraft()});
 try{setStoreLanguage(localStorage.getItem("ao_language")||"en")}catch(e){setStoreLanguage("en")}
 </script>
 
+<script>
+/* Backend bridge for menu sync, durable order creation, ticket creation and tracking. */
+(function(){
+ const API_BASE='https://amdavad-oven-api.onrender.com';
+ window.AO_API_BASE=API_BASE;
+ const statusEl=document.getElementById('backendStatus');
+ function setStatus(text,ok){if(statusEl){statusEl.textContent=text;statusEl.style.borderLeft='4px solid '+(ok?'#42643b':'#c83d27')}}
+ async function fetchJson(path,options){
+   const controller=new AbortController();
+   const timer=setTimeout(()=>controller.abort(),45000);
+   try{
+     const response=await fetch(API_BASE+path,{...options,signal:controller.signal});
+     const data=await response.json().catch(()=>({}));
+     if(!response.ok)throw new Error(data.error||'Service request failed ('+response.status+').');
+     return data;
+   }finally{clearTimeout(timer)}
+ }
+ async function connect(){
+   try{
+     await fetchJson('/healthz');
+     setStatus('Order service connected · PostgreSQL online · menu and order totals are validated by the server.',true);
+     const data=await fetchJson('/api/menu');
+     for(const item of data.products||[]){
+       const local=products.find(p=>Number(p.id)===Number(item.id));
+       if(local){
+         local.name=item.name;local.cat=item.category;local.veg=item.is_veg;
+         local.price=item.price_rupees;local.desc=item.description;local.emoji=item.emoji;
+         local.pizza=item.is_pizza;local.isAvailable=item.is_available;
+       }
+     }
+     renderMenu();renderCart();
+   }catch(error){
+     setStatus('Order service is starting or temporarily unavailable. You can still prepare a manual request; online order storage is not confirmed. '+error.message,false);
+   }
+ }
+ function makeApiItems(entries){
+   return entries.map(([key,quantity])=>{
+     const parts=key.split('_'),id=Number(parts[0]),extra=Number(parts[1]||0);
+     const product=products.find(p=>Number(p.id)===id);
+     if(!product)throw new Error('A cart item is no longer on the menu. Please refresh your cart.');
+     if(product.builderConfig){
+       return {type:'custom',config:product.builderConfig,quantity:Number(quantity)};
+     }
+     if(id>1000)throw new Error('This older custom item must be removed and rebuilt using the current pizza builder.');
+     return {type:'standard',productId:id,size:extra?'large':'regular',quantity:Number(quantity)};
+   });
+ }
+ window.placeOrder=async function(event){
+   event.preventDefault();
+   const entries=Object.entries(cart);
+   if(!entries.length){toast('Add an item to your cart first');return}
+   if(activeCoupon){toast('Demo coupons are not enabled for server checkout yet. Remove the coupon to continue.');return}
+   const form=event.currentTarget,button=form.querySelector('button[type="submit"]');
+   const previous=button.textContent;button.disabled=true;button.textContent='Saving order securely…';
+   const biz=getStoreWhatsApp();
+   const fields={
+     customerName:document.getElementById('customer').value.trim(),
+     phone:document.getElementById('phone').value.trim(),
+     area:document.getElementById('area').value,
+     address:document.getElementById('address').value.trim(),
+     fulfilment:document.getElementById('fulfilment').value,
+     paymentPreference:document.getElementById('payment').value.includes('UPI')?'upi_manual':'cash_on_delivery',
+     notes:document.getElementById('notes').value.trim(),
+     couponCode:'',
+     items:[]
+   };
+   try{
+     fields.items=makeApiItems(entries);
+     let idem=localStorage.getItem('ao_pending_idem');
+     if(!idem){idem=(crypto.randomUUID?crypto.randomUUID():String(Date.now())+'-'+Math.random());localStorage.setItem('ao_pending_idem',idem)}
+     const result=await fetchJson('/api/orders',{method:'POST',headers:{'Content-Type':'application/json','Idempotency-Key':idem},body:JSON.stringify(fields)});
+     const order=result.order;
+     localStorage.removeItem('ao_pending_idem');
+     const trackingUrl=location.origin+'/track.html?token='+encodeURIComponent(order.public_token);
+     const lines=entries.map(([key,n])=>{
+       const p=products.find(x=>Number(x.id)===Number(key.split('_')[0]));
+       return n+' × '+p.name+(p.desc&&p.builderConfig?' · '+p.desc:'');
+     }).join('\n');
+     const message='AMDAVAD OVEN ORDER REQUEST · '+order.order_number+'\n'+lines+'\nServer-calculated total before delivery: ₹'+order.total_rupees+'\nCustomer: '+fields.customerName+'\nMobile: '+fields.phone+'\nArea: '+fields.area+'\nAddress: '+fields.address+'\nFulfilment: '+fields.fulfilment+'\nPayment preference: '+fields.paymentPreference+'\nNotes: '+fields.notes+'\nTrack request: '+trackingUrl+'\nThe order is saved as RECEIVED / UNPAID and awaits kitchen acceptance.';
+     cart={};persist();
+     if(biz){window.open('https://wa.me/'+biz+'?text='+encodeURIComponent(message),'_blank','noopener')}
+     showOrderDraft('ORDER SAVED IN RESTAURANT DATABASE\nOrder number: '+order.order_number+'\nTracking link: '+trackingUrl+'\nStatus: '+order.status+'\nPayment status: '+order.payment_status+'\n\n'+message);
+     const dialog=document.getElementById('orderDraftDialog');
+     dialog.querySelector('h2').textContent='Order request saved';
+     dialog.querySelector('p').innerHTML='Your request has been stored in the restaurant database. It is <b>not yet accepted</b>; the kitchen must confirm it. Use the private tracking link below.';
+     dialog.querySelector('.guild-disclaimer').textContent='Your order number is '+order.order_number+'. Keep the tracking link private.';
+     toast('Order '+order.order_number+' saved');
+   }catch(error){
+     setStatus('Could not save the order online: '+error.message,false);
+     const fallback='ORDER NOT SAVED ONLINE\n'+error.message+'\n\nCustomer: '+fields.customerName+'\nMobile: '+fields.phone+'\nAddress: '+fields.address+'\n\nThis is only a local draft. It is not stored or confirmed.';
+     if(biz){window.open('https://wa.me/'+biz+'?text='+encodeURIComponent(fallback),'_blank','noopener')}
+     else{
+       showOrderDraft(fallback);
+       const dialog=document.getElementById('orderDraftDialog');
+       dialog.querySelector('h2').textContent='Order not saved online';
+       dialog.querySelector('p').innerHTML='The backend could not save this order. This draft has <b>not</b> been sent and is <b>not</b> in the restaurant database.';
+       dialog.querySelector('.guild-disclaimer').textContent='Retry after the order service is available. This text exists only in this browser.';
+     }
+   }finally{button.disabled=false;button.textContent=previous}
+ };
+ window.submitSupportTicket=async function(event){
+   event.preventDefault();
+   const status=document.getElementById('supportTicketStatus');
+   status.textContent='Sending support request…';
+   try{
+     const result=await fetchJson('/api/support',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+       customerName:document.getElementById('supportName').value.trim(),
+       phone:document.getElementById('supportPhone').value.trim(),
+       message:document.getElementById('supportTicketMessage').value.trim()
+     })});
+     status.textContent='Ticket '+result.ticket.ticket_code+' created. The support team can now see it in the team portal.';
+     status.className='success';
+     document.getElementById('publicSupportForm').reset();
+   }catch(error){status.textContent='Ticket not created: '+error.message;status.className='error'}
+ };
+ connect();
+})();
+</script>
 </body></html>
