@@ -150,6 +150,19 @@ async function migrate() {
       setting_value JSONB NOT NULL,
       updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
     );
+    CREATE TABLE IF NOT EXISTS marketing_events (
+      id BIGSERIAL PRIMARY KEY,
+      event_type TEXT NOT NULL,
+      source TEXT NOT NULL DEFAULT 'direct',
+      campaign TEXT NOT NULL DEFAULT '',
+      referral_code TEXT,
+      page_path TEXT NOT NULL DEFAULT '/',
+      item_id INTEGER,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+    ALTER TABLE orders ADD COLUMN IF NOT EXISTS referral_code TEXT;
+    CREATE INDEX IF NOT EXISTS idx_marketing_events_created ON marketing_events(created_at DESC);
+    CREATE INDEX IF NOT EXISTS idx_marketing_events_referral ON marketing_events(referral_code);
     CREATE TABLE IF NOT EXISTS audit_logs (
       id BIGSERIAL PRIMARY KEY,
       admin_user_id BIGINT REFERENCES admin_users(id),
@@ -200,6 +213,7 @@ const OrderSchema = z.object({
   paymentPreference: z.enum(['cash_on_delivery','upi_manual']),
   notes: z.string().max(300).optional().default(''),
   couponCode: z.string().max(20).optional().default(''),
+  referralCode: z.string().regex(/^[A-Z0-9]{6,12}$/).optional(),
   items: z.array(z.discriminatedUnion('type', [
     z.object({ type: z.literal('standard'), productId: z.number().int(), size: z.enum(['regular','large']), quantity: z.number().int().min(1).max(20) }),
     z.object({ type: z.literal('custom'), config: z.object({
@@ -308,8 +322,8 @@ app.post('/api/orders', orderLimiter, asyncRoute(async (req,res) => {
     const orderNumber = 'AO-' + new Date().toISOString().slice(2,10).replace(/-/g,'') + '-' + randomBytes(3).toString('hex').toUpperCase();
     const publicToken = randomUUID();
     const inserted = await client.query(
-      'INSERT INTO orders (order_number,public_token,idempotency_key,customer_name,phone,area,address,fulfilment,payment_preference,notes,coupon_code,subtotal_rupees,discount_rupees,total_rupees) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14) RETURNING id,order_number,public_token,status,total_rupees,payment_status,created_at',
-      [orderNumber,publicToken,idempotencyKey,input.customerName,input.phone,input.area,input.address,input.fulfilment,input.paymentPreference,input.notes,input.couponCode||null,calculated.subtotal,discount,total]
+      'INSERT INTO orders (order_number,public_token,idempotency_key,customer_name,phone,area,address,fulfilment,payment_preference,notes,coupon_code,subtotal_rupees,discount_rupees,total_rupees,referral_code) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15) RETURNING id,order_number,public_token,status,total_rupees,payment_status,created_at',
+      [orderNumber,publicToken,idempotencyKey,input.customerName,input.phone,input.area,input.address,input.fulfilment,input.paymentPreference,input.notes,input.couponCode||null,calculated.subtotal,discount,total,input.referralCode||null]
     );
     const order = inserted.rows[0];
     for (const line of calculated.lines) {
@@ -338,6 +352,25 @@ app.get('/api/orders/track/:token', asyncRoute(async (req,res) => {
   );
   if (!result.rowCount) return res.status(404).json({error:'Order not found.'});
   res.json({order:result.rows[0]});
+}));
+
+const MarketingEventSchema = z.object({
+  eventType:z.enum(['page_view','menu_search','add_to_cart','share_click','referral_visit','checkout_started','order_saved','support_opened']),
+  source:z.enum(['direct','instagram','whatsapp','facebook','youtube','google','other']).default('direct'),
+  campaign:z.string().max(80).optional().default(''),
+  referralCode:z.string().regex(/^[A-Z0-9]{6,12}$/).optional(),
+  pagePath:z.string().max(180).optional().default('/'),
+  itemId:z.number().int().positive().optional()
+});
+app.post('/api/marketing/events',orderLimiter,asyncRoute(async (req,res)=>{
+  const parsed=MarketingEventSchema.safeParse(req.body);
+  if(!parsed.success)return res.status(400).json({error:'Invalid campaign event.'});
+  const x=parsed.data;
+  await pool.query(
+    'INSERT INTO marketing_events (event_type,source,campaign,referral_code,page_path,item_id) VALUES ($1,$2,$3,$4,$5,$6)',
+    [x.eventType,x.source,x.campaign,x.referralCode||null,x.pagePath,x.itemId||null]
+  );
+  res.status(202).json({ok:true});
 }));
 
 app.post('/api/support', orderLimiter, asyncRoute(async (req,res) => {
@@ -515,6 +548,34 @@ app.patch('/api/admin/products/:id',requireAuth,requireRoles('owner','manager'),
   const r=await pool.query('UPDATE products SET price_rupees=COALESCE($1,price_rupees),is_available=COALESCE($2,is_available),updated_at=NOW() WHERE id=$3 RETURNING id,name,price_rupees,is_available',[parsed.data.price_rupees??null,parsed.data.is_available??null,req.params.id]);
   await audit(req.admin.sub,'product_updated','product',req.params.id,parsed.data);
   res.json({product:r.rows[0]});
+}));
+
+app.get('/api/admin/marketing',requireAuth,requireRoles('owner','manager'),asyncRoute(async (_req,res)=>{
+  const [summary,sources,campaigns,referrals,orders]=await Promise.all([
+    pool.query(`SELECT COUNT(*) FILTER (WHERE event_type='page_view')::int AS page_views,
+      COUNT(*) FILTER (WHERE event_type='share_click')::int AS share_clicks,
+      COUNT(*) FILTER (WHERE event_type='referral_visit')::int AS referral_visits,
+      COUNT(*) FILTER (WHERE event_type='add_to_cart')::int AS add_to_cart,
+      COUNT(*) FILTER (WHERE event_type='checkout_started')::int AS checkout_started,
+      COUNT(*) FILTER (WHERE event_type='order_saved')::int AS order_saved
+      FROM marketing_events WHERE created_at>=NOW()-INTERVAL '30 days'`),
+    pool.query(`SELECT source,COUNT(*)::int AS events FROM marketing_events
+      WHERE created_at>=NOW()-INTERVAL '30 days' GROUP BY source ORDER BY events DESC`),
+    pool.query(`SELECT campaign,COUNT(*) FILTER (WHERE event_type='page_view')::int AS views,
+      COUNT(*) FILTER (WHERE event_type='share_click')::int AS shares,
+      COUNT(*) FILTER (WHERE event_type='referral_visit')::int AS referrals
+      FROM marketing_events WHERE created_at>=NOW()-INTERVAL '30 days'
+      GROUP BY campaign ORDER BY views DESC LIMIT 20`),
+    pool.query(`SELECT referral_code,COUNT(*) FILTER (WHERE event_type='referral_visit')::int AS visits,
+      COUNT(*) FILTER (WHERE event_type='share_click')::int AS shares
+      FROM marketing_events WHERE referral_code IS NOT NULL AND created_at>=NOW()-INTERVAL '30 days'
+      GROUP BY referral_code ORDER BY visits DESC LIMIT 25`),
+    pool.query(`SELECT COUNT(*)::int AS order_requests,
+      COUNT(*) FILTER (WHERE referral_code IS NOT NULL)::int AS referred_order_requests,
+      COALESCE(SUM(total_rupees),0)::int AS requested_value_rupees
+      FROM orders WHERE created_at>=NOW()-INTERVAL '30 days'`)
+  ]);
+  res.json({periodDays:30,summary:summary.rows[0],sources:sources.rows,campaigns:campaigns.rows,referrals:referrals.rows,orders:orders.rows[0],note:'Events are first-party browser events, not verified unique people. Order request totals are not paid revenue; no paid ads, bot traffic, or guaranteed virality.'});
 }));
 
 app.get('/api/admin/audit',requireAuth,requireRoles('owner','manager'),asyncRoute(async (_req,res)=>{
