@@ -214,6 +214,7 @@ let message="NEW AMDAVAD OVEN ORDER REQUEST\n"+lines+"\nSubtotal: "+money(sum)+"
 window.open("https://wa.me/"+biz+"?text="+encodeURIComponent(message),"_blank","noopener")
 }
 function toast(s){let t=document.getElementById("toast");t.textContent=s;t.style.display="block";setTimeout(()=>t.style.display="none",2600)}
+let activeCoupon=localStorage.getItem("ao_coupon")||"";
 document.getElementById("year").textContent=new Date().getFullYear();renderMenu();renderCart();document.getElementById("businessPhone").value=localStorage.getItem("ao_business_phone")||"";
 
 const ovenKnowledge = [
@@ -252,7 +253,6 @@ async function copyAmdavadLink(){const url=location.href.split("#")[0];try{await
 if("serviceWorker" in navigator && location.protocol.startsWith("http")){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}))}
 
 
-let activeCoupon=localStorage.getItem("ao_coupon")||"";
 const STORE_WHATSAPP_NUMBER=""; // Set to 91 followed by the verified 10-digit store number before launch.
 function getStoreWhatsApp(){
 const configured=(STORE_WHATSAPP_NUMBER||"").replace(/\D/g,"");
