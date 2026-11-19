@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#211c18">
+<meta name="description" content="Help your neighbourhood discover AMDAVAD OVEN. Share the Ahmedabad pizza menu with trackable referral links and local launch content.">
+<link rel="canonical" href="https://amdavad-oven.onrender.com/launch.html">
+<meta property="og:title" content="AMDAVAD OVEN · Ahmedabad launch">
+<meta property="og:description" content="Share good dough and great nights across Ahmedabad.">
+<meta property="og:image" content="https://amdavad-oven.onrender.com/social-card.svg">
+<title>Ahmedabad Launch Studio · AMDAVAD OVEN</title>
+<style>
+:root{--ink:#211c18;--cream:#fff8ed;--paper:#fffdf8;--red:#c83d27;--muted:#756b60;--line:#eadfce;--green:#42643b}
+*{box-sizing:border-box}body{margin:0;background:var(--cream);color:var(--ink);font:16px/1.5 Inter,system-ui,Arial,sans-serif}
+header{position:sticky;top:0;z-index:8;background:#fff9f0ed;backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:12px max(16px,calc((100vw - 1120px)/2));display:flex;align-items:center;justify-content:space-between;gap:14px}
+.brand{font-weight:1000;letter-spacing:-1.2px;font-size:1.2rem;text-decoration:none;color:var(--ink)}.brand span{color:var(--red)}
+a{color:var(--red)}.wrap{max-width:1120px;margin:auto;padding:24px 18px}
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:28px;align-items:center;padding-top:45px;padding-bottom:42px}
+.eyebrow{font-size:.74rem;letter-spacing:2px;text-transform:uppercase;color:var(--red);font-weight:950}
+h1{font-size:clamp(2.8rem,7vw,5.2rem);line-height:.95;letter-spacing:-.07em;margin:12px 0 18px}
+h2{letter-spacing:-.045em;margin:0 0 12px}.muted{color:var(--muted)}.btn{display:inline-flex;justify-content:center;align-items:center;gap:8px;background:var(--red);border:0;color:white;border-radius:999px;padding:11px 17px;font-weight:850;text-decoration:none;cursor:pointer}.secondary{background:#f0e5d5;color:var(--ink)}
+.hero-art{min-height:290px;border-radius:28px;background:radial-gradient(circle at 50% 50%,#f8d994 0 24%,#bf4326 25% 28%,#e5a958 29% 48%,#9f3925 49% 53%,#f3d3a0 54%);display:grid;place-items:center;font-size:6rem;box-shadow:0 24px 70px #59321b22}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:21px;padding:20px;margin:16px 0}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.card{background:#fffaf2;border:1px solid var(--line);border-radius:17px;padding:16px}
+.card h3{font-size:1.05rem;margin:6px 0}.card p{font-size:.9rem;color:var(--muted)}
+.share-link{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.share-link input{flex:1;min-width:240px;margin:6px 0;padding:12px;border:1px solid var(--line);border-radius:12px;background:white}
+.copy-grid{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:start;margin:12px 0}
+.copy-grid textarea{width:100%;min-height:100px;padding:12px;border:1px solid var(--line);border-radius:12px;background:white;font:14px/1.45 system-ui}
+.channel{display:flex;align-items:start;gap:12px}.channel .symbol{font-size:1.6rem}
+.channel small{display:block;color:var(--muted);margin-top:4px}
+.list-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.list-links a{display:block;border:1px solid var(--line);border-radius:14px;padding:13px;text-decoration:none;color:var(--ink);background:#fffaf2}
+.list-links b{display:block}.list-links span{display:block;color:var(--muted);font-size:.8rem;margin-top:3px}
+.callout{border-left:4px solid var(--red);padding:12px 14px;background:#fbf0e2;border-radius:0 13px 13px 0;color:#574b40}
+footer{background:#241d18;color:#fff3e4;padding:30px 18px;margin-top:35px}footer a{color:#ffd28c}
+@media(max-width:760px){.hero{grid-template-columns:1fr;padding-top:25px}.hero-art{min-height:200px}.grid{grid-template-columns:1fr}.list-links{grid-template-columns:1fr}.copy-grid{grid-template-columns:1fr}}
+</style></head>
+<body>
+<header><a class="brand" href="./">AMDAVAD <span>OVEN.</span></a><nav><a href="./">Storefront</a> · <a href="./admin.html">Team portal</a></nav></header>
+<main>
+<section class="wrap hero">
+ <div><div class="eyebrow">Ahmedabad neighbourhood launch</div><h1>Make the city<br><span style="color:var(--red)">share the slice.</span></h1>
+ <p class="muted">A share toolkit for friends, food communities, local publishers and neighbourhood partners. Each link carries a referral tag so AMDAVAD OVEN can measure visits and order requests that come from permitted promotion.</p>
+ <div class="share-link"><a class="btn" href="./">Explore the live menu</a><button class="btn secondary" onclick="makeLink('whatsapp')">Create WhatsApp link</button></div>
+ </div><div class="hero-art" aria-label="Pizza illustration">🍕</div>
+</section>
+
+<section class="wrap">
+ <div class="panel">
+  <div class="eyebrow">OrderWeave · Referral loop</div><h2>Your neighbourhood share link</h2>
+  <p class="muted">A random, anonymous referral code is generated in this browser. It is not a phone number, customer ID or discount code. A referral is credited only when a visitor arrives with the link and submits an order request.</p>
+  <label for="refLink">Personal share link</label>
+  <div class="share-link"><input id="refLink" readonly><button class="btn" onclick="copyRef()">Copy link</button><button class="btn secondary" onclick="nativeShare()">Share</button></div>
+  <p class="muted" id="refStatus" aria-live="polite"></p>
+  <div class="share-link">
+   <button class="btn" onclick="shareTo('whatsapp')">WhatsApp</button>
+   <button class="btn secondary" onclick="shareTo('facebook')">Facebook</button>
+   <button class="btn secondary" onclick="shareTo('instagram')">Copy Instagram caption</button>
+   <button class="btn secondary" onclick="shareTo('youtube')">Copy YouTube description</button>
+  </div>
+ </div>
+</section>
+
+<section class="wrap">
+ <div class="eyebrow">Launch campaign concepts</div><h2>Three local stories worth sharing</h2>
+ <div class="grid">
+  <article class="card"><div class="eyebrow">01 · Neighbourhood food discovery</div><h3>“A new pizza name in Amdavad”</h3><p>Ask local food pages to review the actual menu after kitchen launch. Offer a transparent tasting invite only when the kitchen and budget are ready; disclose paid or complimentary collaborations.</p></article>
+  <article class="card"><div class="eyebrow">02 · Office and student group orders</div><h3>“Build a shared pizza table”</h3><p>Show a real menu bundle and verified per-person price. Share in relevant office, college or housing communities only with group-admin approval.</p></article>
+  <article class="card"><div class="eyebrow">03 · Customer-created content</div><h3>“Show us your first slice”</h3><p>Invite customers to post an honest photo or short reel and tag the brand. Obtain permission before reusing any photo, name or video.</p></article>
+ </div>
+</section>
+
+<section class="wrap">
+ <div class="eyebrow">Ready-to-post creative</div><h2>Copy and publish manually</h2>
+ <div class="panel">
+  <h3>WhatsApp Status / community post</h3>
+  <div class="copy-grid"><textarea id="copyWhatsApp" readonly>Ahmedabad, meet AMDAVAD OVEN 🍕
+Explore artisan-style pizza, create your own combination and send an order request.
+Menu: https://amdavad-oven.onrender.com
+Availability, final prices and order acceptance are confirmed by the kitchen.</textarea><button class="btn" onclick="copyField('copyWhatsApp')">Copy</button></div>
+  <h3>Instagram caption</h3>
+  <div class="copy-grid"><textarea id="copyInstagram" readonly>Good dough. Great nights. 🍕
+A new neighbourhood pizza concept for Ahmedabad.
+Explore the menu, customise your pizza and send an order request.
+Find us online: https://amdavad-oven.onrender.com
+#AhmedabadFood #AmdavadFoodies #AhmedabadEats #PizzaAhmedabad #GujaratFood</textarea><button class="btn" onclick="copyField('copyInstagram')">Copy</button></div>
+  <h3>Reel / Shorts script (15 seconds)</h3>
+  <div class="copy-grid"><textarea id="copyReel" readonly>0–3 sec: Close-up dough stretch. On-screen: “Ahmedabad, pizza plans?”
+3–6 sec: Sauce and toppings. On-screen: “Build your own slice.”
+6–10 sec: Show a real, freshly prepared pizza. On-screen: “Good dough. Great nights.”
+10–15 sec: Show phone menu. Voiceover: “Explore AMDAVAD OVEN online. Kitchen confirms every order.”
+Caption: Explore the menu at https://amdavad-oven.onrender.com
+Film real food and real operations only. Do not imply delivery coverage or a discount that has not been confirmed.</textarea><button class="btn" onclick="copyField('copyReel')">Copy</button></div>
+  <h3>Gujarati launch caption</h3>
+  <div class="copy-grid"><textarea id="copyGujarati" readonly>અમદાવાદ, પિઝા માટે તૈયાર? 🍕
+AMDAVAD OVEN નું મેનુ જુઓ, તમારી પસંદનો પિઝા બનાવો અને ઓર્ડર વિનંતી મોકલો.
+મેનુ: https://amdavad-oven.onrender.com
+ઓર્ડરની ઉપલબ્ધતા અને અંતિમ વિગતો રસોડા દ્વારા પુષ્ટિ કરવામાં આવશે.</textarea><button class="btn" onclick="copyField('copyGujarati')">Copy</button></div>
+ </div>
+</section>
+
+<section class="wrap">
+ <div class="eyebrow">Ahmedabad discovery partners</div><h2>Where to list or advertise</h2>
+ <p class="muted">These are public promotion channels, not traffic sources to scrape. Ask each publisher for its current audience, rate card, placement, disclosure terms and referral tracking before paying.</p>
+ <div class="list-links">
+  <a href="https://business.google.com/in/business-profile/restaurants/" target="_blank" rel="noopener"><b>Google Business Profile</b><span>Free Search and Maps presence; publish only verified address, hours, phone and menu</span></a>
+  <a href="https://www.najik.in/" target="_blank" rel="noopener"><b>Najik Ahmedabad</b><span>Local business posts, offers and nearby discovery; check current business publishing fees</span></a>
+  <a href="https://aapnuamdavad.com/" target="_blank" rel="noopener"><b>Aapnu Amdavad</b><span>City guide, food community and local business directory; ask moderators about listing and promotional rules</span></a>
+  <a href="https://amdavadgully.com/advertise/" target="_blank" rel="noopener"><b>Amdavad Gully</b><span>City publication; request the current digital/newsletter rate card at amdavadgully@gmail.com</span></a>
+  <a href="https://www.ahmedabadmirror.com/advertise-with-us" target="_blank" rel="noopener"><b>Ahmedabad Mirror</b><span>Website banners, sponsored content and print advertising inquiry form</span></a>
+  <a href="https://sandesh.com/page/advertise-with-us" target="_blank" rel="noopener"><b>Sandesh</b><span>Digital advertising contact: digital.advertising@sandesh.com</span></a>
+  <a href="https://gujaratpost.in/advertise" target="_blank" rel="noopener"><b>Gujarat Post</b><span>Online advertising inquiry: digital.advertising@gujaratpost.in</span></a>
+  <a href="https://www.zomato.com/" target="_blank" rel="noopener"><b>Zomato</b><span>Apply through the restaurant partner onboarding flow after kitchen and compliance setup</span></a>
+ </div>
+ <div class="callout" style="margin-top:16px">Important: do not buy a placement until you have the actual menu, kitchen availability, verified contact, business address or service model, and a clear order-handling process. Just Ahmedabad's advertising page currently labels itself a working draft with placeholder contact fields, so verify it before relying on it.</div>
+</section>
+
+<section class="wrap">
+ <div class="panel">
+  <div class="eyebrow">SignalSage · Campaign measurement</div><h2>Measure real response, not fake reach</h2>
+  <p class="muted">The website records anonymous page, share and referral events only when the visitor opts in. The team portal shows the aggregate 30-day campaign report. It does not reveal other websites' visitor lists or verified unique people.</p>
+  <p><a href="./admin.html">Open the protected marketing dashboard →</a></p>
+ </div>
+</section>
+</main>
+<footer><div class="wrap"><b>AMDAVAD OVEN.</b><p>Ahmedabad neighbourhood pizza project · <a href="./">Open storefront</a></p></div></footer>
+<script src="./campaign.js"></script>
+<script>
+function linkFor(channel){
+ const base=window.aoReferralLink?window.aoReferralLink(channel,'amdavad_launch_2026'):'https://amdavad-oven.onrender.com/';
+ return base;
+}
+function makeLink(channel){
+ const link=linkFor(channel);document.getElementById('refLink').value=link;
+ document.getElementById('refStatus').textContent='Share this link on '+channel+'. It contains your referral code and campaign source.';
+}
+async function copyRef(){const link=document.getElementById('refLink').value||linkFor('other');try{await navigator.clipboard.writeText(link);document.getElementById('refStatus').textContent='Link copied.'}catch(e){document.getElementById('refLink').value=link;document.getElementById('refLink').select();document.getElementById('refStatus').textContent='Select and copy the link.'}}
+async function copyField(id){const el=document.getElementById(id);try{await navigator.clipboard.writeText(el.value);el.style.borderColor='#42643b'}catch(e){el.focus();el.select()}}
+function shareTo(channel){
+ const link=linkFor(channel);
+ const text='Ahmedabad, meet AMDAVAD OVEN 🍕 Explore the menu and customise a pizza: '+link;
+ if(channel==='whatsapp'){window.open('https://wa.me/?text='+encodeURIComponent(text),'_blank','noopener');if(window.aoTrack)aoTrack('share_click')}
+ else if(channel==='facebook'){window.open('https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(link),'_blank','noopener');if(window.aoTrack)aoTrack('share_click')}
+ else if(channel==='instagram'){copyField('copyInstagram');if(window.aoTrack)aoTrack('share_click')}
+ else {copyField('copyReel');if(window.aoTrack)aoTrack('share_click')}
+}
+async function nativeShare(){
+ const link=linkFor('other');
+ if(navigator.share){try{await navigator.share({title:'AMDAVAD OVEN',text:'Discover artisan-style pizza in Ahmedabad.',url:link});if(window.aoTrack)aoTrack('share_click')}catch(e){}}
+ else {document.getElementById('refLink').value=link;copyRef()}
+}
+makeLink('whatsapp');
+</script>
+</body></html>
