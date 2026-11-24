@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://ovenhire.onrender.com/sitemap.xml
