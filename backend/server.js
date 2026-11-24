@@ -863,6 +863,8 @@ app.patch('/api/admin/support/:ticketCode',requireAuth,requireRoles('owner','man
   res.json({ticket:r.rows[0]});
 }));
 
+app.use(require('./ai-chat')(pool));
+
 app.use((req,res)=>res.status(404).json({error:'Endpoint not found.'}));
 app.use((err,_req,res,_next)=>{
   if (err.message==='Origin is not permitted by CORS.') return res.status(403).json({error:err.message});
