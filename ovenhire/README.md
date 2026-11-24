@@ -24,5 +24,13 @@ Prices are proposals only until merchant onboarding, taxes, terms and a verified
 ## Deploy on Render
 Static site: repository `saharshsrivastava01-hue/pizzaplay`, branch `main`, publish directory `ovenhire`, build command `echo "OvenHire static build"`.
 
+## Discovery and sharing
+- Search-engine title/description, canonical URL and Open Graph metadata.
+- Native device share action with clipboard fallback for the site and sample roles.
+- These are distribution helpers only; they do not guarantee reach, ranking or virality.
+
+## Privacy and terms pages
+The preview includes plain-language demo disclosures. It does not collect accounts, payments or CVs. Review and replace the legal text with jurisdiction-specific advice before production launch.
+
 ## Google Play path
 This PWA is not an Android App Bundle (AAB). For Play Store, package the production web app with a maintained Android wrapper such as Capacitor, generate a signed AAB, test on physical devices, provide privacy policy/data-safety disclosures and complete Play Console testing/review. Do not submit this preview as a production recruitment service.
