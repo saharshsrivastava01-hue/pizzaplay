@@ -32,5 +32,11 @@ Static site: repository `saharshsrivastava01-hue/pizzaplay`, branch `main`, publ
 ## Privacy and terms pages
 The preview includes plain-language demo disclosures. It does not collect accounts, payments or CVs. Review and replace the legal text with jurisdiction-specific advice before production launch.
 
+## Chef Network prototype
+- Skill passport fields for cuisine, station, oven/equipment, food safety, languages and location.
+- Searchable fictional sample chef directory and employer contact-request drafts.
+- Contact requests are local-only; no private contact details are published and no message is sent.
+- Production contact requires authenticated users, participant-only database policies, consent controls, blocking/reporting, moderation, rate limits and secure notifications.
+
 ## Google Play path
 This PWA is not an Android App Bundle (AAB). For Play Store, package the production web app with a maintained Android wrapper such as Capacitor, generate a signed AAB, test on physical devices, provide privacy policy/data-safety disclosures and complete Play Console testing/review. Do not submit this preview as a production recruitment service.
