@@ -76,3 +76,28 @@ alter table public.jobs enable row level security;
 alter table public.candidate_profiles enable row level security;
 alter table public.applications enable row level security;
 alter table public.job_credits enable row level security;
+
+-- Private chef-to-employer contact workflow. No public contact details are exposed.
+create table public.chef_contact_requests (
+ id uuid primary key default gen_random_uuid(),
+ chef_user_id uuid not null references public.profiles(id) on delete cascade,
+ employer_user_id uuid not null references public.profiles(id) on delete cascade,
+ employer_business_id uuid references public.employers(id) on delete set null,
+ job_id uuid references public.jobs(id) on delete set null,
+ message text not null check (char_length(message) between 20 and 1200),
+ status text not null default 'pending' check (status in ('pending','accepted','declined','withdrawn','closed')),
+ chef_consented_at timestamptz,
+ created_at timestamptz not null default now(),
+ updated_at timestamptz not null default now(),
+ check (chef_user_id <> employer_user_id)
+);
+create table public.chef_contact_messages (
+ id uuid primary key default gen_random_uuid(),
+ request_id uuid not null references public.chef_contact_requests(id) on delete cascade,
+ sender_user_id uuid not null references public.profiles(id) on delete cascade,
+ body text not null check (char_length(body) between 1 and 4000),
+ created_at timestamptz not null default now()
+);
+alter table public.chef_contact_requests enable row level security;
+alter table public.chef_contact_messages enable row level security;
+-- Intentionally no client policies yet. Add tested participant-only policies and server-side rate limits before enabling messaging.
