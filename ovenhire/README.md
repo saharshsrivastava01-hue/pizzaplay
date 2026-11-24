@@ -1,12 +1,28 @@
-# OvenHire preview
+# OvenHire — pre-launch product build
 
-Separate pre-launch information site for the OvenHire hospitality recruitment concept.
+A responsive, installable-web-app (PWA) front-end prototype for a hospitality hiring marketplace.
 
-- ₹100 proposed single job post (30 days after approval)
-- ₹200 proposed two-post pack (each post 30 days after approval)
-- Candidate access planned to be free
-- Employer and vacancy moderation planned
+## Current preview
+- Responsive landing page, job search and department/location filters.
+- Browser-local demo job creation, candidate profile preview and demo application flow.
+- LocalStorage only; sample/demo data is labelled and never presented as a verified vacancy.
+- Web app manifest, icon and service worker for installability/offline shell caching.
 
-This is a static preview only. It does not accept payments, create accounts, store applications, publish jobs, verify employers, send emails or offer placement/visa guarantees. Do not advertise it as a live paid marketplace until backend, payment provider, terms, privacy, moderation and operational support are implemented.
+## Not production yet
+This build has no server API, real authentication, database connection, CV upload, employer verification, admin moderation, notifications, actual applications, payment gateway, refunds or audit logs. LocalStorage data exists only in the current browser/device and can be cleared. Do not collect money or sensitive candidate documents using this preview.
 
-Deployment target: Render static site, repository saharshsrivastava01-hue/pizzaplay, directory ovenhire.
+## Proposed commercial model
+- ₹100 proposed single listing.
+- ₹200 proposed two-listing pack.
+- 30-day listing duration after moderation approval.
+- Candidate browsing/applications planned to be free.
+Prices are proposals only until merchant onboarding, taxes, terms and a verified checkout flow are complete.
+
+## Backend foundation
+`supabase/schema.sql` is an initial PostgreSQL schema proposal. It enables RLS but deliberately includes no permissive policies. Do not deploy it as a working backend until role-aware policies, server-side authorization, moderation and payment webhook logic have been implemented and tested. Never put service-role secrets in frontend code.
+
+## Deploy on Render
+Static site: repository `saharshsrivastava01-hue/pizzaplay`, branch `main`, publish directory `ovenhire`, build command `echo "OvenHire static build"`.
+
+## Google Play path
+This PWA is not an Android App Bundle (AAB). For Play Store, package the production web app with a maintained Android wrapper such as Capacitor, generate a signed AAB, test on physical devices, provide privacy policy/data-safety disclosures and complete Play Console testing/review. Do not submit this preview as a production recruitment service.
